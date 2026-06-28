@@ -2,8 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Reloj Independiente</title>
-    <!-- Importamos la fuente Orbitron del logo -->
+    <title>MTG - Reloj Superior Derecho</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -12,37 +11,63 @@
             padding: 0;
             background: transparent; /* Totalmente transparente */
             overflow: hidden;
+            --gold-light: #FFD35B;
+            --gold-main: #C99725;
+            --gold-dark: #8C6211;
+            --black-overlay: rgba(18, 18, 18, 0.95);
         }
 
-        /* Caja del Reloj con la estética de tu logo */
-        .mtg-reloj-box {
+        /* Contenedor optimizado para colocarse ARRIBA A LA DERECHA */
+        .mtg-badge-box {
             position: absolute;
-            bottom: 50px;
-            right: 50px; /* Lo ubica abajo a la derecha de forma predeterminada */
-            background: linear-gradient(135deg, rgba(28, 28, 28, 0.95), rgba(10, 10, 10, 0.95));
+            top: 40px;      /* Distancia desde el borde superior */
+            right: 40px;    /* Distancia desde el borde derecho */
             
-            /* Borde dorado metálico sutil */
-            border: 2px solid #C99725;
-            border-radius: 6px;
-            padding: 12px 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            /* Fondo con textura hexagonal sutil de tu logo */
+            background-color: var(--black-overlay);
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="49" viewBox="0 0 28 49"><g fill-rule="evenodd"><g id="hexagons" fill="%23222" fill-opacity="0.3" fill-rule="nonzero"><path d="M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.25v13.5l11 6.35 11-6.35V17.25L14 10.9 3 17.25zM0 45h28v3H0v-3zm0-45h28v3H0V0z"/></g></g></svg>');
+            background-repeat: repeat;
+            
+            /* Borde de oro metálico elegante */
+            border: 2px solid var(--gold-main);
+            border-radius: 8px;
+            padding: 10px 22px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+            min-width: 170px;
         }
 
-        /* Texto del Reloj Digital */
+        /* Letras de Oro para el Título */
+        .badge-titulo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 900;
+            margin: 0 0 4px 0;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: linear-gradient(180deg, var(--gold-light), var(--gold-main));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Reloj Digital nítido */
         .reloj-texto {
             font-family: 'Orbitron', sans-serif;
-            font-size: 32px;
+            font-size: 26px;
             color: #ffffff;
             font-weight: 700;
             letter-spacing: 2px;
-            /* Brillo dorado de fondo */
-            text-shadow: 0 0 10px #C99725;
+            margin: 0;
+            text-shadow: 0 0 8px rgba(201, 151, 37, 0.5);
         }
     </style>
 </head>
 <body>
 
-    <div class="mtg-reloj-box">
+    <div class="mtg-badge-box">
+        <div class="badge-titulo">MTG EN VIVO</div>
         <div id="reloj" class="reloj-texto">00:00:00</div>
     </div>
 
@@ -54,12 +79,11 @@
             let segundos = ahora.getSeconds();
 
             horas = horas < 10 ? '0' + horas : horas;
-            minutos = minutos < 10 ? '0' + minutos : minutos;
+            minutos = minutes < 10 ? '0' + minutos : minutos;
             segundos = segundos < 10 ? '0' + segundos : segundos;
 
             document.getElementById('reloj').textContent = `${horas}:${minutos}:${segundos}`;
         }
-
         actualizarReloj();
         setInterval(actualizarReloj, 1000);
     </script>
