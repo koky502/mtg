@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MTG - Reloj Independiente</title>
+    <!-- Importamos la fuente Orbitron del logo -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent; /* Totalmente transparente */
+            overflow: hidden;
+        }
+
+        /* Caja del Reloj con la estética de tu logo */
+        .mtg-reloj-box {
+            position: absolute;
+            bottom: 50px;
+            right: 50px; /* Lo ubica abajo a la derecha de forma predeterminada */
+            background: linear-gradient(135deg, rgba(28, 28, 28, 0.95), rgba(10, 10, 10, 0.95));
+            
+            /* Borde dorado metálico sutil */
+            border: 2px solid #C99725;
+            border-radius: 6px;
+            padding: 12px 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+        }
+
+        /* Texto del Reloj Digital */
+        .reloj-texto {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            color: #ffffff;
+            font-weight: 700;
+            letter-spacing: 2px;
+            /* Brillo dorado de fondo */
+            text-shadow: 0 0 10px #C99725;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mtg-reloj-box">
+        <div id="reloj" class="reloj-texto">00:00:00</div>
+    </div>
+
+    <script>
+        function actualizarReloj() {
+            const ahora = new Date();
+            let horas = ahora.getHours();
+            let minutos = ahora.getMinutes();
+            let segundos = ahora.getSeconds();
+
+            horas = horas < 10 ? '0' + horas : horas;
+            minutos = minutos < 10 ? '0' + minutos : minutos;
+            segundos = segundos < 10 ? '0' + segundos : segundos;
+
+            document.getElementById('reloj').textContent = `${horas}:${minutos}:${segundos}`;
+        }
+
+        actualizarReloj();
+        setInterval(actualizarReloj, 1000);
+    </script>
+
+</body>
+</html>
