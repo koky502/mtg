@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Reloj y Fecha Guatemala</title>
+    <title>MTG - Diseño Simétrico de Fecha y Hora</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -17,7 +17,7 @@
             --black-overlay: rgba(18, 18, 18, 0.95);
         }
 
-        /* Caja contenedora adaptada para tres niveles de información */
+        /* Contenedor optimizado arriba a la derecha */
         .mtg-badge-box {
             position: absolute;
             top: 40px;      
@@ -31,44 +31,36 @@
             
             border: 2px solid var(--gold-main);
             border-radius: 8px;
-            padding: 12px 24px;
+            padding: 14px 24px;
             text-align: center;
             box-shadow: 0 8px 20px rgba(0,0,0,0.7);
-            min-width: 180px;
+            min-width: 190px;
         }
 
+        /* Título Principal MTG EN VIVO */
         .badge-titulo {
             font-family: 'Orbitron', sans-serif;
             font-size: 18px;
             font-weight: 900;
-            margin: 0 0 4px 0;
+            margin: 0 0 8px 0;
             letter-spacing: 1.5px;
             text-transform: uppercase;
             background: linear-gradient(180deg, var(--gold-light), var(--gold-main));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            border-bottom: 1px solid rgba(201, 151, 37, 0.3);
+            padding-bottom: 6px;
         }
 
-        .reloj-texto {
+        /* Estilo idéntico para Fecha y Hora */
+        .tiempo-datos {
             font-family: 'Orbitron', sans-serif;
             font-size: 26px;
             color: #ffffff;
             font-weight: 700;
             letter-spacing: 2px;
-            margin: 0 0 4px 0;
+            margin: 4px 0;
             text-shadow: 0 0 8px rgba(201, 151, 37, 0.5);
-        }
-
-        /* Estilo sutil y limpio para la fecha de Guatemala */
-        .fecha-texto {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin: 0;
-            border-top: 1px solid rgba(201, 151, 37, 0.3);
-            padding-top: 4px;
         }
     </style>
 </head>
@@ -76,14 +68,24 @@
 
     <div class="mtg-badge-box">
         <div class="badge-titulo">MTG EN VIVO</div>
-        <div id="reloj" class="reloj-texto">00:00:00</div>
-        <div id="fecha" class="fecha-texto">00/00/0000</div>
+        <div id="fecha" class="tiempo-datos">00/00/0000</div>
+        <div id="reloj" class="tiempo-datos">00:00:00</div>
     </div>
 
     <script>
-        function actualizarTiempo() {
+        function actualizarPantalla() {
             const ahora = new Date();
             
+            // --- CÓDIGO DE LA FECHA (DD/MM/AAAA) ---
+            let dia = ahora.getDate();
+            let mes = ahora.getMonth() + 1; 
+            const anio = ahora.getFullYear();
+
+            dia = dia < 10 ? '0' + dia : dia;
+            mes = mes < 10 ? '0' + mes : mes;
+
+            document.getElementById('fecha').textContent = `${dia}/${mes}/${anio}`;
+
             // --- CÓDIGO DEL RELOJ ---
             let horas = ahora.getHours();
             let minutos = ahora.getMinutes();
@@ -94,21 +96,10 @@
             segundos = segundos < 10 ? '0' + segundos : segundos;
 
             document.getElementById('reloj').textContent = `${horas}:${minutos}:${segundos}`;
-
-            // --- CÓDIGO DE LA FECHA (Formato DD/MM/AAAA) ---
-            let dia = ahora.getDate();
-            let mes = ahora.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
-            const anio = ahora.getFullYear();
-
-            dia = dia < 10 ? '0' + dia : dia;
-            mes = mes < 10 ? '0' + mes : mes;
-
-            document.getElementById('fecha').textContent = `${dia}/${mes}/${anio}`;
         }
         
-        // Ejecutar al cargar la página y actualizar continuamente cada segundo
-        actualizarTiempo();
-        setInterval(actualizarTiempo, 1000);
+        actualizarPantalla();
+        setInterval(actualizarPantalla, 1000);
     </script>
 
 </body>
