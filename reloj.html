@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Diseño Simétrico de Fecha y Hora</title>
+    <title>MTG - Diseño Simétrico Final</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -52,7 +52,7 @@
             padding-bottom: 6px;
         }
 
-        /* Estilo idéntico para Fecha y Hora */
+        /* Formato idéntico y simétrico para Fecha y Hora */
         .tiempo-datos {
             font-family: 'Orbitron', sans-serif;
             font-size: 26px;
@@ -88,14 +88,14 @@
 
             // --- CÓDIGO DEL RELOJ ---
             let horas = ahora.getHours();
-            let minutos = ahora.getMinutes();
+            let minutes = ahora.getMinutes();
             let segundos = ahora.getSeconds();
 
             horas = horas < 10 ? '0' + horas : horas;
-            minutos = minutos < 10 ? '0' + minutos : minutos;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
             segundos = segundos < 10 ? '0' + segundos : segundos;
 
-            document.getElementById('reloj').textContent = `${horas}:${minutos}:${segundos}`;
+            document.getElementById('reloj').textContent = `${horas}:${minutes}:${segundos}`;
         }
         
         actualizarPantalla();
