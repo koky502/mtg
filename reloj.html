@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Reloj Superior Derecho</title>
+    <title>MTG - Reloj Superior Derecho Corregido</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: transparent; /* Totalmente transparente */
+            background: transparent;
             overflow: hidden;
             --gold-light: #FFD35B;
             --gold-main: #C99725;
@@ -17,20 +17,17 @@
             --black-overlay: rgba(18, 18, 18, 0.95);
         }
 
-        /* Contenedor optimizado para colocarse ARRIBA A LA DERECHA */
         .mtg-badge-box {
             position: absolute;
-            top: 40px;      /* Distancia desde el borde superior */
-            right: 40px;    /* Distancia desde el borde derecho */
+            top: 40px;      
+            right: 40px;    
             
-            /* Fondo con textura hexagonal sutil de tu logo */
             background-color: var(--black-overlay);
             background-image: 
                 linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)),
                 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="49" viewBox="0 0 28 49"><g fill-rule="evenodd"><g id="hexagons" fill="%23222" fill-opacity="0.3" fill-rule="nonzero"><path d="M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.25v13.5l11 6.35 11-6.35V17.25L14 10.9 3 17.25zM0 45h28v3H0v-3zm0-45h28v3H0V0z"/></g></g></svg>');
             background-repeat: repeat;
             
-            /* Borde de oro metálico elegante */
             border: 2px solid var(--gold-main);
             border-radius: 8px;
             padding: 10px 22px;
@@ -39,7 +36,6 @@
             min-width: 170px;
         }
 
-        /* Letras de Oro para el Título */
         .badge-titulo {
             font-family: 'Orbitron', sans-serif;
             font-size: 18px;
@@ -52,7 +48,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Reloj Digital nítido */
         .reloj-texto {
             font-family: 'Orbitron', sans-serif;
             font-size: 26px;
@@ -75,15 +70,17 @@
         function actualizarReloj() {
             const ahora = new Date();
             let horas = ahora.getHours();
-            let minutos = ahora.getMinutos();
+            let minutos = ahora.getMinutes();
             let segundos = ahora.getSeconds();
 
+            // Formato de dos dígitos corregido
             horas = horas < 10 ? '0' + horas : horas;
             minutos = minutos < 10 ? '0' + minutos : minutos;
             segundos = segundos < 10 ? '0' + segundos : segundos;
 
             document.getElementById('reloj').textContent = `${horas}:${minutos}:${segundos}`;
         }
+        
         actualizarReloj();
         setInterval(actualizarReloj, 1000);
     </script>
