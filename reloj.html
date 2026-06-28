@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Reloj Superior Derecho Corregido</title>
+    <title>MTG - Reloj y Fecha Guatemala</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -17,6 +17,7 @@
             --black-overlay: rgba(18, 18, 18, 0.95);
         }
 
+        /* Caja contenedora adaptada para tres niveles de información */
         .mtg-badge-box {
             position: absolute;
             top: 40px;      
@@ -30,10 +31,10 @@
             
             border: 2px solid var(--gold-main);
             border-radius: 8px;
-            padding: 10px 22px;
+            padding: 12px 24px;
             text-align: center;
             box-shadow: 0 8px 20px rgba(0,0,0,0.7);
-            min-width: 170px;
+            min-width: 180px;
         }
 
         .badge-titulo {
@@ -54,8 +55,20 @@
             color: #ffffff;
             font-weight: 700;
             letter-spacing: 2px;
-            margin: 0;
+            margin: 0 0 4px 0;
             text-shadow: 0 0 8px rgba(201, 151, 37, 0.5);
+        }
+
+        /* Estilo sutil y limpio para la fecha de Guatemala */
+        .fecha-texto {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin: 0;
+            border-top: 1px solid rgba(201, 151, 37, 0.3);
+            padding-top: 4px;
         }
     </style>
 </head>
@@ -64,25 +77,38 @@
     <div class="mtg-badge-box">
         <div class="badge-titulo">MTG EN VIVO</div>
         <div id="reloj" class="reloj-texto">00:00:00</div>
+        <div id="fecha" class="fecha-texto">00/00/0000</div>
     </div>
 
     <script>
-        function actualizarReloj() {
+        function actualizarTiempo() {
             const ahora = new Date();
+            
+            // --- CÓDIGO DEL RELOJ ---
             let horas = ahora.getHours();
             let minutos = ahora.getMinutes();
             let segundos = ahora.getSeconds();
 
-            // Formato de dos dígitos corregido
             horas = horas < 10 ? '0' + horas : horas;
             minutos = minutos < 10 ? '0' + minutos : minutos;
             segundos = segundos < 10 ? '0' + segundos : segundos;
 
             document.getElementById('reloj').textContent = `${horas}:${minutos}:${segundos}`;
+
+            // --- CÓDIGO DE LA FECHA (Formato DD/MM/AAAA) ---
+            let dia = ahora.getDate();
+            let mes = ahora.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
+            const anio = ahora.getFullYear();
+
+            dia = dia < 10 ? '0' + dia : dia;
+            mes = mes < 10 ? '0' + mes : mes;
+
+            document.getElementById('fecha').textContent = `${dia}/${mes}/${anio}`;
         }
         
-        actualizarReloj();
-        setInterval(actualizarReloj, 1000);
+        // Ejecutar al cargar la página y actualizar continuamente cada segundo
+        actualizarTiempo();
+        setInterval(actualizarTiempo, 1000);
     </script>
 
 </body>
