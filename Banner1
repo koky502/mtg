@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Overlay Profesional</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent; /* Transparente para OBS */
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        /* Estructura del Banner Inferior */
+        .banner {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            background: rgba(20, 20, 20, 0.9); /* Fondo oscuro elegante */
+            border-left: 8px solid #00E5FF; /* Línea cian de acento */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .titulo {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .subtitulo {
+            font-size: 18px;
+            color: #BBBBBB;
+            margin: 5px 0 0 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banner">
+        <!-- AQUÍ EDITARÁS LOS TEXTOS DESDE TU TELÉFONO -->
+        <p class="titulo">Transmisión en Vivo</p>
+        <p class="subtitulo">Evento Especial en Guatemala</p>
+    </div>
+
+</body>
+</html>
