@@ -2,45 +2,95 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Overlay de Koky502</title>
+    <title>MTG - Banner Profesional</title>
+    <!-- Importar fuentes modernas de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@600;800&family=Orbitron&display=swap" rel="stylesheet">
+    
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: transparent; /* Totalmente transparente para OBS Studio */
+            background: transparent; /* Transparente para OBS */
             overflow: hidden;
-            font-family: Arial, sans-serif;
+            /* Fuentes para títulos y subtítulos */
+            --font-main: 'Orbitron', sans-serif;
+            --font-sub: 'Exo', sans-serif;
+            /* Paleta de colores extraída de tu logo */
+            --gold-light: #FFD35B;
+            --gold-main: #C99725; /* El dorado metálico central */
+            --gold-dark: #8C6211;
+            --black-overlay: rgba(18, 18, 18, 0.95);
         }
-        /* El diseño de tu Banner */
-        .banner-irl {
+
+        /* Animación de entrada suave (Fade-in) */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Contenedor principal del banner */
+        .mtg-banner {
             position: absolute;
-            bottom: 60px;
-            left: 60px;
-            background: rgba(15, 15, 15, 0.85); /* Fondo negro semitransparente profesional */
-            border-left: 8px solid #00e5ff; /* Línea cian de acento */
+            bottom: 50px;
+            left: 50px;
+            
+            /* Fondo negro con patrón hexagonal integrado */
+            background-color: var(--black-overlay);
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)),
+                /* Patrón hexagonal simple (simulando el panal del logo) */
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="49" viewBox="0 0 28 49"><g fill-rule="evenodd"><g id="hexagons" fill="%23222" fill-opacity="0.3" fill-rule="nonzero"><path d="M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.25v13.5l11 6.35 11-6.35V17.25L14 10.9 3 17.25zM0 45h28v3H0v-3zm0-45h28v3H0V0z"/></g></g></svg>');
+            
+            /* Borde lateral con gradiente dorado (como el anillo) */
+            border-left: 10px solid;
+            border-image: linear-gradient(180deg, var(--gold-light), var(--gold-dark)) 1 100%;
+            
             color: white;
-            padding: 15px 35px;
-            border-radius: 6px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            padding: 20px 40px;
+            border-radius: 4px; /* Un poco redondeado en las esquinas principales */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            
+            /* Aplicar la animación de entrada */
+            animation: fadeIn 0.5s ease-out;
+            
+            /* Asegurar que el patrón hexagonal se repita */
+            background-repeat: repeat;
+            background-size: auto;
         }
+
+        /* Título Principal (e.g., Juancho Transmite) */
         .titulo {
-            font-size: 32px;
-            font-weight: bold;
+            font-family: var(--font-main);
+            font-size: 36px;
+            font-weight: 800;
             margin: 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: white;
+            /* Efecto de degradado dorado sutil en el texto */
+            background: linear-gradient(var(--gold-light), var(--gold-main));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
+
+        /* Subtítulo o Descripción (e.g., Internet de Alta Velocidad) */
         .subtitulo {
+            font-family: var(--font-sub);
             font-size: 20px;
-            color: #d1d1d1;
-            margin: 6px 0 0 0;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 8px 0 0 0;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
 <body>
 
-    <div class="banner-irl">
-        <!-- ESTOS SON LOS TEXTOS QUE VAS A CAMBIAR DESDE EL TELÉFONO EN VIVO -->
+    <!-- Contenedor del banner exclusivo para MTG -->
+    <div class="mtg-banner">
+        <!-- Estos son los textos que editarás en vivo desde tu teléfono -->
         <p class="titulo">Transmisión en Vivo</p>
-        <p class="subtitulo">Producción Profesional Independiente</p>
+        <p class="subtitulo">MTG - Internet de Alta Velocidad - Guatemala</p>
     </div>
 
 </body>
