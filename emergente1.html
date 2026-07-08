@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patrocinadores Premium - MTG</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Contenedor posicionado abajo a la izquierda */
+        #widget-container {
+            position: absolute;
+            bottom: 40px;
+            left: 50px;
+            display: flex;
+            align-items: center;
+            height: 90px;
+        }
+
+        /* 1. EL BOTÓN REDONDO DE PLAY */
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            z-index: 10; /* Siempre por encima */
+            border: 3px solid #0a0a0a;
+            transform: scale(0);
+        }
+
+        /* Triángulo interno de PLAY hecho con CSS puro */
+        .triangle {
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-left: 26px solid #000000;
+            border-bottom: 15px solid transparent;
+            margin-left: 8px;
+        }
+
+        /* 2. LOS RÓTULOS HORIZONTALES (MÓDULO DE TEXTO) */
+        .banner-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: -40px; /* Se esconde detrás del botón de Play */
+            padding-left: 50px;
+            padding-right: 30px;
+            height: 70px;
+            background: rgba(10, 10, 10, 0.95);
+            border-top: 2px solid #d4af37;
+            border-right: 4px solid #d4af37;
+            border-bottom: 2px solid #d4af37;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+            z-index: 5;
+            transform: scaleX(0);
+            transform-origin: left;
+            white-space: nowrap;
+        }
+
+        /* Rótulo superior (Título de acción) */
+        .sub-label {
+            color: #e6ca65;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+        }
+
+        /* Rótulo Central (Nombre del Patrocinador) */
+        .main-text {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===================================================
+           CLASES DE ANIMACIÓN (Controladas por la Secuencia)
+           =================================================== */
+        
+        .animar-play-entrada { animation: entradaPlay 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .animar-play-salida  { animation: salidaPlay 0.5s ease forwards; }
+        
+        .animar-banner-entrada { animation: entradaBanner 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+        .animar-banner-salida  { animation: salidaBanner 0.4s ease forwards; }
+
+        /* KEYFRAMES */
+        @keyframes entradaPlay {
+            0% { transform: scale(0) rotate(-180deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        @keyframes salidaPlay {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+        @keyframes entradaBanner {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
+        }
+        @keyframes salidaBanner {
+            0% { transform: scaleX(1); opacity: 1; }
+            100% { transform: scaleX(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="widget-container">
+        <div id="play-btn" class="play-button">
+            <div class="triangle"></div>
+        </div>
+        
+        <div id="banner" class="banner-wrapper">
+            <div class="sub-label">Agradecemos a:</div>
+            <div id="sponsor-name" class="main-text">Sincronizando...</div>
+        </div>
+    </div>
+
+    <script>
+        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
+        
+        let listaPatrocinadores = [];
+        let indiceActual = 0;
+        let estaMostrando = false;
+
+        function parseCSV(text) {
+            const lines = text.replace(/\r/g, "").split("\n");
+            const result = [];
+            const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+            const colIndex = headers.indexOf("datos_generales");
+            const targetIndex = (colIndex !== -1) ? colIndex : 4;
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                if (currentline[targetIndex]) {
+                    const valorLimpio = currentline[targetIndex].replace(/^"|"\$/g, '').trim();
+                    if (valorLimpio && valorLimpio !== "") result.push(valorLimpio);
+                }
+            }
+            return result;
+        }
+
+        async function cargarPatrocinadores() {
+            try {
+                const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
+                const dataText = await response.text();
+                const nuevasMarcas = parseCSV(dataText);
+                if (nuevasMarcas.length > 0) listaPatrocinadores = nuevasMarcas;
+            } catch (error) {
+                console.error("Error cargando marcas:", error);
+            }
+        }
+
+        // CONTROL DE SECUENCIA DE TIEMPOS (LOGICA BROADCST)
+        function ejecutarCicloVisual() {
+            if (listaPatrocinadores.length === 0 || estaMostrando) return;
+            
+            estaMostrando = true;
+            const btn = document.getElementById("play-btn");
+            const banner = document.getElementById("banner");
+            const txt = document.getElementById("sponsor-name");
+
+            // Asegurar texto antes de abrir
+            txt.innerText = listaPatrocinadores[indiceActual];
+            indiceActual = (indiceActual + 1) % listaPatrocinadores.length;
+
+            // T+0: Entra Play
+            btn.className = "play-button animar-play-entrada";
+
+            // T+0.5s: Salen rótulos de texto
+            setTimeout(() => {
+                banner.className = "banner-wrapper animar-banner-entrada";
+            }, 500);
+
+            // T+4.0s: Desaparecen rótulos primero (Tu especificación)
+            setTimeout(() => {
+                banner.className = "banner-wrapper animar-banner-salida";
+            }, 4000);
+
+            // T+4.5s: Desaparece Play de último (Tu especificación)
+            setTimeout(() => {
+                btn.className = "play-button animar-play-salida";
+            }, 4500);
+
+            // T+5.5s: Resetear estados para el próximo patrocinador
+            setTimeout(() => {
+                estaMostrando = false;
+            }, 5500);
+        }
+
+        async function iniciar() {
+            await cargarPatrocinadores();
+            
+            // Lanza el primer patrocinador de inmediato
+            if (listaPatrocinadores.length > 0) ejecutarCicloVisual();
+            
+            // Cada 10 segundos inicia la secuencia completa desde cero (Aparecer -> Mostrar -> Guardar)
+            setInterval(ejecutarCicloVisual, 10000);
+            
+            // Sincroniza con la nube en segundo plano cada 30s
+            setInterval(cargarPatrocinadores, 30000);
+        }
+
+        window.onload = iniciar;
+    </script>
+</body>
+</html>
