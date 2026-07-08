@@ -119,13 +119,22 @@
             return txt.replace(/^"|"\$/g, '').trim();
         }
 
-        // CONTROL MANUAL COMPLEMENTARIO: Si das click derecho en OBS e "Interactuar", puedes pausarlo haciendo click en el marcador
+       // CONTROL MANUAL COMPLEMENTARIO: Si das click derecho en OBS e "Interactuar", puedes pausarlo haciendo click en el marcador
+      
         function toggleReloj() {
             ejecutando = !ejecutando;
-            console.log("Reloj en ejecución: " + ejecutando);
+            const relojElemento = document.getElementById("game-clock");
+            
+            if (!ejecutando) {
+                // Al pausar, se pone gris/rojo sutil para avisarte que está detenido
+                relojElemento.style.color = "#ff4444"; 
+            } else {
+                // Al reanudar, vuelve a su color Oro brillante corporativo
+                relojElemento.style.color = "#e6ca65"; 
+            }
         }
 
-        // MOTOR INTERNO INMUNE: Cuenta de 1 en 1 de forma local sin depender de Sheets
+        // MOTOR INTERNO INMUNE
         setInterval(() => {
             if (ejecutando) {
                 segundosCronometro++;
@@ -137,7 +146,7 @@
             }
         }, 1000);
 
-        // LECTURA ÚNICAMENTE DE GOLES Y NOMBRES
+       // LECTURA ÚNICAMENTE DE GOLES Y NOMBRES
         async function consultarGolesYEquipos() {
             try {
                 const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
