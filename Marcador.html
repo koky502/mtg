@@ -107,34 +107,34 @@
         <div id="team2-name" class="team-box team-right">VISITANTE</div>
     </div>
 
-    <script>
+   <script>
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
 
-        // CRONÓMETRO PURO (Suma pase lo que pase en internet)
+        // CRONÓMETRO PURO LOCAL
         let segundosCronometro = 0;
         let ejecutando = true; 
+
+        // ESCUDO ANTI-RETROCESO (Guarda los goles reales en la memoria del script)
+        let golesLocalConfirmados = 0;
+        let golesVisitaConfirmados = 0;
+        let rachaErroresGoogle = 0;
 
         function limpiarTexto(txt) {
             if (!txt) return "";
             return txt.replace(/^"|"\$/g, '').trim();
         }
 
-       // CONTROL MANUAL COMPLEMENTARIO: Si das click derecho en OBS e "Interactuar", puedes pausarlo haciendo click en el marcador
-      
         function toggleReloj() {
             ejecutando = !ejecutando;
             const relojElemento = document.getElementById("game-clock");
-            
             if (!ejecutando) {
-                // Al pausar, se pone gris/rojo sutil para avisarte que está detenido
                 relojElemento.style.color = "#ff4444"; 
             } else {
-                // Al reanudar, vuelve a su color Oro brillante corporativo
                 relojElemento.style.color = "#e6ca65"; 
             }
         }
 
-        // MOTOR INTERNO INMUNE
+        // MOTOR DEL TIEMPO (100% local, inmune a internet)
         setInterval(() => {
             if (ejecutando) {
                 segundosCronometro++;
@@ -146,9 +146,10 @@
             }
         }, 1000);
 
-       // LECTURA ÚNICAMENTE DE GOLES Y NOMBRES
+        // RECEPTOR DE GOLES INTELIGENTE
         async function consultarGolesYEquipos() {
             try {
+                // Forzamos la ruptura de caché del navegador usando la hora exacta en milisegundos
                 const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
                 const dataText = await response.text();
                 const lines = dataText.replace(/\r/g, "").split("\n");
@@ -158,19 +159,36 @@
                 const filaEq1 = lines[7].split(","); 
                 const filaEq2 = lines[8].split(","); 
 
-                // Forzamos la actualización de textos e ignoramos por completo cualquier comando de tiempo
-                document.getElementById("team1-name").innerText = limpiarTexto(filaEq1[0]);
-                document.getElementById("team1-score").innerText = limpiarTexto(filaEq1[1]) || "0";
-                document.getElementById("team2-name").innerText = limpiarTexto(filaEq2[0]);
-                document.getElementById("team2-score").innerText = limpiarTexto(filaEq2[1]) || "0";
+                const nombreLocal = limpiarTexto(filaEq1[0]);
+                const golesLocalNube = parseInt(limpiarTexto(filaEq1[1])) || 0;
+
+                const nombreVisita = limpiarTexto(filaEq2[0]);
+                const golesVisitaNube = parseInt(limpiarTexto(filaEq2[1])) || 0;
+
+                // Actualizar nombres (estos no sufren por fluctuaciones de números)
+                document.getElementById("team1-name").innerText = nombreLocal;
+                document.getElementById("team2-name").innerText = nombreVisita;
+
+                // VALIDACIÓN DE SEGURIDAD (MÉTODO HISTÓRICO)
+                // Si la nube me envía un número menor al que yo ya canté en pantalla, 
+                // lo ignoro porque es un retraso de sincronización de los servidores de Google.
+                if (golesLocalNube >= golesLocalConfirmados) {
+                    golesLocalConfirmados = golesLocalNube;
+                    document.getElementById("team1-score").innerText = golesLocalConfirmados;
+                }
+                
+                if (golesVisitaNube >= golesVisitaConfirmados) {
+                    golesVisitaConfirmados = golesVisitaNube;
+                    document.getElementById("team2-score").innerText = golesVisitaConfirmados;
+                }
 
             } catch (error) {
                 console.error("Error actualizando datos:", error);
             }
         }
 
-        // Revisa la nube cada 4 segundos SOLAMENTE para ver si hubo un gol
-        setInterval(consultarGolesYEquipos, 4000);
+        // Consultamos cada 3 segundos para acelerar el tiempo de respuesta
+        setInterval(consultarGolesYEquipos, 3000);
         consultarGolesYEquipos();
     </script>
 </body>
