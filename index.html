@@ -96,32 +96,35 @@
             </div>
     </div>
 
-    <script>
-        // Endpoint en formato CSV que acabamos de validar
+   <script>
+        // Endpoint en formato CSV validado
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
 
-        // Función de ingeniería para convertir texto CSV plano en una matriz de objetos limpios
+        // Función de alta resistencia que elimina los caracteres ocultos \r
         function parseCSV(text) {
-            const lines = text.split("\n");
+            const lines = text.replace(/\r/g, "").split("\n");
+            if (lines.length === 0) return [];
+            
             const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
             const result = [];
 
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
-                const currentline = lines[i].split(",");
+                
+                // Expresión regular para separar por comas de forma segura
+                const currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 const obj = {};
+                
                 for (let j = 0; j < headers.length; j++) {
-                    obj[headers[j]] = currentline[j] ? currentline[j].trim() : "";
+                    obj[headers[j]] = currentline[j] ? currentline[j].replace(/^"|"\$/g, '').trim() : "";
                 }
                 result.push(obj);
             }
             return result;
         }
 
-        // Función principal que hace el fetch asíncrono a la nube de Google
         async function actualizarOverlay() {
             try {
-                // Forzamos la omisión de caché del navegador para asegurar tiempo real puro
                 const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
                 const dataText = await response.text();
                 const corredores = parseCSV(dataText);
@@ -129,14 +132,12 @@
                 const tablaCuerpo = document.getElementById("tabla-cuerpo");
                 let htmlContenido = "";
 
-                // Iteramos los datos y construimos el diseño fila por fila
                 corredores.forEach((corredor, index) => {
-                    // Actualizamos el dato general (ej. Kilómetros restantes) usando la primera fila útil
+                    // Sincroniza datos generales de la primera fila útil si existe
                     if(index === 0 && corredor.datos_generales) {
                         document.getElementById("general-info").innerText = corredor.datos_generales;
                     }
 
-                    // Validamos que la fila contenga un nombre real antes de dibujar
                     if(corredor.nombre) {
                         htmlContenido += `
                             <div class="row">
@@ -158,10 +159,7 @@
             }
         }
 
-        // Ejecución inmediata al cargar el overlay en OBS
         actualizarOverlay();
-
-        // Bucle de telemetría: consulta a Google Sheets cada 3 segundos (3000 ms)
         setInterval(actualizarOverlay, 3000);
     </script>
 </body>
