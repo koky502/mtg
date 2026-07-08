@@ -27,20 +27,47 @@
     </div>
     <script>
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
-        function limpiar(t){ return t ? t.replace(/^"|"\$/g, '').trim() : ""; }
+        
+        function limpiar(t){ 
+            return t ? t.replace(/^"|"\$/g, '').trim() : ""; 
+        }
+
         async function actualizar() {
             try {
+                // Rompemos caché para asegurar inmediatez
                 const r = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
-                const d = await r.text(); const l = d.replace(/\r/g, "").split("\n");
+                const d = await r.text(); 
+                const l = d.replace(/\r/g, "").split("\n");
+                
+                // l[7] corresponde exactamente a la fila 8 de tu Sheets (Los Cifuentes)
+                // l[8] corresponde exactamente a la fila 9 de tu Sheets (La Gomera)
                 if (l.length < 9) return;
-                const e1 = l[7].split(","); const e2 = l[8].split(",");
-                document.getElementById("team1-name").innerText = limpiar(e1[0]);
-                document.getElementById("team1-score").innerText = limpiar(e1[1]) || "0";
-                document.getElementById("team2-name").innerText = limpiar(e1[0] ? e2[0] : "");
-                document.getElementById("team2-score").innerText = limpiar(e2[1]) || "0";
-            } catch (e) { console.error(e); }
+                
+                const e1 = l[7].split(","); // Fila 8
+                const e2 = l[8].split(","); // Fila 9
+
+                // Extraemos textos y números de forma limpia
+                const nombreLocal = limpiar(e1[0]);
+                const golesLocal = limpiar(e1[1]) || "0";
+                
+                const nombreVisita = limpiar(e2[0]);
+                const golesVisita = limpiar(e2[1]) || "0";
+
+                // Inyectamos exactamente en su lugar en el marcador
+                document.getElementById("team1-name").innerText = nombreLocal;
+                document.getElementById("team1-score").innerText = golesLocal;
+                
+                document.getElementById("team2-name").innerText = nombreVisita;
+                document.getElementById("team2-score").innerText = golesVisita;
+
+            } catch (e) { 
+                console.error("Error leyendo el Sheets:", e); 
+            }
         }
-        setInterval(actualizar, 4000); actualizar();
+
+        // Consulta cada 4 segundos
+        setInterval(actualizar, 4000); 
+        actualizar();
     </script>
 </body>
 </html>
