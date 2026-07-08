@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scoreboard Inmune a Reinicios - MTG</title>
+    <title>Scoreboard Autónomo - MTG</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
 
@@ -68,6 +68,7 @@
             border-bottom: 3px solid #e6ca65;
             clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
             padding: 0 10px;
+            cursor: pointer; /* Indica que se puede clickear en OBS */
         }
 
         .score-box {
@@ -96,7 +97,7 @@
 </head>
 <body>
 
-    <div id="scoreboard-container">
+    <div id="scoreboard-container" onclick="toggleReloj()">
         <div id="team1-name" class="team-box team-left">LOCAL</div>
         <div id="team1-score" class="score-box score-left">0</div>
 
@@ -109,85 +110,59 @@
     <script>
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
 
-        // RECUPERACIÓN DE MEMORIA HARDWARE: Si la página se reinicia, lee el último segundo guardado
-        let segundosCronometro = parseInt(localStorage.getItem('mtg_segundos')) || 0;
-        let ejecutando = localStorage.getItem('mtg_ejecutando') === 'true';
-        let estadoAnteriorComando = localStorage.getItem('mtg_ultimo_comando') || "";
+        // CRONÓMETRO PURO (Suma pase lo que pase en internet)
+        let segundosCronometro = 0;
+        let ejecutando = true; 
 
         function limpiarTexto(txt) {
             if (!txt) return "";
             return txt.replace(/^"|"\$/g, '').trim();
         }
 
-        // Muestra el tiempo guardado inmediatamente al cargar/recargar la página
-        mostrarTiempoEnPantalla();
+        // CONTROL MANUAL COMPLEMENTARIO: Si das click derecho en OBS e "Interactuar", puedes pausarlo haciendo click en el marcador
+        function toggleReloj() {
+            ejecutando = !ejecutando;
+            console.log("Reloj en ejecución: " + ejecutando);
+        }
 
-        // 1. EL MOTOR INDEPENDIENTE (Guarda el tiempo físicamente en la PC cada segundo)
+        // MOTOR INTERNO INMUNE: Cuenta de 1 en 1 de forma local sin depender de Sheets
         setInterval(() => {
             if (ejecutando) {
                 segundosCronometro++;
-                localStorage.setItem('mtg_segundos', segundosCronometro);
-                mostrarTiempoEnPantalla();
+                const mins = Math.floor(segundosCronometro / 60);
+                const segs = segundosCronometro % 60;
+                const strMins = mins < 10 ? "0" + mins : mins;
+                const strSegs = segs < 10 ? "0" + segs : segs;
+                document.getElementById("game-clock").innerText = `${strMins}:${strSegs}`;
             }
         }, 1000);
 
-        function mostrarTiempoEnPantalla() {
-            const mins = Math.floor(segundosCronometro / 60);
-            const segs = segundosCronometro % 60;
-            const strMins = mins < 10 ? "0" + mins : mins;
-            const strSegs = segs < 10 ? "0" + segs : segs;
-            document.getElementById("game-clock").innerText = `${strMins}:${strSegs}`;
-        }
-
-        // 2. RECEPTOR DE EXCEL
-        async function consultarGoogleSheets() {
+        // LECTURA ÚNICAMENTE DE GOLES Y NOMBRES
+        async function consultarGolesYEquipos() {
             try {
                 const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
                 const dataText = await response.text();
                 const lines = dataText.replace(/\r/g, "").split("\n");
 
-                if (lines.length < 10) return;
+                if (lines.length < 9) return;
 
                 const filaEq1 = lines[7].split(","); 
                 const filaEq2 = lines[8].split(","); 
-                const filaHora = lines[9].split(","); 
 
-                // Goles y nombres
+                // Forzamos la actualización de textos e ignoramos por completo cualquier comando de tiempo
                 document.getElementById("team1-name").innerText = limpiarTexto(filaEq1[0]);
                 document.getElementById("team1-score").innerText = limpiarTexto(filaEq1[1]) || "0";
                 document.getElementById("team2-name").innerText = limpiarTexto(filaEq2[0]);
                 document.getElementById("team2-score").innerText = limpiarTexto(filaEq2[1]) || "0";
 
-                const comandoEnSheets = limpiarTexto(filaHora[1]).toUpperCase(); 
-
-                if (comandoEnSheets === estadoAnteriorComando) return;
-                estadoAnteriorComando = comandoEnSheets;
-                localStorage.setItem('mtg_ultimo_comando', comandoEnSheets);
-
-                // EJECUCIÓN DE COMANDOS SEGUROS
-                if (comandoEnSheets === "INICIAR") {
-                    segundosCronometro = 0;
-                    ejecutando = true;
-                    localStorage.setItem('mtg_segundos', 0);
-                    localStorage.setItem('mtg_ejecutando', 'true');
-                    mostrarTiempoEnPantalla();
-                } 
-                else if (comandoEnSheets === "PAUSA") {
-                    ejecutando = false;
-                    localStorage.setItem('mtg_ejecutando', 'false');
-                } 
-                else if (comandoEnSheets === "SEGUNDO") {
-                    ejecutando = true;
-                    localStorage.setItem('mtg_ejecutando', 'true');
-                }
-
             } catch (error) {
-                console.error("Error en sincronización:", error);
+                console.error("Error actualizando datos:", error);
             }
         }
 
-        setInterval(consultarGoogleSheets, 4000);
-        consultarGoogleSheets();
+        // Revisa la nube cada 4 segundos SOLAMENTE para ver si hubo un gol
+        setInterval(consultarGolesYEquipos, 4000);
+        consultarGolesYEquipos();
     </script>
 </body>
 </html>
