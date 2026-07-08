@@ -16,29 +16,30 @@
             color: #ffffff;
         }
 
-        /* Contenedor principal del Leaderboard (Tabla de posiciones) */
-        #leaderboard {
-            position: absolute;
-            top: 40px;
-            left: 40px;
-            width: 380px;
-            background: rgba(15, 23, 42, 0.85); /* Fondo oscuro semitransparente profesional */
-            border-left: 6px solid #e11d48; /* Línea de acento color rojo deportivo */
-            border-radius: 4px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-        }
+       /* Cambia el contenedor para usar un fondo negro más profundo y acento dorado */
+#leaderboard {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    width: 380px;
+    background: rgba(10, 10, 10, 0.90); /* Negro profundo como el fondo de tu logo */
+    border-left: 6px solid #d4af37; /* Línea de acento Oro Metálico (Gold) */
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
 
-        /* Encabezado del overlay */
-        .header {
-            background: #e11d48;
-            padding: 10px 15px;
-            font-weight: bold;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            justify-content: space-between;
-        }
+       /* El encabezado pasa de rojo a negro/oro elegante */
+.header {
+    background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%); /* Degradado dorado idéntico a las ondas de tu logo */
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #000000; /* Texto negro para máxima lectura sobre el fondo dorado */
+    display: flex;
+    justify-content: space-between;
+}
 
         /* Filas de los ciclistas */
         .row {
@@ -52,13 +53,13 @@
             border-bottom: none;
         }
 
-        /* Estilos de las celdas internas */
-        .pos {
-            width: 30px;
-            font-weight: bold;
-            color: #fbbf24; /* Color oro para el indicador visual */
-            font-size: 16px;
-        }
+      /* El número de la posición resalta en oro brillante */
+.pos {
+    width: 30px;
+    font-weight: 900;
+    color: #e6ca65; /* Oro MTG */
+    font-size: 18px;
+}
 
         .info {
             flex-grow: 1;
