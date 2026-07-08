@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lower Third Premium - MTG</title>
     <style>
+        /* Importamos tipografías profesionales para broadcast */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+
         body {
             margin: 0;
             padding: 0;
             background-color: transparent;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Montserrat', sans-serif; /* Cambio a fuente premium anti-alising */
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         #widget-container {
@@ -19,31 +24,31 @@
             left: 50px;
             display: flex;
             align-items: center;
-            height: 110px; /* Altura ideal para las 3 líneas */
+            height: 120px; /* Ampliado ligeramente para dar aire */
         }
 
         /* EL BOTÓN REDONDO DE PLAY CORPORATIVO */
         .play-button {
-            width: 85px;
-            height: 85px;
+            width: 90px;
+            height: 90px;
             background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
             z-index: 10;
-            border: 3px solid #0a0a0a;
+            border: 3.5px solid #0a0a0a;
             transform: scale(0);
         }
 
         .triangle {
             width: 0;
             height: 0;
-            border-top: 15px solid transparent;
-            border-left: 26px solid #000000;
-            border-bottom: 15px solid transparent;
-            margin-left: 8px;
+            border-top: 16px solid transparent;
+            border-left: 28px solid #000000;
+            border-bottom: 16px solid transparent;
+            margin-left: 10px;
         }
 
         /* CONTENEDOR DE LAS 3 LÍNEAS (VENTANA EMERGENTE) */
@@ -52,47 +57,54 @@
             flex-direction: column;
             justify-content: center;
             margin-left: -45px;
-            padding-left: 55px;
-            padding-right: 35px;
-            height: 90px; /* Ajustado para que las 3 líneas respiren bien */
-            background: rgba(10, 10, 10, 0.95); /* Negro Mate MTG */
-            border-top: 2px solid #d4af37;
-            border-right: 4px solid #d4af37;
-            border-bottom: 2px solid #d4af37;
-            border-radius: 0 8px 8px 0;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+            padding-left: 65px; /* Más espacio para que no choque con el círculo */
+            padding-right: 45px;
+            height: 100px; /* Incrementado para separar los renglones */
+            background: rgba(10, 10, 10, 0.97); /* Casi sólido para evitar ruido del fondo */
+            border-top: 2.5px solid #e6ca65;
+            border-right: 5px solid #e6ca65; /* Borde de salida más sólido */
+            border-bottom: 2.5px solid #e6ca65;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
             z-index: 5;
             transform: scaleX(0);
             transform-origin: left;
             white-space: nowrap;
+            gap: 4px; /* Separación interna garantizada entre párrafos */
         }
 
         /* LÍNEA 1: Agradecemos a: */
         .sub-label {
-            color: #e6ca65; /* Oro MTG */
-            font-size: 11px;
-            font-weight: 900;
+            color: #e6ca65; 
+            font-size: 12px; /* Incrementado */
+            font-weight: 900; /* Ultra negrita */
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 2px;
+            letter-spacing: 3.5px; /* Separación extrema anti-borrosidad */
+            line-height: 1.2;
         }
 
         /* LÍNEA 2: Nombre del Patrocinador */
         .main-text {
-            color: #ffffff; /* Blanco nítido */
-            font-size: 20px;
-            font-weight: bold;
+            color: #ffffff; 
+            font-size: 22px; /* Mayor impacto visual */
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
+            letter-spacing: 1px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Sombra para despegar del fondo */
         }
 
         /* LÍNEA 3: Número de Teléfono */
         .phone-text {
-            color: #e6ca65; /* Oro Suave */
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 1px;
+            color: #ffffff; /* Cambiado a blanco nítido para que resalte mucho más que el oro fino */
+            background: rgba(184, 134, 11, 0.2); /* Sutil fondo dorado para encapsular el número */
+            padding: 2px 8px;
+            border-radius: 4px;
+            align-self: flex-start; /* Se ajusta al ancho del texto */
+            font-size: 15px; /* Más grande y legible */
+            font-weight: 700;
+            letter-spacing: 2px; /* Separación limpia entre dígitos numéricos */
+            line-height: 1.2;
         }
 
         /* ANIMACIONES DE TRIGGER */
