@@ -2,100 +2,166 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Banner Profesional</title>
-    <!-- Importar fuentes modernas de Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@600;800&family=Orbitron&display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overlay Ciclismo MTG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
+        /* Estilos base optimizados para el croma o transparencia en OBS */
         body {
             margin: 0;
             padding: 0;
-            background: transparent; /* Transparente para OBS */
+            background-color: transparent;
+            font-family: 'Arial', sans-serif;
             overflow: hidden;
-            /* Fuentes para títulos y subtítulos */
-            --font-main: 'Orbitron', sans-serif;
-            --font-sub: 'Exo', sans-serif;
-            /* Paleta de colores extraída de tu logo */
-            --gold-light: #FFD35B;
-            --gold-main: #C99725; /* El dorado metálico central */
-            --gold-dark: #8C6211;
-            --black-overlay: rgba(18, 18, 18, 0.95);
+            color: #ffffff;
         }
 
-        /* Animación de entrada suave (Fade-in) */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Contenedor principal del banner */
-        .mtg-banner {
+        /* Contenedor principal del Leaderboard (Tabla de posiciones) */
+        #leaderboard {
             position: absolute;
-            bottom: 50px;
-            left: 50px;
-            
-            /* Fondo negro con patrón hexagonal integrado */
-            background-color: var(--black-overlay);
-            background-image: 
-                linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)),
-                /* Patrón hexagonal simple (simulando el panal del logo) */
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="49" viewBox="0 0 28 49"><g fill-rule="evenodd"><g id="hexagons" fill="%23222" fill-opacity="0.3" fill-rule="nonzero"><path d="M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.25v13.5l11 6.35 11-6.35V17.25L14 10.9 3 17.25zM0 45h28v3H0v-3zm0-45h28v3H0V0z"/></g></g></svg>');
-            
-            /* Borde lateral con gradiente dorado (como el anillo) */
-            border-left: 10px solid;
-            border-image: linear-gradient(180deg, var(--gold-light), var(--gold-dark)) 1 100%;
-            
-            color: white;
-            padding: 20px 40px;
-            border-radius: 4px; /* Un poco redondeado en las esquinas principales */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            
-            /* Aplicar la animación de entrada */
-            animation: fadeIn 0.5s ease-out;
-            
-            /* Asegurar que el patrón hexagonal se repita */
-            background-repeat: repeat;
-            background-size: auto;
+            top: 40px;
+            left: 40px;
+            width: 380px;
+            background: rgba(15, 23, 42, 0.85); /* Fondo oscuro semitransparente profesional */
+            border-left: 6px solid #e11d48; /* Línea de acento color rojo deportivo */
+            border-radius: 4px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }
 
-        /* Título Principal (e.g., Juancho Transmite) */
-        .titulo {
-            font-family: var(--font-main);
-            font-size: 36px;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: 1px;
+        /* Encabezado del overlay */
+        .header {
+            background: #e11d48;
+            padding: 10px 15px;
+            font-weight: bold;
+            font-size: 14px;
             text-transform: uppercase;
-            color: white;
-            /* Efecto de degradado dorado sutil en el texto */
-            background: linear-gradient(var(--gold-light), var(--gold-main));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
         }
 
-        /* Subtítulo o Descripción (e.g., Internet de Alta Velocidad) */
-        .subtitulo {
-            font-family: var(--font-sub);
-            font-size: 30px;
-            color: rgba(255, 255, 255, 0.8);
-            margin: 8px 0 0 0;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+        /* Filas de los ciclistas */
+        .row {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        /* Estilos de las celdas internas */
+        .pos {
+            width: 30px;
+            font-weight: bold;
+            color: #fbbf24; /* Color oro para el indicador visual */
+            font-size: 16px;
+        }
+
+        .info {
+            flex-grow: 1;
+        }
+
+        .name {
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .team {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .time {
+            font-weight: bold;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 3px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Contenedor del banner exclusivo para MTG -->
-    <div class="mtg-banner">
-        <!-- Estos son los textos que editarás en vivo desde tu teléfono -->
-        <p class="titulo"> 
-            INAUGURACIÓN DE CAMPEONATO MUNICIPAL 
-        </p>
-        <p class="subtitulo">
-            MINISTERIO DE EDUCACIÓN
-        </p>
+    <div id="leaderboard" class="animate__animated animate__fadeInLeft">
+        <div class="header">
+            <span>Posiciones en Vivo</span>
+            <span id="general-info">--</span>
+        </div>
+        <div id="tabla-cuerpo">
+            </div>
     </div>
 
+    <script>
+        // Endpoint en formato CSV que acabamos de validar
+        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
+
+        // Función de ingeniería para convertir texto CSV plano en una matriz de objetos limpios
+        function parseCSV(text) {
+            const lines = text.split("\n");
+            const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+            const result = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const currentline = lines[i].split(",");
+                const obj = {};
+                for (let j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = currentline[j] ? currentline[j].trim() : "";
+                }
+                result.push(obj);
+            }
+            return result;
+        }
+
+        // Función principal que hace el fetch asíncrono a la nube de Google
+        async function actualizarOverlay() {
+            try {
+                // Forzamos la omisión de caché del navegador para asegurar tiempo real puro
+                const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
+                const dataText = await response.text();
+                const corredores = parseCSV(dataText);
+
+                const tablaCuerpo = document.getElementById("tabla-cuerpo");
+                let htmlContenido = "";
+
+                // Iteramos los datos y construimos el diseño fila por fila
+                corredores.forEach((corredor, index) => {
+                    // Actualizamos el dato general (ej. Kilómetros restantes) usando la primera fila útil
+                    if(index === 0 && corredor.datos_generales) {
+                        document.getElementById("general-info").innerText = corredor.datos_generales;
+                    }
+
+                    // Validamos que la fila contenga un nombre real antes de dibujar
+                    if(corredor.nombre) {
+                        htmlContenido += `
+                            <div class="row">
+                                <div class="pos">${corredor.posicion || (index + 1)}</div>
+                                <div class="info">
+                                    <div class="name">${corredor.nombre}</div>
+                                    <div class="team">${corredor.equipo || 'Individual'}</div>
+                                </div>
+                                <div class="time">${corredor.tiempo || '00:00'}</div>
+                            </div>
+                        `;
+                    }
+                });
+
+                tablaCuerpo.innerHTML = htmlContenido;
+
+            } catch (error) {
+                console.error("Error de sincronización con la consola de control:", error);
+            }
+        }
+
+        // Ejecución inmediata al cargar el overlay en OBS
+        actualizarOverlay();
+
+        // Bucle de telemetría: consulta a Google Sheets cada 3 segundos (3000 ms)
+        setInterval(actualizarOverlay, 3000);
+    </script>
 </body>
 </html>
