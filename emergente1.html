@@ -185,7 +185,7 @@
             }
         }
 
-        function ejecutarCicloVisual() {
+       function ejecutarCicloVisual() {
             if (listaPatrocinadores.length === 0 || estaMostrando) return;
             
             estaMostrando = true;
@@ -208,20 +208,20 @@
                 banner.className = "banner-wrapper animar-banner-entrada";
             }, 500);
 
-            // T+4.0s: Se esconde la ventana emergente de 3 líneas primero
+            // T+6.5s: Se esconde la ventana emergente (Damos 6 segundos limpios de lectura)
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-salida";
-            }, 4000);
+            }, 6500);
 
-            // T+4.5s: Se encoge y desaparece el botón de Play al final
+            // T+7.0s: Se encoge y desaparece el botón de Play al final
             setTimeout(() => {
                 btn.className = "play-button animar-play-salida";
-            }, 4500);
+            }, 7000);
 
-            // T+5.5s: Libera el trigger para el siguiente ciclo
+            // T+8.0s: Libera el trigger para cerrar el ciclo
             setTimeout(() => {
                 estaMostrando = false;
-            }, 5500);
+            }, 8000);
         }
 
         async function iniciar() {
