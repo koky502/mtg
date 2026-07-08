@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scoreboard Profesional Estable - MTG</title>
+    <title>Scoreboard Cronómetro Puro - MTG</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
 
@@ -109,17 +109,34 @@
     <script>
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
 
-        let segundosActuales = 0;
-        let relojCorriendo = false;
-        let intervaloReloj;
-        let ultimaHoraSheets = ""; // Almacena el valor string exacto de la nube
+        // Memoria de tiempo persistente local de OBS
+        let segundosCronometro = 0;
+        let ejecutando = false;
+        let estadoAnteriorComando = "";
 
         function limpiarTexto(txt) {
             if (!txt) return "";
-            return txt.replace(/^"|"\$/g, '').replace(/:$/, '').trim();
+            return txt.replace(/^"|"\$/g, '').trim();
         }
 
-        async function procesarMarcador() {
+        // 1. EL MOTOR DEL RELOJ LOCAL (Suma de forma independiente)
+        setInterval(() => {
+            if (ejecutando) {
+                segundosCronometro++;
+                mostrarTiempoEnPantalla();
+            }
+        }, 1000);
+
+        function mostrarTiempoEnPantalla() {
+            const mins = Math.floor(segundosCronometro / 60);
+            const segs = segundosCronometro % 60;
+            const strMins = mins < 10 ? "0" + mins : mins;
+            const strSegs = segs < 10 ? "0" + segs : segs;
+            document.getElementById("game-clock").innerText = `${strMins}:${strSegs}`;
+        }
+
+        // 2. ESCUCHA DE TU EXCEL
+        async function consultarGoogleSheets() {
             try {
                 const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
                 const dataText = await response.text();
@@ -127,67 +144,42 @@
 
                 if (lines.length < 10) return;
 
-                const filaEq1 = lines[7].split(","); // Fila 8
-                const filaEq2 = lines[8].split(","); // Fila 9
-                const filaHora = lines[9].split(","); // Fila 10
+                const filaEq1 = lines[7].split(","); 
+                const filaEq2 = lines[8].split(","); 
+                const filaHora = lines[9].split(","); 
 
-                // Actualizar nombres y goles (cambian instantáneamente si se editan en Excel)
+                // Goles y nombres en tiempo real
                 document.getElementById("team1-name").innerText = limpiarTexto(filaEq1[0]);
                 document.getElementById("team1-score").innerText = limpiarTexto(filaEq1[1]) || "0";
-
                 document.getElementById("team2-name").innerText = limpiarTexto(filaEq2[0]);
                 document.getElementById("team2-score").innerText = limpiarTexto(filaEq2[1]) || "0";
 
-                const comandoHora = limpiarTexto(filaHora[1]); // Celda B10
+                const comandoEnSheets = limpiarTexto(filaHora[1]).toUpperCase(); 
 
-                // FILTRO INTELIGENTE: Solo operamos si el usuario REALMENTE modificó la celda en Excel
-                if (comandoHora !== ultimaHoraSheets) {
-                    ultimaHoraSheets = comandoHora;
-                    
-                    if (comandoHora.toLowerCase() === "pausa") {
-                        relojCorriendo = false;
-                        clearInterval(intervaloReloj);
-                    } else {
-                        // Desglosamos la hora ingresada
-                        const partes = comandoHora.split(":");
-                        const mins = parseInt(partes[0]) || 0;
-                        const segs = parseInt(partes[1]) || 0;
-                        
-                        // Seteamos los segundos base en el acumulador global
-                        segundosActuales = (mins * 60) + segs;
-                        
-                        // Si el reloj no estaba corriendo, lo encendemos de forma persistente
-                        if (!relojCorriendo) {
-                            relojCorriendo = true;
-                            clearInterval(intervaloReloj);
-                            intervaloReloj = setInterval(actualizarSegundoReloj, 1000);
-                        }
-                    }
+                if (comandoEnSheets === estadoAnteriorComando) return;
+                estadoAnteriorComando = comandoEnSheets;
+
+                // LOGICA TUYA DE CRONÓMETRO CONTINUO
+                if (comandoEnSheets === "INICIAR") {
+                    segundosCronometro = 0; // Solo aquí se resetea por completo el partido
+                    ejecutando = true;
+                    mostrarTiempoEnPantalla();
+                } 
+                else if (comandoEnSheets === "PAUSA") {
+                    ejecutando = false; // Se congela reteniendo el tiempo actual
+                } 
+                else if (comandoEnSheets === "SEGUNDO") {
+                    // Tu gran aporte: NO toca los segundos, solo reactiva el conteo desde donde quedó
+                    ejecutando = true; 
                 }
 
             } catch (error) {
-                console.error("Error sincronizando el marcador:", error);
+                console.error("Error actualizando marcador:", error);
             }
         }
 
-        function actualizarSegundoReloj() {
-            if (!relojCorriendo) return;
-            
-            segundosActuales++;
-            
-            const mins = Math.floor(segundosActuales / 60);
-            const segs = segundosActuales % 60;
-            
-            const strMins = mins < 10 ? "0" + mins : mins;
-            const strSegs = segs < 10 ? "0" + segs : segs;
-            
-            // Actualiza visualmente el DOM en tiempo real segundo a segundo
-            document.getElementById("game-clock").innerText = `${strMins}:${strSegs}`;
-        }
-
-        // El bucle de consulta web corre cada 4 segundos, pero ya no reseteará el reloj gracias al filtro inteligente
-        setInterval(procesarMarcador, 4000); 
-        procesarMarcador();
+        setInterval(consultarGoogleSheets, 4000);
+        consultarGoogleSheets();
     </script>
 </body>
 </html>
