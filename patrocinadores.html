@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticker de Patrocinadores - MTG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        /* Contenedor principal de la barra inferior (Full Width) */
+        #ticker-container {
+            position: absolute;
+            bottom: 30px;
+            left: 5%;
+            width: 90%;
+            height: 50px;
+            background: rgba(15, 23, 42, 0.9); /* Fondo oscuro elegante */
+            border-bottom: 4px solid #e11d48; /* Línea de acento roja */
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Etiqueta fija a la izquierda */
+        .ticker-label {
+            background: #e11d48;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-weight: bold;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-top-left-radius: 3px;
+        }
+
+        /* Espacio dinámico donde rotan los nombres */
+        .ticker-content {
+            flex-grow: 1;
+            padding-left: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ticker-container" class="animate__animated animate__fadeInUp">
+        <div class="ticker-label">Agradecemos a:</div>
+        <div id="ticker-text" class="ticker-content">Cargando patrocinadores...</div>
+    </div>
+
+    <script>
+        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
+        
+        let listaPatrocinadores = [];
+        let indiceActual = 0;
+
+        function parseCSV(text) {
+            const lines = text.split("\n");
+            const result = [];
+            // Buscamos el índice de la columna "datos_generales"
+            const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+            const colIndex = headers.indexOf("datos_generales");
+
+            if (colIndex === -1) return [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const currentline = lines[i].split(",");
+                if (currentline[colIndex] && currentline[colIndex].trim()) {
+                    result.push(currentline[colIndex].trim());
+                }
+            }
+            return result;
+        }
+
+        // Carga los datos desde Google Sheets
+        async function cargarPatrocinadores() {
+            try {
+                const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
+                const dataText = await response.text();
+                listaPatrocinadores = parseCSV(dataText);
+            } catch (error) {
+                console.error("Error cargando marcas:", error);
+            }
+        }
+
+        // Maneja la rotación visual con animaciones de entrada y salida
+        function rotarTicker() {
+            if (listaPatrocinadores.length === 0) return;
+
+            const tickerText = document.getElementById("ticker-text");
+            
+            // Animación de salida (desvanecer hacia afuera)
+            tickerText.className = "ticker-content animate__animated animate__fadeOut text-transparent";
+            
+            setTimeout(() => {
+                // Cambiamos el texto al siguiente de la lista
+                tickerText.innerText = listaPatrocinadores[indiceActual];
+                indiceActual = (indiceActual + 1) % listaPatrocinadores.length;
+                
+                // Animación de entrada (aparecer elegantemente)
+                tickerText.className = "ticker-content animate__animated animate__fadeIn";
+            }, 600); // Espera a que termine la animación de salida para cambiar el texto
+        }
+
+        // Inicialización de la cabecera
+        async function iniciar() {
+            await cargarPatrocinadores();
+            rotarTicker();
+            
+            // Cada 7 segundos cambia de marca en pantalla con animación
+            setInterval(rotarTicker, 7000);
+            
+            // Cada 30 segundos actualiza la lista interna por si agregas un patrocinador nuevo en ruta
+            setInterval(cargarPatrocinadores, 30000);
+        }
+
+        window.onload = iniciar;
+    </script>
+</body>
+</html>
