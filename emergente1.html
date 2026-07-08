@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patrocinadores Premium - MTG</title>
+    <title>Lower Third Premium - MTG</title>
     <style>
         body {
             margin: 0;
@@ -13,32 +13,30 @@
             overflow: hidden;
         }
 
-        /* Contenedor posicionado abajo a la izquierda */
         #widget-container {
             position: absolute;
             bottom: 40px;
             left: 50px;
             display: flex;
             align-items: center;
-            height: 90px;
+            height: 110px; /* Altura ideal para las 3 líneas */
         }
 
-        /* 1. EL BOTÓN REDONDO DE PLAY */
+        /* EL BOTÓN REDONDO DE PLAY CORPORATIVO */
         .play-button {
-            width: 80px;
-            height: 80px;
+            width: 85px;
+            height: 85px;
             background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-            z-index: 10; /* Siempre por encima */
+            z-index: 10;
             border: 3px solid #0a0a0a;
             transform: scale(0);
         }
 
-        /* Triángulo interno de PLAY hecho con CSS puro */
         .triangle {
             width: 0;
             height: 0;
@@ -48,16 +46,16 @@
             margin-left: 8px;
         }
 
-        /* 2. LOS RÓTULOS HORIZONTALES (MÓDULO DE TEXTO) */
+        /* CONTENEDOR DE LAS 3 LÍNEAS (VENTANA EMERGENTE) */
         .banner-wrapper {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-left: -40px; /* Se esconde detrás del botón de Play */
-            padding-left: 50px;
-            padding-right: 30px;
-            height: 70px;
-            background: rgba(10, 10, 10, 0.95);
+            margin-left: -45px;
+            padding-left: 55px;
+            padding-right: 35px;
+            height: 90px; /* Ajustado para que las 3 líneas respiren bien */
+            background: rgba(10, 10, 10, 0.95); /* Negro Mate MTG */
             border-top: 2px solid #d4af37;
             border-right: 4px solid #d4af37;
             border-bottom: 2px solid #d4af37;
@@ -69,9 +67,9 @@
             white-space: nowrap;
         }
 
-        /* Rótulo superior (Título de acción) */
+        /* LÍNEA 1: Agradecemos a: */
         .sub-label {
-            color: #e6ca65;
+            color: #e6ca65; /* Oro MTG */
             font-size: 11px;
             font-weight: 900;
             text-transform: uppercase;
@@ -79,26 +77,31 @@
             margin-bottom: 2px;
         }
 
-        /* Rótulo Central (Nombre del Patrocinador) */
+        /* LÍNEA 2: Nombre del Patrocinador */
         .main-text {
-            color: #ffffff;
+            color: #ffffff; /* Blanco nítido */
             font-size: 20px;
             font-weight: bold;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        /* LÍNEA 3: Número de Teléfono */
+        .phone-text {
+            color: #e6ca65; /* Oro Suave */
+            font-size: 14px;
+            font-weight: bold;
             letter-spacing: 1px;
         }
 
-        /* ===================================================
-           CLASES DE ANIMACIÓN (Controladas por la Secuencia)
-           =================================================== */
-        
+        /* ANIMACIONES DE TRIGGER */
         .animar-play-entrada { animation: entradaPlay 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .animar-play-salida  { animation: salidaPlay 0.5s ease forwards; }
         
         .animar-banner-entrada { animation: entradaBanner 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
         .animar-banner-salida  { animation: salidaBanner 0.4s ease forwards; }
 
-        /* KEYFRAMES */
         @keyframes entradaPlay {
             0% { transform: scale(0) rotate(-180deg); }
             100% { transform: scale(1) rotate(0deg); }
@@ -126,7 +129,8 @@
         
         <div id="banner" class="banner-wrapper">
             <div class="sub-label">Agradecemos a:</div>
-            <div id="sponsor-name" class="main-text">Sincronizando...</div>
+            <div id="sponsor-name" class="main-text">Cargando...</div>
+            <div id="sponsor-phone" class="phone-text"></div>
         </div>
     </div>
 
@@ -140,17 +144,31 @@
         function parseCSV(text) {
             const lines = text.replace(/\r/g, "").split("\n");
             const result = [];
+            if (lines.length === 0) return [];
+
             const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
-            const colIndex = headers.indexOf("datos_generales");
-            const targetIndex = (colIndex !== -1) ? colIndex : 4;
+            
+            // Adaptado dinámicamente a los nuevos nombres de tus columnas del Excel
+            const nameIdx = headers.indexOf("patrocinadores"); 
+            const phoneIdx = headers.indexOf("telefono");
+
+            // Si no encuentra la columna por nombre exacto, usamos los índices fijos por seguridad (E=4, F=5)
+            const targetNameIdx = (nameIdx !== -1) ? nameIdx : 4;
+            const targetPhoneIdx = (phoneIdx !== -1) ? phoneIdx : 5;
 
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
+                
                 const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if (currentline[targetIndex]) {
-                    const valorLimpio = currentline[targetIndex].replace(/^"|"\$/g, '').trim();
-                    if (valorLimpio && valorLimpio !== "") result.push(valorLimpio);
+                
+                if (currentline[targetNameIdx]) {
+                    const nombreLimpio = currentline[targetNameIdx].replace(/^"|"\$/g, '').trim();
+                    const telfLimpio = currentline[targetPhoneIdx] ? currentline[targetPhoneIdx].replace(/^"|"\$/g, '').trim() : "";
+                    
+                    if (nombreLimpio && nombreLimpio !== "" && nombreLimpio.toLowerCase() !== "patrocinadores") {
+                        result.push({ nombre: nombreLimpio, telefono: telfLimpio });
+                    }
                 }
             }
             return result;
@@ -163,42 +181,44 @@
                 const nuevasMarcas = parseCSV(dataText);
                 if (nuevasMarcas.length > 0) listaPatrocinadores = nuevasMarcas;
             } catch (error) {
-                console.error("Error cargando marcas:", error);
+                console.error("Error cargando base de datos:", error);
             }
         }
 
-        // CONTROL DE SECUENCIA DE TIEMPOS (LOGICA BROADCST)
         function ejecutarCicloVisual() {
             if (listaPatrocinadores.length === 0 || estaMostrando) return;
             
             estaMostrando = true;
             const btn = document.getElementById("play-btn");
             const banner = document.getElementById("banner");
-            const txt = document.getElementById("sponsor-name");
+            const txtNombre = document.getElementById("sponsor-name");
+            const txtTelefono = document.getElementById("sponsor-phone");
 
-            // Asegurar texto antes de abrir
-            txt.innerText = listaPatrocinadores[indiceActual];
+            const itemActual = listaPatrocinadores[indiceActual];
+            txtNombre.innerText = itemActual.nombre;
+            txtTelefono.innerText = itemActual.telefono ? `Tel: ${itemActual.telefono}` : "";
+
             indiceActual = (indiceActual + 1) % listaPatrocinadores.length;
 
-            // T+0: Entra Play
+            // T+0: Entra Play redondo girando
             btn.className = "play-button animar-play-entrada";
 
-            // T+0.5s: Salen rótulos de texto
+            // T+0.5s: Se despliega la ventana emergente con las 3 líneas
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-entrada";
             }, 500);
 
-            // T+4.0s: Desaparecen rótulos primero (Tu especificación)
+            // T+4.0s: Se esconde la ventana emergente de 3 líneas primero
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-salida";
             }, 4000);
 
-            // T+4.5s: Desaparece Play de último (Tu especificación)
+            // T+4.5s: Se encoge y desaparece el botón de Play al final
             setTimeout(() => {
                 btn.className = "play-button animar-play-salida";
             }, 4500);
 
-            // T+5.5s: Resetear estados para el próximo patrocinador
+            // T+5.5s: Libera el trigger para el siguiente ciclo
             setTimeout(() => {
                 estaMostrando = false;
             }, 5500);
@@ -206,14 +226,8 @@
 
         async function iniciar() {
             await cargarPatrocinadores();
-            
-            // Lanza el primer patrocinador de inmediato
             if (listaPatrocinadores.length > 0) ejecutarCicloVisual();
-            
-            // Cada 10 segundos inicia la secuencia completa desde cero (Aparecer -> Mostrar -> Guardar)
-            setInterval(ejecutarCicloVisual, 10000);
-            
-            // Sincroniza con la nube en segundo plano cada 30s
+            setInterval(ejecutarCicloVisual, 12000); // 12 segundos entre cada tanda publicitaria
             setInterval(cargarPatrocinadores, 30000);
         }
 
