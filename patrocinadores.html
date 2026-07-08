@@ -63,74 +63,103 @@
         <div id="ticker-text" class="ticker-content">Cargando patrocinadores...</div>
     </div>
 
-    <script>
-        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
+   <script>
+    const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
+    
+    let listaPatrocinadores = [];
+    let indiceActual = 0;
+
+    // Función de alta resistencia para extraer datos generales sin importar la posición de la columna
+    function parseCSV(text) {
+        // Normalizamos los saltos de línea para eliminar caracteres ocultos (\r)
+        const lines = text.replace(/\r/g, "").split("\n");
+        const result = [];
         
-        let listaPatrocinadores = [];
-        let indiceActual = 0;
+        if (lines.length === 0) return [];
 
-        function parseCSV(text) {
-            const lines = text.split("\n");
-            const result = [];
-            // Buscamos el índice de la columna "datos_generales"
-            const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
-            const colIndex = headers.indexOf("datos_generales");
+        // Identificamos en qué columna quedó "datos_generales" limpiando espacios
+        const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+        const colIndex = headers.indexOf("datos_generales");
 
-            if (colIndex === -1) return [];
+        // Si por alguna razón no encuentra la columna por nombre, usamos la última por defecto (Índice 4)
+        const targetIndex = (colIndex !== -1) ? colIndex : 4;
 
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                const currentline = lines[i].split(",");
-                if (currentline[colIndex] && currentline[colIndex].trim()) {
-                    result.push(currentline[colIndex].trim());
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+
+            // Expresión regular robusta para separar por comas respetando textos entre comillas
+            const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            
+            if (currentline[targetIndex]) {
+                // Limpiamos comillas excedentes y espacios en blanco
+                const valorLimpio = currentline[targetIndex].replace(/^"|"\$/g, '').trim();
+                if (valorLimpio && valorLimpio !== "") {
+                    result.push(valorLimpio);
                 }
             }
-            return result;
         }
+        return result;
+    }
 
-        // Carga los datos desde Google Sheets
-        async function cargarPatrocinadores() {
-            try {
-                const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
-                const dataText = await response.text();
-                listaPatrocinadores = parseCSV(dataText);
-            } catch (error) {
-                console.error("Error cargando marcas:", error);
+    // Carga los datos desde Google Sheets
+    async function cargarPatrocinadores() {
+        try {
+            const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
+            const dataText = await response.text();
+            
+            const nuevasMarcas = parseCSV(dataText);
+            
+            if (nuevasMarcas.length > 0) {
+                listaPatrocinadores = nuevasMarcas;
             }
+        } catch (error) {
+            console.error("Error cargando marcas:", error);
         }
+    }
 
-        // Maneja la rotación visual con animaciones de entrada y salida
-        function rotarTicker() {
-            if (listaPatrocinadores.length === 0) return;
+    // Maneja la rotación visual con animaciones de entrada y salida
+    function rotarTicker() {
+        if (listaPatrocinadores.length === 0) return;
 
-            const tickerText = document.getElementById("ticker-text");
+        const tickerText = document.getElementById("ticker-text");
+        
+        // Animación de salida
+        tickerText.className = "ticker-content animate__animated animate__fadeOut";
+        
+        setTimeout(() => {
+            // Aseguramos que el índice no quede fuera de rango si la lista cambia dinámicamente
+            if (indiceActual >= listaPatrocinadores.length) {
+                indiceActual = 0;
+            }
             
-            // Animación de salida (desvanecer hacia afuera)
-            tickerText.className = "ticker-content animate__animated animate__fadeOut text-transparent";
+            tickerText.innerText = listaPatrocinadores[indiceActual];
+            indiceActual = (indiceActual + 1) % listaPatrocinadores.length;
             
-            setTimeout(() => {
-                // Cambiamos el texto al siguiente de la lista
-                tickerText.innerText = listaPatrocinadores[indiceActual];
-                indiceActual = (indiceActual + 1) % listaPatrocinadores.length;
-                
-                // Animación de entrada (aparecer elegantemente)
-                tickerText.className = "ticker-content animate__animated animate__fadeIn";
-            }, 600); // Espera a que termine la animación de salida para cambiar el texto
-        }
+            // Animación de entrada
+            tickerText.className = "ticker-content animate__animated animate__fadeIn";
+        }, 500);
+    }
 
-        // Inicialización de la cabecera
-        async function iniciar() {
-            await cargarPatrocinadores();
+    // Inicialización de la cabecera
+    async function iniciar() {
+        await cargarPatrocinadores();
+        
+        // Si cargó datos, los muestra de inmediato
+        if (listaPatrocinadores.length > 0) {
             rotarTicker();
-            
-            // Cada 7 segundos cambia de marca en pantalla con animación
-            setInterval(rotarTicker, 7000);
-            
-            // Cada 30 segundos actualiza la lista interna por si agregas un patrocinador nuevo en ruta
-            setInterval(cargarPatrocinadores, 30000);
+        } else {
+            document.getElementById("ticker-text").innerText = "Sincronizando con Ruta...";
         }
+        
+        // Cada 7 segundos cambia de marca en pantalla con animación
+        setInterval(rotarTicker, 7000);
+        
+        // Cada 15 segundos actualiza la lista interna desde la nube
+        setInterval(cargarPatrocinadores, 15000);
+    }
 
-        window.onload = iniciar;
-    </script>
+    window.onload = iniciar;
+</script>
 </body>
 </html>
