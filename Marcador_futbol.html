@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scoreboard Profesional - MTG</title>
+    <title>Scoreboard Profesional Estable - MTG</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
 
@@ -16,7 +16,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Lienzo contenedor centrado arriba */
         #scoreboard-container {
             position: absolute;
             top: 20px;
@@ -30,9 +29,8 @@
             overflow: hidden;
         }
 
-        /* Estructura base de las cajas de los equipos */
         .team-box {
-            background: rgba(15, 15, 15, 0.95); /* Negro Mate */
+            background: rgba(15, 15, 15, 0.95);
             color: #ffffff;
             height: 100%;
             display: flex;
@@ -47,7 +45,7 @@
 
         .team-left { 
             justify-content: flex-end; 
-            border-bottom: 3px solid #b8860b; /* Subrayado de marca oro */
+            border-bottom: 3px solid #b8860b;
         }
         
         .team-right { 
@@ -55,10 +53,9 @@
             border-bottom: 3px solid #b8860b;
         }
 
-        /* CONTENEDOR CENTRAL: TIEMPO (TRAPEZIO INVERTIDO) */
         .time-box {
             background: linear-gradient(135deg, #111111 0%, #222222 100%);
-            color: #e6ca65; /* Color Oro */
+            color: #e6ca65;
             height: 100%;
             width: 110px;
             display: flex;
@@ -69,15 +66,13 @@
             letter-spacing: 1px;
             z-index: 5;
             border-bottom: 3px solid #e6ca65;
-            /* Simula el corte poligonal inclinado hacia adentro de tu referencia */
             clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
             padding: 0 10px;
         }
 
-        /* CAJAS DE LOS GOLES (MARCADOR EXTREMO) */
         .score-box {
-            background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%); /* Oro Metálico */
-            color: #000000; /* Número negro para contraste ultra nítido */
+            background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%);
+            color: #000000;
             height: 100%;
             width: 60px;
             display: flex;
@@ -88,7 +83,6 @@
             z-index: 4;
         }
 
-        /* Cortes poligonales inclinados de los extremos (Como tu imagen) */
         .score-left {
             clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 0% 100%);
             padding-right: 8px;
@@ -103,28 +97,23 @@
 <body>
 
     <div id="scoreboard-container">
-        <!-- Bloque Izquierdo: Equipo Local + Goles -->
         <div id="team1-name" class="team-box team-left">LOCAL</div>
         <div id="team1-score" class="score-box score-left">0</div>
 
-        <!-- Centro: Reloj de Juego -->
         <div id="game-clock" class="time-box">00:00</div>
 
-        <!-- Bloque Derecho: Goles + Equipo Visitante -->
         <div id="team2-score" class="score-box score-right">0</div>
         <div id="team2-name" class="team-box team-right">VISITANTE</div>
     </div>
 
     <script>
-        // Tu URL de Google Sheets en formato CSV
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
 
         let segundosActuales = 0;
         let relojCorriendo = false;
         let intervaloReloj;
-        let ultimaHoraSheets = "";
+        let ultimaHoraSheets = ""; // Almacena el valor string exacto de la nube
 
-        // Función para limpiar textos de comillas
         function limpiarTexto(txt) {
             if (!txt) return "";
             return txt.replace(/^"|"\$/g, '').replace(/:$/, '').trim();
@@ -138,21 +127,20 @@
 
                 if (lines.length < 10) return;
 
-                // Extraemos las filas exactas según tu captura de pantalla
-                const filaEq1 = lines[7].split(","); // Fila 8 (Índice 7)
-                const filaEq2 = lines[8].split(","); // Fila 9 (Índice 8)
-                const filaHora = lines[9].split(","); // Fila 10 (Índice 9)
+                const filaEq1 = lines[7].split(","); // Fila 8
+                const filaEq2 = lines[8].split(","); // Fila 9
+                const filaHora = lines[9].split(","); // Fila 10
 
-                // Asignar nombres de equipos y sus goles
+                // Actualizar nombres y goles (cambian instantáneamente si se editan en Excel)
                 document.getElementById("team1-name").innerText = limpiarTexto(filaEq1[0]);
                 document.getElementById("team1-score").innerText = limpiarTexto(filaEq1[1]) || "0";
 
                 document.getElementById("team2-name").innerText = limpiarTexto(filaEq2[0]);
                 document.getElementById("team2-score").innerText = limpiarTexto(filaEq2[1]) || "0";
 
-                // Gestión inteligente del tiempo
-                const comandoHora = limpiarTexto(filaHora[1]);
+                const comandoHora = limpiarTexto(filaHora[1]); // Celda B10
 
+                // FILTRO INTELIGENTE: Solo operamos si el usuario REALMENTE modificó la celda en Excel
                 if (comandoHora !== ultimaHoraSheets) {
                     ultimaHoraSheets = comandoHora;
                     
@@ -160,12 +148,15 @@
                         relojCorriendo = false;
                         clearInterval(intervaloReloj);
                     } else {
-                        // Si ingresas algo como "45:00:00" o "00:00", extraemos minutos y segundos
+                        // Desglosamos la hora ingresada
                         const partes = comandoHora.split(":");
                         const mins = parseInt(partes[0]) || 0;
                         const segs = parseInt(partes[1]) || 0;
+                        
+                        // Seteamos los segundos base en el acumulador global
                         segundosActuales = (mins * 60) + segs;
                         
+                        // Si el reloj no estaba corriendo, lo encendemos de forma persistente
                         if (!relojCorriendo) {
                             relojCorriendo = true;
                             clearInterval(intervaloReloj);
@@ -181,20 +172,21 @@
 
         function actualizarSegundoReloj() {
             if (!relojCorriendo) return;
+            
             segundosActuales++;
             
             const mins = Math.floor(segundosActuales / 60);
             const segs = segundosActuales % 60;
             
-            // Formato de dos dígitos (00:00)
             const strMins = mins < 10 ? "0" + mins : mins;
             const strSegs = segs < 10 ? "0" + segs : segs;
             
+            // Actualiza visualmente el DOM en tiempo real segundo a segundo
             document.getElementById("game-clock").innerText = `${strMins}:${strSegs}`;
         }
 
-        // Configuración de arranque
-        setInterval(procesarMarcador, 4000); // Consulta la nube cada 4 segundos por si cambian los goles
+        // El bucle de consulta web corre cada 4 segundos, pero ya no reseteará el reloj gracias al filtro inteligente
+        setInterval(procesarMarcador, 4000); 
         procesarMarcador();
     </script>
 </body>
