@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lower Third Premium Oro/Negro - MTG</title>
+    <style>
+        /* Importamos tipografías profesionales para broadcast */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+ 
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+            font-family: 'Montserrat', sans-serif; 
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+ 
+        #widget-container {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            display: flex;
+            align-items: center;
+            height: 120px; 
+        }
+ 
+        /* EL BOTÓN REDONDO DE PLAY CORPORATIVO */
+        .play-button {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            z-index: 10;
+            border: 3.5px solid #0a0a0a;
+            transform: scale(0);
+        }
+ 
+        .triangle {
+            width: 0;
+            height: 0;
+            border-top: 16px solid transparent;
+            border-left: 28px solid #000000;
+            border-bottom: 16px solid transparent;
+            margin-left: 10px;
+        }
+ 
+        /* CONTENEDOR DE LAS 3 LÍNEAS (Ajustado a Fondo Negro Transparente) */
+        .banner-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: -45px;
+            padding-left: 65px; 
+            padding-right: 45px;
+            height: 100px; 
+            background: rgba(0, 0, 0, 0.75); /* FONDO NEGRO TRANSPARENTE CORPORATIVO */
+            border-top: 2.5px solid #e6ca65;
+            border-right: 5px solid #e6ca65; 
+            border-bottom: 2.5px solid #e6ca65;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            z-index: 5;
+            transform: scaleX(0);
+            transform-origin: left;
+            white-space: nowrap;
+            gap: 2px;
+        }
+ 
+        /* LÍNEA 1: Agradecemos a: */
+        .sub-label {
+            color: #b8860b; 
+            font-size: 11px; 
+            font-weight: 900; 
+            text-transform: uppercase;
+            letter-spacing: 3.5px; 
+            line-height: 1.2;
+        }
+ 
+        /* LÍNEA 2: Nombre del Patrocinador (Cambiado a tu Color Oro Favorito) */
+        .main-text {
+            color: #e6ca65; /* TEXTO EN COLOR ORO */
+            font-size: 24px; 
+            font-weight: 900; /* Letra imponente */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6); 
+        }
+ 
+        /* LÍNEA 3: Número de Teléfono */
+        .phone-text {
+            color: #ffffff; 
+            font-size: 14px; 
+            font-weight: 700;
+            letter-spacing: 1.5px; 
+            line-height: 1.2;
+        }
+ 
+        /* ANIMACIONES DE TRIGGER */
+        .animar-play-entrada { animation: entradaPlay 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .animar-play-salida  { animation: salidaPlay 0.5s ease forwards; }
+         
+        .animar-banner-entrada { animation: entradaBanner 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+        .animar-banner-salida  { animation: salidaBanner 0.4s ease forwards; }
+ 
+        @keyframes entradaPlay {
+            0% { transform: scale(0) rotate(-180deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        @keyframes salidaPlay {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+        @keyframes entradaBanner {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
+        }
+        @keyframes salidaBanner {
+            0% { transform: scaleX(1); opacity: 1; }
+            100% { transform: scaleX(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+ 
+    <div id="widget-container">
+        <div id="play-btn" class="play-button">
+            <div class="triangle"></div>
+        </div>
+        
+        <div id="banner" class="banner-wrapper">
+            <div class="sub-label">Agradecemos a:</div>
+            <div id="sponsor-name" class="main-text">Cargando...</div>
+            <div id="sponsor-phone" class="phone-text"></div>
+        </div>
+    </div>
+ 
+    <script>
+        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
+        
+        let listaPatrocinadores = [];
+        let indiceActual = 0;
+        let estaMostrando = false;
+ 
+        function parseCSV(text) {
+            const lines = text.replace(/\r/g, "").split("\n");
+            const result = [];
+            if (lines.length === 0) return [];
+ 
+            const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+            
+            const nameIdx = headers.indexOf("patrocinadores"); 
+            const phoneIdx = headers.indexOf("telefono");
+ 
+            const targetNameIdx = (nameIdx !== -1) ? nameIdx : 4;
+            const targetPhoneIdx = (phoneIdx !== -1) ? phoneIdx : 5;
+ 
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                
+                if (currentline[targetNameIdx]) {
+                    const nombreLimpio = currentline[targetNameIdx].replace(/^"|"\$/g, '').trim();
+                    const telfLimpio = currentline[targetPhoneIdx] ? currentline[targetPhoneIdx].replace(/^"|"\$/g, '').trim() : "";
+                    
+                    if (nombreLimpio && nombreLimpio !== "" && nombreLimpio.toLowerCase() !== "patrocinadores") {
+                        result.push({ nombre: nombreLimpio, telefono: telfLimpio });
+                    }
+                }
+            }
+            return result;
+        }
+ 
+        async function cargarPatrocinadores() {
+            try {
+                const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
+                const dataText = await response.text();
+                const nuevasMarcas = parseCSV(dataText);
+                if (nuevasMarcas.length > 0) listaPatrocinadores = nuevasMarcas;
+            } catch (error) {
+                console.error("Error cargando base de datos:", error);
+            }
+        }
+ 
+        function ejecutarCicloVisual() {
+            if (listaPatrocinadores.length === 0 || estaMostrando) return;
+            
+            estaMostrando = true;
+            const btn = document.getElementById("play-btn");
+            const banner = document.getElementById("banner");
+            const txtNombre = document.getElementById("sponsor-name");
+            const txtTelefono = document.getElementById("sponsor-phone");
+ 
+            const itemActual = listaPatrocinadores[indiceActual];
+            txtNombre.innerText = itemActual.nombre;
+            txtTelefono.innerText = itemActual.telefono ? `WhatsApp / Tel: ${itemActual.telefono}` : "";
+ 
+            indiceActual = (indiceActual + 1) % listaPatrocinadores.length;
+ 
+            // T+0: Entra Play redondo girando
+            btn.className = "play-button animar-play-entrada";
+ 
+            // T+0.5s: Se despliega la ventana emergente
+            setTimeout(() => {
+                banner.className = "banner-wrapper animar-banner-entrada";
+            }, 500);
+ 
+            // T+6.5s: Se esconde la ventana emergente 
+            setTimeout(() => {
+                banner.className = "banner-wrapper animar-banner-salida";
+            }, 6500);
+ 
+            // T+7.0s: Se encoge el botón de Play
+            setTimeout(() => {
+                btn.className = "play-button animar-play-salida";
+            }, 7000);
+ 
+            // T+8.0s: Libera el trigger para el ciclo
+            setTimeout(() => {
+                estaMostrando = false;
+            }, 8000);
+        }
+ 
+        async function iniciar() {
+            await cargarPatrocinadores();
+            if (listaPatrocinadores.length > 0) ejecutarCicloVisual();
+            setInterval(ejecutarCicloVisual, 12000); 
+            setInterval(cargarPatrocinadores, 30000);
+        }
+ 
+        window.onload = iniciar;
+    </script>
+</body>
+</html>
