@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Compact Pure Gold 3D</title>
+    <title>MTG - Ultra Compact Gold 3D</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -26,7 +26,7 @@
         .stage-3d {
             position: relative;
             width: 700px;
-            height: 500px;
+            height: 400px; /* Reducido para compactar el contenedor global */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -35,14 +35,13 @@
         }
 
         /* ==========================================
-           1. ARCOS WI-FI (ESPACIO COMPACTADO)
+           1. ARCOS WI-FI (ELIMINADO ESPACIO INFERIOR)
            ========================================== */
         .wifi-3d-group {
             position: relative;
             width: 240px;
-            height: 110px;
-            /* Reducido al mínimo para pegar las ondas a las letras MTG */
-            margin-bottom: -15px;
+            height: 65px; /* Reducido drásticamente para eliminar el vacío con las letras */
+            margin-bottom: 5px;
             transform-style: preserve-3d;
         }
 
@@ -97,6 +96,7 @@
             letter-spacing: -2px;
             position: relative;
             color: var(--gold-bright);
+            line-height: 110px; /* Recorta el alto invisible de la tipografía */
         }
 
         .letter-3d {
@@ -157,14 +157,13 @@
         }
 
         /* ==========================================
-           3. PANEL DE DATOS (REDUCIDO ACENTUADO)
+           3. PANEL DE DATOS (ELIMINADO ESPACIO SUPERIOR)
            ========================================== */
         .info-panel-3d {
             font-family: 'Orbitron', sans-serif;
             font-size: 26px;
             color: #ffffff;
-            /* Reducido drásticamente de 30px a 5px para pegarlo a las letras */
-            margin-top: 5px;
+            margin-top: -5px; /* Valor negativo para forzar el pegado total a las letras */
             letter-spacing: 5px;
             font-weight: 900;
             opacity: 0;
@@ -192,10 +191,10 @@
         .stage-3d::after {
             content: '';
             position: absolute;
-            top: 20%;
+            top: 25%;
             left: -150%;
             width: 80px;
-            height: 65%;
+            height: 50%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), rgba(255, 211, 91, 0.5), transparent);
             transform: skewX(-30deg) translateZ(30px);
             animation: loopFlash 12s ease-in-out infinite;
