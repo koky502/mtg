@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Cinematic 3D Transformers</title>
+    <title>MTG - Infinite 3D Transformers Loop</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -15,14 +15,12 @@
             align-items: center;
             height: 100vh;
             width: 100vw;
-            /* Activamos el espacio tridimensional global */
             perspective: 1200px;
             --gold-light: #FFD35B;
             --gold-main: #C99725;
             --gold-dark: #8C6211;
         }
 
-        /* Contenedor Maestro con soporte 3D */
         .stage-3d {
             position: relative;
             width: 600px;
@@ -35,7 +33,7 @@
         }
 
         /* ==========================================
-           1. ISOTIPO: WI-FI CINEMÁTICO DE ALTA RED
+           1. ISOTIPO: WI-FI CINEMÁTICO EN BUCLE
            ========================================== */
         .wifi-3d-group {
             position: relative;
@@ -55,49 +53,56 @@
             transform-style: preserve-3d;
             transform-origin: bottom center;
             opacity: 0;
-            /* Simulación de bisel metálico mediante filtros de sombra avanzados */
             filter: drop-shadow(0px 5px 4px rgba(0,0,0,0.6)) drop-shadow(0px 0px 8px rgba(201,151,37,0.3));
         }
 
+        /* Toda la coreografía dura 12 segundos e itera infinitamente */
         .arc-1 {
             width: 50px;
             height: 50px;
             margin-left: -39px;
-            animation: buildArc1 1.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-            animation-delay: 0.2s;
+            animation: loopArc1 12s cubic-bezier(0.19, 1, 0.22, 1) infinite;
         }
 
         .arc-2 {
             width: 110px;
             height: 110px;
             margin-left: -69px;
-            animation: buildArc2 1.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-            animation-delay: 0.4s;
+            animation: loopArc2 12s cubic-bezier(0.19, 1, 0.22, 1) infinite;
         }
 
         .arc-3 {
             width: 170px;
             height: 170px;
             margin-left: -99px;
-            animation: buildArc3 1.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-            animation-delay: 0.6s;
+            animation: loopArc3 12s cubic-bezier(0.19, 1, 0.22, 1) infinite;
         }
 
-        @keyframes buildArc1 {
+        /* Sincronización de tiempos (0% al 10% entra, 10% al 80% estático, 80% al 90% sale, 90% al 100% oculto) */
+        @keyframes loopArc1 {
             0% { opacity: 0; transform: translateZ(400px) translateY(-100px) rotateX(-90deg) scale(0.1); filter: brightness(3); }
-            100% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
+            8% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
+            80% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
+            88% { opacity: 0; transform: translateZ(400px) translateY(-100px) rotateX(-90deg) scale(0.1); filter: brightness(2); }
+            100% { opacity: 0; }
         }
-        @keyframes buildArc2 {
-            0% { opacity: 0; transform: translateZ(500px) translateY(-150px) rotateY(90deg) scale(0.1); filter: brightness(3); }
-            100% { opacity: 1; transform: translateZ(0) translateY(0) rotateY(0deg) scale(1); filter: brightness(1); }
+        @keyframes loopArc2 {
+            0%, 2% { opacity: 0; transform: translateZ(500px) translateY(-150px) rotateY(90deg) scale(0.1); filter: brightness(3); }
+            10% { opacity: 1; transform: translateZ(0) translateY(0) rotateY(0deg) scale(1); filter: brightness(1); }
+            80% { opacity: 1; transform: translateZ(0) translateY(0) rotateY(0deg) scale(1); filter: brightness(1); }
+            88% { opacity: 0; transform: translateZ(500px) translateY(-150px) rotateY(90deg) scale(0.1); filter: brightness(2); }
+            100% { opacity: 0; }
         }
-        @keyframes buildArc3 {
-            0% { opacity: 0; transform: translateZ(600px) translateY(-200px) rotateX(90deg) scale(0.1); filter: brightness(3); }
-            100% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
+        @keyframes loopArc3 {
+            0%, 4% { opacity: 0; transform: translateZ(600px) translateY(-200px) rotateX(90deg) scale(0.1); filter: brightness(3); }
+            12% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
+            80% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
+            88% { opacity: 0; transform: translateZ(600px) translateY(-200px) rotateX(90deg) scale(0.1); filter: brightness(2); }
+            100% { opacity: 0; }
         }
 
         /* ==========================================
-           2. NÚCLEO MECÁNICO: LETRAS MTG EN 3D
+           2. NÚCLEO MECÁNICO: LETRAS MTG EN BUCLE 3D
            ========================================== */
         .logo-core-3d {
             display: flex;
@@ -114,14 +119,11 @@
             position: relative;
             transform-style: preserve-3d;
             opacity: 0;
-            color: var(--gold-main);
-            /* Gradiente metálico premium */
             background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold-main) 50%, var(--gold-dark) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Efecto de Extrusión 3D Real simulado mediante texto duplicado en capas de sombra */
         .letter-3d::after {
             content: attr(data-letter);
             position: absolute;
@@ -134,75 +136,36 @@
             z-index: -1;
         }
 
-        /* Animación Letra M - Viene cruzada en el eje Z rotando de forma agresiva */
-        .m-piece {
-            animation: transformM3D 1.6s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
-            animation-delay: 0.8s;
-        }
-        @keyframes transformM3D {
-            0% {
-                opacity: 0;
-                transform: translateX(-500px) translateY(200px) translateZ(600px) rotateY(-130deg) rotateX(45deg);
-                filter: blur(8px) brightness(3);
-            }
-            80% {
-                opacity: 1;
-                transform: translateX(10px) translateY(-5px) translateZ(-20px) rotateY(15deg) rotateX(-5deg);
-                filter: blur(0px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg);
-            }
+        .m-piece { animation: loopM3D 12s cubic-bezier(0.075, 0.82, 0.165, 1) infinite; }
+        .t-piece { animation: loopT3D 12s cubic-bezier(0.165, 0.84, 0.44, 1) infinite; }
+        .g-piece { animation: loopG3D 12s cubic-bezier(0.075, 0.82, 0.165, 1) infinite; }
+
+        @keyframes loopM3D {
+            0%, 5% { opacity: 0; transform: translateX(-500px) translateY(200px) translateZ(600px) rotateY(-130deg) rotateX(45deg); filter: blur(8px) brightness(3); }
+            15% { opacity: 1; transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg); filter: blur(0px) brightness(1); }
+            80% { opacity: 1; transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg); filter: blur(0px) brightness(1); }
+            86% { opacity: 0; transform: translateX(-500px) translateY(200px) translateZ(600px) rotateY(-130deg) rotateX(45deg); filter: blur(4px) brightness(2); }
+            100% { opacity: 0; }
         }
 
-        /* Animación Letra T - La pieza central que cae perpendicular impactando el lienzo */
-        .t-piece {
-            animation: transformT3D 1.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-            animation-delay: 1.1s;
-            z-index: 5;
-        }
-        @keyframes transformT3D {
-            0% {
-                opacity: 0;
-                transform: translateY(-400px) translateZ(-800px) rotateX(-90deg) scale(0.4);
-                filter: brightness(4);
-            }
-            70% {
-                opacity: 1;
-                transform: translateY(15px) translateZ(30px) rotateX(10deg) scale(1.05);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) translateZ(0) rotateX(0deg) scale(1);
-                filter: brightness(1);
-            }
+        @keyframes loopT3D {
+            0%, 8% { opacity: 0; transform: translateY(-400px) translateZ(-800px) rotateX(-90deg) scale(0.4); filter: brightness(4); }
+            18% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg) scale(1); filter: brightness(1); }
+            80% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg) scale(1); filter: brightness(1); }
+            86% { opacity: 0; transform: translateY(-400px) translateZ(-800px) rotateX(-90deg) scale(0.4); filter: brightness(2); }
+            100% { opacity: 0; }
         }
 
-        /* Animación Letra G - Entra desde el fondo del espacio tridimensional rotando veloz */
-        .g-piece {
-            animation: transformG3D 1.6s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
-            animation-delay: 0.9s;
-        }
-        @keyframes transformG3D {
-            0% {
-                opacity: 0;
-                transform: translateX(500px) translateY(-150px) translateZ(600px) rotateY(140deg) rotateX(-30deg);
-                filter: blur(8px) brightness(3);
-            }
-            80% {
-                opacity: 1;
-                transform: translateX(-10px) translateY(5px) translateZ(-20px) rotateY(-15deg) rotateX(5deg);
-                filter: blur(0px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg);
-            }
+        @keyframes loopG3D {
+            0%, 6% { opacity: 0; transform: translateX(500px) translateY(-150px) translateZ(600px) rotateY(140deg) rotateX(-30deg); filter: blur(8px) brightness(3); }
+            16% { opacity: 1; transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg); filter: blur(0px) brightness(1); }
+            80% { opacity: 1; transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg); filter: blur(0px) brightness(1); }
+            86% { opacity: 0; transform: translateX(500px) translateY(-150px) translateZ(600px) rotateY(140deg) rotateX(-30deg); filter: blur(4px) brightness(2); }
+            100% { opacity: 0; }
         }
 
         /* ==========================================
-           3. BASE DE DATOS: ESCÁNER MECÁNICO
+           3. BASE DE DATOS: PANEL INFORMATIVO
            ========================================== */
         .info-panel-3d {
             font-family: 'Orbitron', sans-serif;
@@ -218,37 +181,20 @@
             border-radius: 6px;
             box-shadow: 0 0 15px rgba(201, 151, 37, 0.4);
             transform: translateZ(-100px) scaleX(0);
-            animation: lockPanel3D 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            animation-delay: 2.3s;
+            animation: loopPanel 12s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
         }
 
-        @keyframes lockPanel3D {
-            0% {
-                opacity: 0;
-                transform: translateZ(-100px) scaleX(0);
-                filter: brightness(3);
-            }
-            100% {
-                opacity: 1;
-                transform: translateZ(0) scaleX(1);
-                filter: brightness(1);
-            }
+        @keyframes loopPanel {
+            0%, 18% { opacity: 0; transform: translateZ(-100px) scaleX(0); filter: brightness(3); }
+            24% { opacity: 1; transform: translateZ(0) scaleX(1); filter: brightness(1); }
+            80% { opacity: 1; transform: translateZ(0) scaleX(1); filter: brightness(1); }
+            85% { opacity: 0; transform: translateZ(-100px) scaleX(0); filter: brightness(2); }
+            100% { opacity: 0; }
         }
 
         /* ==========================================
            4. DESTELLO CINEMATOGRÁFICO DE CIERRE (SHINE)
            ========================================== */
-        .shine-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            mix-blend-mode: overlay;
-            pointer-events: none;
-            transform-style: preserve-3d;
-        }
-
         .stage-3d::after {
             content: '';
             position: absolute;
@@ -258,36 +204,32 @@
             height: 70%;
             background: linear-gradient(90deg, transparent, rgba(255, 211, 91, 0.6), transparent);
             transform: skewX(-25deg) translateZ(20px);
-            animation: cinematicFlash 1.4s ease-in-out forwards;
-            animation-delay: 2.6s;
+            animation: loopFlash 12s ease-in-out infinite;
         }
 
-        @keyframes cinematicFlash {
-            0% { left: -150%; opacity: 1; }
-            100% { left: 150%; opacity: 0; }
+        @keyframes loopFlash {
+            0%, 23% { left: -150%; opacity: 0; }
+            30% { left: 150%; opacity: 1; }
+            35%, 100% { left: 150%; opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Escenario de Renderizado 3D Completo -->
     <div class="stage-3d">
         
-        <!-- Isotipo Desfragmentado en el Espacio Z -->
         <div class="wifi-3d-group">
             <div class="arc-3d arc-1"></div>
             <div class="arc-3d arc-2"></div>
             <div class="arc-3d arc-3"></div>
         </div>
 
-        <!-- El Núcleo de Letras Extruidas Mecánicas -->
         <div class="logo-core-3d">
             <span class="letter-3d m-piece" data-letter="M">M</span>
             <span class="letter-3d t-piece" data-letter="T">T</span>
             <span class="letter-3d g-piece" data-letter="G">G</span>
         </div>
 
-        <!-- Panel de Confirmación de Datos del Negocio -->
         <div class="info-panel-3d">TEL. 3684 7307</div>
         
     </div>
