@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Marketing Master Overlay 3D Pro (Sincronización Total de Brillo)</title>
+    <title>MTG - Marketing Master Overlay 3D Pro (Text Fix)</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght=900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -54,7 +54,7 @@
         }
 
         /* ==========================================
-           1. ARCOS WI-FI: RE-ENMASCARAN BRILLO EN EL SEGUNDO 4
+           1. ARCOS WI-FI
            ========================================== */
         .wifi-3d-group {
             position: relative;
@@ -89,7 +89,6 @@
             0% { opacity: 0; transform: translateZ(300px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
             6% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
             18% { filter: brightness(0.7) drop-shadow(0px 4px 6px rgba(0,0,0,0.6)); }
-            /* SEGUNDO 4: Vuelve a encenderse en oro junto al rayo */
             30%, 38% { filter: brightness(2) drop-shadow(0 0 18px var(--gold-bright)); } 
             45%, 92% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.2) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
             100% { opacity: 0; transform: translateZ(100px) scale(0.8); }
@@ -98,7 +97,6 @@
             0%, 2% { opacity: 0; transform: translateZ(400px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
             8% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
             20% { filter: brightness(0.7) drop-shadow(0px 4px 6px rgba(0,0,0,0.6)); }
-            /* SEGUNDO 4: Sincronizado */
             32%, 39% { filter: brightness(2) drop-shadow(0 0 18px var(--gold-bright)); }
             46%, 92% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.2) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
             100% { opacity: 0; transform: translateZ(150px) scale(0.8); }
@@ -107,14 +105,13 @@
             0%, 4% { opacity: 0; transform: translateZ(500px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
             10% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
             22% { filter: brightness(0.7) drop-shadow(0px 4px 6px rgba(0,0,0,0.6)); }
-            /* SEGUNDO 4: Sincronizado */
             34%, 40% { filter: brightness(2) drop-shadow(0 0 18px var(--gold-bright)); }
             48%, 92% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.2) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
             100% { opacity: 0; transform: translateZ(200px) scale(0.8); }
         }
 
         /* ==========================================
-           2. NÚCLEO: LETRAS MTG CON SEGUNDO IMPULSO ORO
+           2. NÚCLEO: LETRAS MTG
            ========================================== */
         .logo-core-3d {
             display: flex;
@@ -165,7 +162,6 @@
             0% { opacity: 0; transform: translateX(-80px) translateZ(200px) rotateY(-40deg); filter: brightness(1); }
             8% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1); }
             20% { filter: brightness(0.8); }
-            /* SEGUNDO 4: Estalla en brillo oro junto al destello */
             30%, 38% { filter: brightness(1.9) drop-shadow(0 0 30px rgba(255, 211, 91, 0.9)); }
             45%, 92% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1.25) drop-shadow(0 0 10px rgba(255, 211, 91, 0.4)); }
             100% { opacity: 0; transform: translateZ(150px); }
@@ -175,7 +171,6 @@
             0% { opacity: 0; transform: translateY(-50px) translateZ(200px) rotateX(40deg); filter: brightness(1); }
             8% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: brightness(1); }
             20% { filter: brightness(0.8); }
-            /* SEGUNDO 4: Estalla en brillo oro junto al destello */
             32%, 39% { filter: brightness(1.9) drop-shadow(0 0 30px rgba(255, 211, 91, 0.9)); }
             46%, 92% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: brightness(1.25) drop-shadow(0 0 10px rgba(255, 211, 91, 0.4)); }
             100% { opacity: 0; transform: translateZ(150px); }
@@ -185,14 +180,13 @@
             0% { opacity: 0; transform: translateX(80px) translateZ(200px) rotateY(40deg); filter: brightness(1); }
             8% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1); }
             20% { filter: brightness(0.8); }
-            /* SEGUNDO 4: Estalla en brillo oro junto al destello */
             34%, 40% { filter: brightness(1.9) drop-shadow(0 0 30px rgba(255, 211, 91, 0.9)); }
             48%, 92% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1.25) drop-shadow(0 0 10px rgba(255, 211, 91, 0.4)); }
             100% { opacity: 0; transform: translateZ(150px); }
         }
 
         /* ==========================================
-           3. PANEL DE MARKETING
+           3. PANEL DE MARKETING CON FIJACIÓN ESTRICTA
            ========================================== */
         .info-panel-3d {
             position: relative;
@@ -221,7 +215,7 @@
 
         @keyframes loopPanel {
             0% { opacity: 0; transform: translateY(20px) translateZ(-30px) scale(0.9); }
-            10%, 92% { opacity: 1; transform: translateY(0) translateZ(0 scale(1); }
+            10%, 92% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
             100% { opacity: 0; transform: translateY(10px) translateZ(50px); }
         }
 
@@ -229,28 +223,32 @@
             position: relative;
             width: 100%;
             height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: block; /* Forzamos bloque rígido en lugar de flex */
+            text-align: center;
         }
 
         .text-slide {
-            position: absolute;
+            display: none; /* Totalmente invisibles por defecto para evitar choques visuales */
             white-space: nowrap;
+            line-height: 46px;
             background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-bright) 50%, var(--gold-main) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.9));
             opacity: 0;
             transform: translateY(10px);
-            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
-        .text-slide.activo-slide { opacity: 1; transform: translateY(0); }
-        .text-slide.pasado-slide { opacity: 0; transform: translateY(-10px); }
+        /* Clases de control absoluto de estados */
+        .text-slide.activo-slide { 
+            display: inline-block !important; 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
 
         /* ==========================================
-           4. DESTELLO MÁGICO "GLINT" SQUASH
+           4. DESTELLO MÁGICO "GLINT"
            ========================================== */
         .stage-3d::after {
             content: '';
@@ -320,19 +318,17 @@
         function ejecutarBucleLogo() {
             stage.className = "stage-3d activo";
             
-            // Teléfono visible al inicio
-            setTimeout(() => {
-                slide1.className = "text-slide activo-slide";
-                slide2.className = "text-slide";
-            }, 1000);
+            // 1. Inicia mostrando SOLO el teléfono de forma limpia
+            slide1.className = "text-slide activo-slide";
+            slide2.className = "text-slide";
 
-            // Transición limpia al segundo 4 (Sincronizado con el re-encendido oro de MTG)
+            // 2. Al segundo 4 (junto al rayo y re-encendido oro), apaga el Tel y enciende ¡RESERVA YA!
             setTimeout(() => {
-                slide1.className = "text-slide pasado-slide";
-                slide2.className = "text-slide activo-slide";
+                slide1.className = "text-slide"; // Se oculta por completo con display: none
+                slide2.className = "text-slide activo-slide"; // Entra en escena
             }, 4000);
 
-            // Cierre total en el segundo 12
+            // 3. Cierre y limpieza total al segundo 12
             setTimeout(() => {
                 stage.className = "stage-3d"; 
                 
