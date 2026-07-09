@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lower Third Premium Oro/Negro - MTG</title>
+    <title>Lower Third Premium Oro Puro - MTG</title>
     <style>
         /* Importamos tipografías profesionales para broadcast */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
@@ -51,7 +51,7 @@
             margin-left: 10px;
         }
  
-        /* CONTENEDOR DE LAS 3 LÍNEAS (Ajustado a Fondo Negro Transparente) */
+        /* CONTENEDOR DE LAS 3 LÍNEAS (Fondo Negro Transparente) */
         .banner-wrapper {
             display: flex;
             flex-direction: column;
@@ -60,7 +60,7 @@
             padding-left: 65px; 
             padding-right: 45px;
             height: 100px; 
-            background: rgba(0, 0, 0, 0.75); /* FONDO NEGRO TRANSPARENTE CORPORATIVO */
+            background: rgba(0, 0, 0, 0.75); 
             border-top: 2.5px solid #e6ca65;
             border-right: 5px solid #e6ca65; 
             border-bottom: 2.5px solid #e6ca65;
@@ -83,20 +83,20 @@
             line-height: 1.2;
         }
  
-        /* LÍNEA 2: Nombre del Patrocinador (Cambiado a tu Color Oro Favorito) */
+        /* LÍNEA 2: Nombre del Patrocinador */
         .main-text {
-            color: #e6ca65; /* TEXTO EN COLOR ORO */
+            color: #e6ca65; 
             font-size: 24px; 
-            font-weight: 900; /* Letra imponente */
+            font-weight: 900; 
             text-transform: uppercase;
             letter-spacing: 1px;
             line-height: 1.2;
             text-shadow: 0 2px 4px rgba(0,0,0,0.6); 
         }
  
-        /* LÍNEA 3: Número de Teléfono */
+        /* LÍNEA 3: Número de Teléfono (Cambiado al mismo oro mate de la línea 1) */
         .phone-text {
-            color: #ffffff; 
+            color: #b8860b; /* COLOR ORO MATE COINCIDENTE */
             font-size: 14px; 
             font-weight: 700;
             letter-spacing: 1.5px; 
@@ -206,25 +206,20 @@
  
             indiceActual = (indiceActual + 1) % listaPatrocinadores.length;
  
-            // T+0: Entra Play redondo girando
             btn.className = "play-button animar-play-entrada";
  
-            // T+0.5s: Se despliega la ventana emergente
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-entrada";
             }, 500);
  
-            // T+6.5s: Se esconde la ventana emergente 
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-salida";
             }, 6500);
  
-            // T+7.0s: Se encoge el botón de Play
             setTimeout(() => {
                 btn.className = "play-button animar-play-salida";
             }, 7000);
  
-            // T+8.0s: Libera el trigger para el ciclo
             setTimeout(() => {
                 estaMostrando = false;
             }, 8000);
