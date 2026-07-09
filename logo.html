@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Ultra Compact Gold 3D</title>
+    <title>MTG - Ultra Compact Borderless Gold 3D</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -26,7 +26,7 @@
         .stage-3d {
             position: relative;
             width: 700px;
-            height: 400px; /* Reducido para compactar el contenedor global */
+            height: 400px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -35,12 +35,12 @@
         }
 
         /* ==========================================
-           1. ARCOS WI-FI (ELIMINADO ESPACIO INFERIOR)
+           1. ARCOS WI-FI
            ========================================== */
         .wifi-3d-group {
             position: relative;
             width: 240px;
-            height: 65px; /* Reducido drásticamente para eliminar el vacío con las letras */
+            height: 65px;
             margin-bottom: 5px;
             transform-style: preserve-3d;
         }
@@ -96,7 +96,7 @@
             letter-spacing: -2px;
             position: relative;
             color: var(--gold-bright);
-            line-height: 110px; /* Recorta el alto invisible de la tipografía */
+            line-height: 110px;
         }
 
         .letter-3d {
@@ -157,22 +157,23 @@
         }
 
         /* ==========================================
-           3. PANEL DE DATOS (ELIMINADO ESPACIO SUPERIOR)
+           3. PANEL DE DATOS (SIN BORDE EXTERIOR)
            ========================================== */
         .info-panel-3d {
             font-family: 'Orbitron', sans-serif;
             font-size: 26px;
             color: #ffffff;
-            margin-top: -5px; /* Valor negativo para forzar el pegado total a las letras */
+            margin-top: -5px; 
             letter-spacing: 5px;
             font-weight: 900;
             opacity: 0;
-            border: 3px solid var(--gold-bright);
+            /* Eliminamos la propiedad border y el box-shadow pesado */
+            border: none;
             background: rgba(18, 18, 18, 0.4);
             padding: 8px 40px;
             border-radius: 8px;
             text-shadow: 0 0 10px var(--gold-bright);
-            box-shadow: 0 0 20px rgba(201, 151, 37, 0.6), inset 0 0 10px rgba(201, 151, 37, 0.3);
+            box-shadow: inset 0 0 10px rgba(201, 151, 37, 0.2);
             transform: translateZ(-50px) scaleX(0);
             animation: loopPanel 12s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
         }
