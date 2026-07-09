@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Ultra Compact Perfect Fit 3D</title>
+    <title>MTG - Broadcast Master Overlay 3D</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -15,12 +15,13 @@
             align-items: center;
             height: 100vh;
             width: 100vw;
-            perspective: 1400px;
-            --gold-light: #FFF099;
+            perspective: 1600px;
+            /* Paleta Cromada de Oro Premium */
+            --gold-light: #FFF5BC;
             --gold-bright: #FFD35B;
             --gold-main: #C99725;
             --gold-dark: #8C6211;
-            --gold-deep: #4A3406;
+            --gold-deep: #3A2803;
         }
 
         .stage-3d {
@@ -32,16 +33,18 @@
             justify-content: center;
             align-items: center;
             transform-style: preserve-3d;
+            /* Filtro de contraste IRL global para legibilidad en exteriores */
+            filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.65));
         }
 
         /* ==========================================
-           1. ARCOS WI-FI (PEGADOS A LAS LETRAS)
+           1. ARCOS WI-FI (SECUENCIA 1)
            ========================================== */
         .wifi-3d-group {
             position: relative;
             width: 240px;
             height: 65px;
-            margin-bottom: -25px; /* Margen negativo para eliminar el espacio de las flechas rojas */
+            margin-bottom: -23px; 
             transform-style: preserve-3d;
             z-index: 10;
         }
@@ -56,37 +59,38 @@
             transform-style: preserve-3d;
             transform-origin: bottom center;
             opacity: 0;
-            filter: drop-shadow(0px 4px 6px rgba(74, 52, 6, 0.8)) drop-shadow(0px 0px 12px var(--gold-bright));
+            filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.5)) drop-shadow(0px 0px 10px rgba(255, 211, 91, 0.4));
         }
 
-        .arc-1 { width: 60px; height: 60px; margin-left: -44px; animation: loopArc1 12s cubic-bezier(0.19, 1, 0.22, 1) infinite; }
-        .arc-2 { width: 120px; height: 120px; margin-left: -74px; animation: loopArc2 12s cubic-bezier(0.19, 1, 0.22, 1) infinite; }
-        .arc-3 { width: 180px; height: 180px; margin-left: -104px; animation: loopArc3 12s cubic-bezier(0.19, 1, 0.22, 1) infinite; }
+        /* Tiempos ajustados para fluidez continua */
+        .arc-1 { width: 60px; height: 60px; margin-left: -44px; animation: loopArc1 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
+        .arc-2 { width: 120px; height: 120px; margin-left: -74px; animation: loopArc2 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
+        .arc-3 { width: 180px; height: 180px; margin-left: -104px; animation: loopArc3 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
 
         @keyframes loopArc1 {
-            0% { opacity: 0; transform: translateZ(500px) translateY(-100px) rotateX(-90deg) scale(0.1); filter: brightness(3); }
-            8% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
-            80% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
-            88% { opacity: 0; transform: translateZ(500px) translateY(-100px) rotateX(-90deg) scale(0.1); }
+            0% { opacity: 0; transform: translateZ(300px) scale(0.4); }
+            5% { opacity: 1; transform: translateZ(0) scale(1); }
+            82% { opacity: 1; transform: translateZ(0) scale(1); }
+            86% { opacity: 0; transform: translateZ(100px) scale(0.8); filter: blur(4px); }
             100% { opacity: 0; }
         }
         @keyframes loopArc2 {
-            0%, 2% { opacity: 0; transform: translateZ(600px) translateY(-150px) rotateY(90deg) scale(0.1); filter: brightness(3); }
-            10% { opacity: 1; transform: translateZ(0) translateY(0) rotateY(0deg) scale(1); filter: brightness(1); }
-            80% { opacity: 1; transform: translateZ(0) translateY(0) rotateY(0deg) scale(1); filter: brightness(1); }
-            88% { opacity: 0; transform: translateZ(600px) translateY(-150px) rotateY(90deg) scale(0.1); }
+            0%, 1.5% { opacity: 0; transform: translateZ(400px) scale(0.4); }
+            6.5% { opacity: 1; transform: translateZ(0) scale(1); }
+            82% { opacity: 1; transform: translateZ(0) scale(1); }
+            86% { opacity: 0; transform: translateZ(150px) scale(0.8); filter: blur(4px); }
             100% { opacity: 0; }
         }
         @keyframes loopArc3 {
-            0%, 4% { opacity: 0; transform: translateZ(700px) translateY(-200px) rotateX(90deg) scale(0.1); filter: brightness(3); }
-            12% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
-            80% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
-            88% { opacity: 0; transform: translateZ(700px) translateY(-200px) rotateX(90deg) scale(0.1); }
+            0%, 3% { opacity: 0; transform: translateZ(500px) scale(0.4); }
+            8% { opacity: 1; transform: translateZ(0) scale(1); }
+            82% { opacity: 1; transform: translateZ(0) scale(1); }
+            86% { opacity: 0; transform: translateZ(200px) scale(0.8); filter: blur(4px); }
             100% { opacity: 0; }
         }
 
         /* ==========================================
-           2. NÚCLEO: LETRAS MTG
+           2. NÚCLEO: LETRAS MTG (SECUENCIA 2 - CASCADA)
            ========================================== */
         .logo-core-3d {
             display: flex;
@@ -107,104 +111,116 @@
             opacity: 0;
             background: linear-gradient(135deg, 
                 var(--gold-light) 0%, 
-                var(--gold-bright) 25%, 
-                var(--gold-dark) 50%, 
-                var(--gold-light) 75%, 
+                var(--gold-bright) 28%, 
+                var(--gold-dark) 55%, 
+                var(--gold-light) 78%, 
                 var(--gold-main) 100%
             );
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 8px 10px rgba(74, 52, 6, 0.7));
         }
 
+        /* Extrusión 3D Real trasera */
         .letter-3d::after {
             content: attr(data-letter);
             position: absolute;
             top: 0;
             left: 0;
-            transform: translateZ(-12px);
+            transform: translateZ(-14px);
             background: linear-gradient(180deg, var(--gold-main) 0%, var(--gold-deep) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             z-index: -1;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.8));
         }
 
-        .m-piece { animation: loopM3D 12s cubic-bezier(0.075, 0.82, 0.165, 1) infinite; }
-        .t-piece { animation: loopT3D 12s cubic-bezier(0.165, 0.84, 0.44, 1) infinite; }
-        .g-piece { animation: loopG3D 12s cubic-bezier(0.075, 0.82, 0.165, 1) infinite; }
+        /* Desfases de tiempo (Delay) para el efecto cascada fluido */
+        .m-piece { animation: loopM3D 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; animation-delay: 0.2s; }
+        .t-piece { animation: loopT3D 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; animation-delay: 0.4s; }
+        .g-piece { animation: loopG3D 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; animation-delay: 0.6s; }
 
         @keyframes loopM3D {
-            0%, 5% { opacity: 0; transform: translateX(-550px) translateY(150px) translateZ(500px) rotateY(-110deg) rotateX(35deg); filter: blur(6px) brightness(2.5); }
-            15% { opacity: 1; transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg); filter: blur(0px) brightness(1); }
-            80% { opacity: 1; transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg); filter: blur(0px) brightness(1); }
-            86% { opacity: 0; transform: translateX(-550px) translateY(150px) translateZ(500px) rotateY(-110deg) rotateX(35deg); }
+            0% { opacity: 0; transform: translateX(-80px) translateZ(200px) rotateY(-40deg); filter: blur(4px); }
+            10% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: blur(0px); }
+            82% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: blur(0px); }
+            86% { opacity: 0; transform: translateZ(150px); filter: blur(2px); }
             100% { opacity: 0; }
         }
 
         @keyframes loopT3D {
-            0%, 8% { opacity: 0; transform: translateY(-350px) translateZ(-600px) rotateX(-75deg) scale(0.5); filter: brightness(3); }
-            18% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg) scale(1); filter: brightness(1); }
-            80% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg) scale(1); filter: brightness(1); }
-            86% { opacity: 0; transform: translateY(-350px) translateZ(-600px) rotateX(-75deg) scale(0.4); }
+            0% { opacity: 0; transform: translateY(-50px) translateZ(200px) rotateX(40deg); filter: blur(4px); }
+            10% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: blur(0px); }
+            82% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: blur(0px); }
+            86% { opacity: 0; transform: translateZ(150px); filter: blur(2px); }
             100% { opacity: 0; }
         }
 
         @keyframes loopG3D {
-            0%, 6% { opacity: 0; transform: translateX(550px) translateY(-100px) translateZ(500px) rotateY(120deg) rotateX(-25deg); filter: blur(6px) brightness(2.5); }
-            16% { opacity: 1; transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg); filter: blur(0px) brightness(1); }
-            80% { opacity: 1; transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg); filter: blur(0px) brightness(1); }
-            86% { opacity: 0; transform: translateX(550px) translateY(-100px) translateZ(500px) rotateY(120deg) rotateX(-25deg); }
+            0% { opacity: 0; transform: translateX(80px) translateZ(200px) rotateY(40deg); filter: blur(4px); }
+            10% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: blur(0px); }
+            82% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: blur(0px); }
+            86% { opacity: 0; transform: translateZ(150px); filter: blur(2px); }
             100% { opacity: 0; }
         }
 
         /* ==========================================
-           3. PANEL DE DATOS
+           3. PANEL DE DATOS (SECUENCIA 3 - ENTRADA ELEGANTE)
            ========================================== */
         .info-panel-3d {
             font-family: 'Orbitron', sans-serif;
             font-size: 26px;
             color: #ffffff;
-            margin-top: -5px; 
+            margin-top: -3px; 
             letter-spacing: 5px;
             font-weight: 900;
             opacity: 0;
             border: none;
-            background: rgba(18, 18, 18, 0.4);
-            padding: 8px 40px;
-            border-radius: 8px;
-            text-shadow: 0 0 10px var(--gold-bright);
-            box-shadow: inset 0 0 10px rgba(201, 151, 37, 0.2);
-            transform: translateZ(-50px) scaleX(0);
-            animation: loopPanel 12s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
+            background: rgba(12, 12, 12, 0.45); /* Fondo optimizado para contraste */
+            padding: 6px 35px;
+            border-radius: 6px;
+            /* Delineado de alta definición para exteriores */
+            text-shadow: 0px 2px 4px rgba(0, 0, 0, 1), 0 0 12px var(--gold-bright);
+            box-shadow: inset 0 0 8px rgba(255, 211, 91, 0.15), 0 4px 10px rgba(0,0,0,0.4);
+            transform: translateZ(-30px) scale(0.9);
+            animation: loopPanel 12s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+            animation-delay: 1s; /* Aparece justo al completarse el logo */
         }
 
         @keyframes loopPanel {
-            0%, 18% { opacity: 0; transform: translateZ(-50px) scaleX(0); }
-            24% { opacity: 1; transform: translateZ(0) scaleX(1); }
-            80% { opacity: 1; transform: translateZ(0) scaleX(1); }
-            85% { opacity: 0; transform: translateZ(-50px) scaleX(0); }
+            0% { opacity: 0; transform: translateY(20px) translateZ(-30px) scale(0.9); }
+            10% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
+            82% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
+            86% { opacity: 0; transform: translateY(10px) translateZ(50px); }
             100% { opacity: 0; }
         }
 
         /* ==========================================
-           4. DESTELLO MÁGICO
+           4. DESTELLO MÁGICO "GLINT" OPTIMIZADO
            ========================================== */
         .stage-3d::after {
             content: '';
             position: absolute;
-            top: 25%;
+            top: 15%;
             left: -150%;
-            width: 80px;
-            height: 50%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), rgba(255, 211, 91, 0.5), transparent);
-            transform: skewX(-30deg) translateZ(30px);
+            width: 90px;
+            height: 60%;
+            /* Reflejo más suave y realista */
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.0) 20%, 
+                rgba(255, 255, 255, 0.75) 50%, 
+                rgba(255, 211, 91, 0.3) 70%, 
+                transparent 100%
+            );
+            transform: skewX(-35deg) translateZ(20px);
             animation: loopFlash 12s ease-in-out infinite;
+            animation-delay: 1.2s;
         }
 
         @keyframes loopFlash {
-            0%, 24% { left: -150%; opacity: 0; }
-            32% { left: 150%; opacity: 1; }
-            38%, 100% { left: 150%; opacity: 0; }
+            0%, 15% { left: -150%; opacity: 0; }
+            23% { left: 150%; opacity: 1; }
+            30%, 100% { left: 150%; opacity: 0; }
         }
     </style>
 </head>
