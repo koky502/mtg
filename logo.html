@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Marketing Master Overlay 3D</title>
+    <title>MTG - Marketing Master Overlay 3D Premium</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght=900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -23,6 +23,7 @@
             --gold-deep: #3A2803;
         }
 
+        /* CONTENEDOR PRINCIPAL CONTROLADO POR JS */
         .stage-3d {
             position: relative;
             width: 700px;
@@ -33,17 +34,21 @@
             align-items: center;
             transform-style: preserve-3d;
             filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.65));
-            animation: stagePulse 180s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+            
+            /* Estado inicial: oculto fuera de escena */
+            opacity: 0;
+            transform: scale(0.8) translateZ(-200px);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        @keyframes stagePulse {
-            0%, 1.2% { transform: scale(1); }
-            1.5% { transform: scale(1.03); }
-            1.8%, 100% { transform: scale(1); }
+        /* Clases de activación controladas por el temporizador */
+        .stage-3d.activo {
+            opacity: 1;
+            transform: scale(1) translateZ(0px);
         }
 
         /* ==========================================
-           1. ARCOS WI-FI (EFECTO RADAR/SEÑAL VIVA)
+           1. ARCOS WI-FI (SEÑAL ACTIVA EN ENTRADA)
            ========================================== */
         .wifi-3d-group {
             position: relative;
@@ -66,32 +71,19 @@
             opacity: 0;
         }
 
-        .arc-1 { width: 60px; height: 60px; margin-left: -44px; animation: loopArc1 180s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
-        .arc-2 { width: 120px; height: 120px; margin-left: -74px; animation: loopArc2 180s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
-        .arc-3 { width: 180px; height: 180px; margin-left: -104px; animation: loopArc3 180s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
+        .arc-1 { width: 60px; height: 60px; margin-left: -44px; }
+        .arc-2 { width: 120px; height: 120px; margin-left: -74px; }
+        .arc-3 { width: 180px; height: 180px; margin-left: -104px; }
 
-        @keyframes loopArc1 {
-            0% { opacity: 0; transform: translateZ(300px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
-            0.3% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
-            1.3% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
-            5.5% { opacity: 1; transform: translateZ(0) scale(1); }
-            5.7%, 100% { opacity: 0; transform: translateZ(100px) scale(0.8); filter: blur(4px); }
-        }
-        @keyframes loopArc2 {
-            0%, 0.1% { opacity: 0; transform: translateZ(400px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
-            0.4% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
-            1.4% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
-            5.5% { opacity: 1; transform: translateZ(0) scale(1); }
-            5.7%, 100% { opacity: 0; transform: translateZ(150px) scale(0.8); filter: blur(4px); }
-        }
-        @keyframes loopArc3 {
-            0%, 0.2% { opacity: 0; transform: translateZ(500px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
-            0.5% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
-            1.6% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
-            2.3% { filter: brightness(0.6) drop-shadow(0 0 20px var(--gold-bright)); }
-            2.6% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
-            5.5% { opacity: 1; transform: translateZ(0) scale(1); }
-            5.7%, 100% { opacity: 0; transform: translateZ(200px) scale(0.8); filter: blur(4px); }
+        /* Animación de disparo único al activarse */
+        .activo .arc-1 { animation: entradaArc 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.1s; }
+        .activo .arc-2 { animation: entradaArc 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.3s; }
+        .activo .arc-3 { animation: entradaArc 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.5s; }
+
+        @keyframes entradaArc {
+            0% { opacity: 0; transform: translateZ(200px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
+            30% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
+            100% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
         }
 
         /* ==========================================
@@ -138,59 +130,61 @@
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.8));
         }
 
-        .m-piece { animation: loopM3D 180s cubic-bezier(0.25, 1, 0.5, 1) infinite; animation-delay: 0.2s; }
-        .t-piece { animation: loopT3D 180s cubic-bezier(0.25, 1, 0.5, 1) infinite; animation-delay: 0.4s; }
-        .g-piece { animation: loopG3D 180s cubic-bezier(0.25, 1, 0.5, 1) infinite; animation-delay: 0.6s; }
+        /* Animaciones rítmicas de entrada única */
+        .activo .m-piece { animation: entradaLetraM 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.2s; }
+        .activo .t-piece { animation: entradaLetraT 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.4s; }
+        .activo .g-piece { animation: entradaLetraG 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.6s; }
 
-        @keyframes loopM3D {
-            0% { opacity: 0; transform: translateX(-80px) translateZ(200px) rotateY(-40deg); filter: brightness(1); }
-            0.6% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(0.9); }
-            1.4% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); }
-            4.6% { filter: brightness(0.95); }
-            5.5% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); }
-            5.7%, 100% { opacity: 0; transform: translateZ(150px); filter: blur(2px); }
+        @keyframes entradaLetraM {
+            0% { opacity: 0; transform: translateX(-80px) translateZ(150px) rotateY(-40deg); filter: brightness(2); }
+            40% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.6)); }
+            100% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1); }
         }
 
-        @keyframes loopT3D {
-            0% { opacity: 0; transform: translateY(-50px) translateZ(200px) rotateX(40deg); filter: brightness(1); }
-            0.6% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: brightness(0.9); }
-            1.6% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); }
-            4.6% { filter: brightness(0.95); }
-            5.5% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); }
-            5.7%, 100% { opacity: 0; transform: translateZ(150px); filter: blur(2px); }
+        @keyframes entradaLetraT {
+            0% { opacity: 0; transform: translateY(-50px) translateZ(150px) rotateX(40deg); filter: brightness(2); }
+            40% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.6)); }
+            100% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: brightness(1); }
         }
 
-        @keyframes loopG3D {
-            0% { opacity: 0; transform: translateX(80px) translateZ(200px) rotateY(40deg); filter: brightness(1); }
-            0.6% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(0.9); }
-            1.7% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); }
-            4.6% { filter: brightness(0.95); }
-            5.5% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); }
-            5.7%, 100% { opacity: 0; transform: translateZ(150px); filter: blur(2px); }
+        @keyframes entradaLetraG {
+            0% { opacity: 0; transform: translateX(80px) translateZ(150px) rotateY(40deg); filter: brightness(2); }
+            40% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.6)); }
+            100% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1); }
         }
 
         /* ==========================================
-           3. PANEL DE MARKETING INTERMITENTE
+           3. PANEL DE MARKETING CON MÁRGENES CORREGIDOS
            ========================================== */
         .info-panel-3d {
             position: relative;
-            width: 310px; 
-            height: 45px;
-            margin-top: 5px;
+            min-width: 320px; 
+            padding: 0 25px; /* Corrección de las flechas rojas: margen interno seguro */
+            height: 48px;
+            margin-top: 15px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 900;
-            letter-spacing: 3px;
+            letter-spacing: 2.5px;
             opacity: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(12, 12, 12, 0.45);
+            background: rgba(10, 10, 10, 0.78); /* Mayor solidez sobre fondos complejos */
             border-radius: 6px;
-            box-shadow: inset 0 0 8px rgba(255, 211, 91, 0.15), 0 4px 10px rgba(0,0,0,0.4);
+            border: 1.5px solid rgba(255, 211, 91, 0.3);
+            box-shadow: inset 0 0 12px rgba(255, 211, 91, 0.15), 0 6px 15px rgba(0,0,0,0.5);
             transform: translateZ(-30px) scale(0.9);
-            animation: loopPanel 180s cubic-bezier(0.25, 1, 0.5, 1) infinite;
-            animation-delay: 1s;
+        }
+
+        .activo .info-panel-3d {
+            animation: entradaPanel 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes entradaPanel {
+            0% { opacity: 0; transform: translateY(20px) translateZ(-30px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
         }
 
         .marketing-text-wrapper {
@@ -208,63 +202,59 @@
             background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-bright) 50%, var(--gold-main) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.9));
+            filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.9));
             opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease-in-out;
         }
 
-        .slide-phone { animation: showPhone 180s ease-in-out infinite; }
-        .slide-cta { animation: showCTA 180s ease-in-out infinite; }
-
-        @keyframes showPhone {
-            0%, 0.5% { opacity: 0; transform: translateY(5px); }
-            0.6%, 2.7% { opacity: 1; transform: translateY(0); }
-            2.8%, 100% { opacity: 0; transform: translateY(-5px); }
+        /* Control de slides internos por clases JS */
+        .text-slide.activo-slide {
+            opacity: 1;
+            transform: translateY(0);
         }
-
-        @keyframes showCTA {
-            0%, 2.9% { opacity: 0; transform: translateY(5px); }
-            3.0%, 5.4% { opacity: 1; transform: translateY(0); }
-            5.5%, 100% { opacity: 0; transform: translateY(-5px); }
-        }
-
-        @keyframes loopPanel {
-            0% { opacity: 0; transform: translateY(20px) translateZ(-30px) scale(0.9); }
-            0.6%, 5.4% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
-            5.7%, 100% { opacity: 0; transform: translateY(10px) translateZ(50px); }
+        
+        .text-slide.pasado-slide {
+            opacity: 0;
+            transform: translateY(-10px);
         }
 
         /* ==========================================
-           4. DESTELLO MÁGICO "GLINT"
+           4. DESTELLO PREMIUM "GLINT"
            ========================================== */
         .stage-3d::after {
             content: '';
             position: absolute;
             top: 15%;
             left: -150%;
-            width: 90px;
+            width: 110px;
             height: 60%;
             background: linear-gradient(90deg, 
                 transparent 0%, 
-                rgba(255, 255, 255, 0.0) 20%, 
-                rgba(255, 255, 255, 0.75) 50%, 
-                rgba(255, 211, 91, 0.3) 70%, 
+                rgba(255, 255, 255, 0.8) 50%, 
+                rgba(255, 211, 91, 0.4) 75%, 
                 transparent 100%
             );
-            transform: skewX(-35deg) translateZ(20px);
-            animation: loopFlash 180s ease-in-out infinite;
-            animation-delay: 1.2s;
+            transform: skewX(-30deg) translateZ(30px);
+            opacity: 0;
         }
 
-        @keyframes loopFlash {
-            0%, 1.0% { left: -150%; opacity: 0; }
-            1.5% { left: 150%; opacity: 1; }
-            2.0%, 100% { left: 150%; opacity: 0; }
+        .activo::after {
+            animation: destelloGlint 2s ease-in-out forwards;
+            animation-delay: 1.5s;
+        }
+
+        @annotation destelloGlint {
+            0% { left: -150%; opacity: 0; }
+            30% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { left: 150%; opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="stage-3d">
+    <div id="mtg-stage" class="stage-3d">
         
         <div class="wifi-3d-group">
             <div class="arc-3d arc-1"></div>
@@ -280,12 +270,60 @@
 
         <div class="info-panel-3d">
             <div class="marketing-text-wrapper">
-                <span class="text-slide slide-phone">TEL. 3684 7307</span>
-                <span class="text-slide slide-cta">¡RESERVA YA!</span>
+                <span id="slide-1" class="text-slide">TEL. 3684 7307</span>
+                <span id="slide-2" class="text-slide">¡RESERVA YA!</span>
             </div>
         </div>
         
     </div>
 
+    <script>
+        // CONFIGURACIÓN ESTRICTA DE TIEMPOS (En milisegundos)
+        const DURACION_VISIBLE = 12000; // 12 segundos expuesto en pantalla
+        const PAUSA_OCULTO     = 180000; // 3 minutos oculto (180 segundos exactos)
+
+        const stage = document.getElementById("mtg-stage");
+        const slide1 = document.getElementById("slide-1");
+        const slide2 = document.getElementById("slide-2");
+
+        function ejecutarBucleLogo() {
+            // 1. Entrada del contenedor principal
+            stage.className = "stage-3d activo";
+            
+            // 2. Control de los textos deslizantes internos
+            // Primer texto (Teléfono) aparece inmediatamente
+            slide1.className = "text-slide activo-slide";
+            slide2.className = "text-slide";
+
+            // A los 6 segundos cambia al segundo texto (CTA / ¡RESERVA YA!)
+            setTimeout(() => {
+                slide1.className = "text-slide pasado-slide";
+                slide2.className = "text-slide activo-slide";
+            }, 6000);
+
+            // 3. Desaparición completa de la escena a los 12 segundos exactos
+            setTimeout(() => {
+                stage.className = "stage-3d"; // Quita la clase 'activo' y se oculta con transición suave
+                
+                // Limpieza de estados internos para la próxima vuelta
+                setTimeout(() => {
+                    slide1.className = "text-slide";
+                    slide2.className = "text-slide";
+                }, 1000);
+
+            }, DURACION_VISIBLE);
+        }
+
+        function iniciarControlador() {
+            // Primera ejecución al cargar la página
+            ejecutarBucleLogo();
+
+            // Configuración del intervalo matemático continuo (Tiempo visible + tiempo de espera)
+            setInterval(ejecutarBucleLogo, DURACION_VISIBLE + PAUSA_OCULTO);
+        }
+
+        // Arranca el sistema cuando el documento esté completamente listo
+        window.onload = iniciarControlador;
+    </script>
 </body>
 </html>
