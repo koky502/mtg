@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Energy Sync Master Overlay 3D</title>
+    <title>MTG - Unified Pure Gold 3D</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -60,7 +60,6 @@
             opacity: 0;
         }
 
-        /* Ciclo Wi-Fi: Brillan fuerte al inicio de su aparición y luego se oscurecen */
         .arc-1 { width: 60px; height: 60px; margin-left: -44px; animation: loopArc1 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
         .arc-2 { width: 120px; height: 120px; margin-left: -74px; animation: loopArc2 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
         .arc-3 { width: 180px; height: 180px; margin-left: -104px; animation: loopArc3 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
@@ -68,7 +67,7 @@
         @keyframes loopArc1 {
             0% { opacity: 0; transform: translateZ(300px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
             5% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
-            20% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); } /* Aquí se vuelve oscuro */
+            20% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
             82% { opacity: 1; transform: translateZ(0) scale(1); }
             86% { opacity: 0; transform: translateZ(100px) scale(0.8); filter: blur(4px); }
             100% { opacity: 0; }
@@ -76,7 +75,7 @@
         @keyframes loopArc2 {
             0%, 1.5% { opacity: 0; transform: translateZ(400px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
             6.5% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
-            22% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); } /* Aquí se vuelve oscuro */
+            22% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
             82% { opacity: 1; transform: translateZ(0) scale(1); }
             86% { opacity: 0; transform: translateZ(150px) scale(0.8); filter: blur(4px); }
             100% { opacity: 0; }
@@ -84,14 +83,14 @@
         @keyframes loopArc3 {
             0%, 3% { opacity: 0; transform: translateZ(500px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
             8% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
-            24% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); } /* Aquí se vuelve oscuro */
+            24% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
             82% { opacity: 1; transform: translateZ(0) scale(1); }
             86% { opacity: 0; transform: translateZ(200px) scale(0.8); filter: blur(4px); }
             100% { opacity: 0; }
         }
 
         /* ==========================================
-           2. NÚCLEO: LETRAS MTG (SINCRONIZACIÓN DE ENERGÍA CRUZA)
+           2. NÚCLEO: LETRAS MTG
            ========================================== */
         .logo-core-3d {
             display: flex;
@@ -134,7 +133,6 @@
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.8));
         }
 
-        /* Aplicamos el contra-ritmo: Brilla oro puro cuando el wifi se apaga (Entre el 20% y el 70% del ciclo) */
         .m-piece { animation: loopM3D 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; animation-delay: 0.2s; }
         .t-piece { animation: loopT3D 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; animation-delay: 0.4s; }
         .g-piece { animation: loopG3D 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; animation-delay: 0.6s; }
@@ -142,7 +140,7 @@
         @keyframes loopM3D {
             0% { opacity: 0; transform: translateX(-80px) translateZ(200px) rotateY(-40deg); filter: brightness(1); }
             10% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(0.9); }
-            22% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); } /* ¡Oro Puro aquí! */
+            22% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); }
             70% { filter: brightness(0.95); }
             82% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); }
             86% { opacity: 0; transform: translateZ(150px); filter: blur(2px); }
@@ -152,7 +150,7 @@
         @keyframes loopT3D {
             0% { opacity: 0; transform: translateY(-50px) translateZ(200px) rotateX(40deg); filter: brightness(1); }
             10% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: brightness(0.9); }
-            24% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); } /* ¡Oro Puro aquí! */
+            24% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); }
             70% { filter: brightness(0.95); }
             82% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); }
             86% { opacity: 0; transform: translateZ(150px); filter: blur(2px); }
@@ -162,7 +160,7 @@
         @keyframes loopG3D {
             0% { opacity: 0; transform: translateX(80px) translateZ(200px) rotateY(40deg); filter: brightness(1); }
             10% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(0.9); }
-            26% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); } /* ¡Oro Puro aquí! */
+            26% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); }
             70% { filter: brightness(0.95); }
             82% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); }
             86% { opacity: 0; transform: translateZ(150px); filter: blur(2px); }
@@ -170,22 +168,28 @@
         }
 
         /* ==========================================
-           3. PANEL DE DATOS
+           3. PANEL DE DATOS (TEXTO INTEGRADO EN ORO CROMADO)
            ========================================== */
         .info-panel-3d {
             font-family: 'Orbitron', sans-serif;
             font-size: 26px;
-            color: #ffffff;
             margin-top: -3px; 
             letter-spacing: 5px;
             font-weight: 900;
             opacity: 0;
-            border: none;
             background: rgba(12, 12, 12, 0.45);
             padding: 6px 35px;
             border-radius: 6px;
-            text-shadow: 0px 2px 4px rgba(0, 0, 0, 1), 0 0 12px var(--gold-bright);
+            
+            /* Aplicación de gradiente oro a los números para corregir el error de marketing */
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-bright) 50%, var(--gold-main) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            
+            /* Sombra y delineado estricto para mantener contraste IRL */
+            filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.9));
             box-shadow: inset 0 0 8px rgba(255, 211, 91, 0.15), 0 4px 10px rgba(0,0,0,0.4);
+            
             transform: translateZ(-30px) scale(0.9);
             animation: loopPanel 12s cubic-bezier(0.25, 1, 0.5, 1) infinite;
             animation-delay: 1s;
