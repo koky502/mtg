@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Ultra Compact Borderless Gold 3D</title>
+    <title>MTG - Ultra Compact Perfect Fit 3D</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -35,14 +35,15 @@
         }
 
         /* ==========================================
-           1. ARCOS WI-FI
+           1. ARCOS WI-FI (PEGADOS A LAS LETRAS)
            ========================================== */
         .wifi-3d-group {
             position: relative;
             width: 240px;
             height: 65px;
-            margin-bottom: 5px;
+            margin-bottom: -25px; /* Margen negativo para eliminar el espacio de las flechas rojas */
             transform-style: preserve-3d;
+            z-index: 10;
         }
 
         .arc-3d {
@@ -157,7 +158,7 @@
         }
 
         /* ==========================================
-           3. PANEL DE DATOS (SIN BORDE EXTERIOR)
+           3. PANEL DE DATOS
            ========================================== */
         .info-panel-3d {
             font-family: 'Orbitron', sans-serif;
@@ -167,7 +168,6 @@
             letter-spacing: 5px;
             font-weight: 900;
             opacity: 0;
-            /* Eliminamos la propiedad border y el box-shadow pesado */
             border: none;
             background: rgba(18, 18, 18, 0.4);
             padding: 8px 40px;
