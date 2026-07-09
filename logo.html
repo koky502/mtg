@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Marketing Master Overlay 3D Premium</title>
+    <title>MTG - Marketing Master Overlay 3D Premium (AIDA Edition)</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght=900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -23,7 +23,7 @@
             --gold-deep: #3A2803;
         }
 
-        /* CONTENEDOR PRINCIPAL CONTROLADO POR JS */
+        /* CONTENEDOR PRINCIPAL: Recupera el Zoom tridimensional de escena */
         .stage-3d {
             position: relative;
             width: 700px;
@@ -35,20 +35,27 @@
             transform-style: preserve-3d;
             filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.65));
             
-            /* Estado inicial: oculto fuera de escena */
             opacity: 0;
             transform: scale(0.8) translateZ(-200px);
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: opacity 0.5s ease;
         }
 
-        /* Clases de activación controladas por el temporizador */
+        /* Cuando está activo, corre la coreografía AIDA completa de 12 segundos */
         .stage-3d.activo {
             opacity: 1;
-            transform: scale(1) translateZ(0px);
+            animation: stagePulseAIDA 12s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes stagePulseAIDA {
+            0% { transform: scale(0.8) translateZ(-200px); }
+            5% { transform: scale(1) translateZ(0px); }
+            22%, 24% { transform: scale(1.04) translateZ(30px); } /* Sutil Zoom de impacto */
+            27%, 95% { transform: scale(1) translateZ(0px); }
+            100% { transform: scale(0.8) translateZ(-200px); opacity: 0; }
         }
 
         /* ==========================================
-           1. ARCOS WI-FI (SEÑAL ACTIVA EN ENTRADA)
+           1. ARCOS WI-FI (EFECTO RADAR / SE ATENUAN)
            ========================================== */
         .wifi-3d-group {
             position: relative;
@@ -75,19 +82,34 @@
         .arc-2 { width: 120px; height: 120px; margin-left: -74px; }
         .arc-3 { width: 180px; height: 180px; margin-left: -104px; }
 
-        /* Animación de disparo único al activarse */
-        .activo .arc-1 { animation: entradaArc 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.1s; }
-        .activo .arc-2 { animation: entradaArc 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.3s; }
-        .activo .arc-3 { animation: entradaArc 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.5s; }
+        /* Sincronización precisa de arcos basada en el bucle original */
+        .activo .arc-1 { animation: loopArc1 12s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        .activo .arc-2 { animation: loopArc2 12s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        .activo .arc-3 { animation: loopArc3 12s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
 
-        @keyframes entradaArc {
-            0% { opacity: 0; transform: translateZ(200px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
-            30% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
-            100% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
+        @keyframes loopArc1 {
+            0% { opacity: 0; transform: translateZ(300px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
+            5% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
+            20%, 95% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
+            100% { opacity: 0; transform: translateZ(100px) scale(0.8); }
+        }
+        @keyframes loopArc2 {
+            0%, 2% { opacity: 0; transform: translateZ(400px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
+            6% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
+            20%, 95% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
+            100% { opacity: 0; transform: translateZ(150px) scale(0.8); }
+        }
+        @keyframes loopArc3 {
+            0%, 4% { opacity: 0; transform: translateZ(500px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
+            8% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
+            24% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
+            35% { filter: brightness(0.6) drop-shadow(0 0 20px var(--gold-bright)); }
+            40%, 95% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
+            100% { opacity: 0; transform: translateZ(200px) scale(0.8); }
         }
 
         /* ==========================================
-           2. NÚCLEO: LETRAS MTG
+           2. NÚCLEO: LETRAS MTG (MÁXIMO BRILLO)
            ========================================== */
         .logo-core-3d {
             display: flex;
@@ -130,61 +152,66 @@
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.8));
         }
 
-        /* Animaciones rítmicas de entrada única */
-        .activo .m-piece { animation: entradaLetraM 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.2s; }
-        .activo .t-piece { animation: entradaLetraT 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.4s; }
-        .activo .g-piece { animation: entradaLetraG 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.6s; }
+        .activo .m-piece { animation: loopM3D 12s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.1s; }
+        .activo .t-piece { animation: loopT3D 12s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.2s; }
+        .activo .g-piece { animation: loopG3D 12s cubic-bezier(0.25, 1, 0.5, 1) forwards; animation-delay: 0.3s; }
 
-        @keyframes entradaLetraM {
-            0% { opacity: 0; transform: translateX(-80px) translateZ(150px) rotateY(-40deg); filter: brightness(2); }
-            40% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.6)); }
-            100% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1); }
+        @keyframes loopM3D {
+            0% { opacity: 0; transform: translateX(-80px) translateZ(200px) rotateY(-40deg); filter: brightness(1); }
+            8% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(0.9); }
+            22% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); } /* Explosión AIDA */
+            30%, 95% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(0.95); }
+            100% { opacity: 0; transform: translateZ(150px); }
         }
 
-        @keyframes entradaLetraT {
-            0% { opacity: 0; transform: translateY(-50px) translateZ(150px) rotateX(40deg); filter: brightness(2); }
-            40% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.6)); }
-            100% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: brightness(1); }
+        @keyframes loopT3D {
+            0% { opacity: 0; transform: translateY(-50px) translateZ(200px) rotateX(40deg); filter: brightness(1); }
+            8% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: brightness(0.9); }
+            24% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); }
+            32%, 95% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0deg); filter: brightness(0.95); }
+            100% { opacity: 0; transform: translateZ(150px); }
         }
 
-        @keyframes entradaLetraG {
-            0% { opacity: 0; transform: translateX(80px) translateZ(150px) rotateY(40deg); filter: brightness(2); }
-            40% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.6)); }
-            100% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(1); }
+        @keyframes loopG3D {
+            0% { opacity: 0; transform: translateX(80px) translateZ(200px) rotateY(40deg); filter: brightness(1); }
+            8% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(0.9); }
+            26% { filter: brightness(1.8) drop-shadow(0 0 25px rgba(255, 211, 91, 0.8)); }
+            34%, 95% { opacity: 1; transform: translateX(0) translateZ(0) rotateY(0deg); filter: brightness(0.95); }
+            100% { opacity: 0; transform: translateZ(150px); }
         }
 
         /* ==========================================
-           3. PANEL DE MARKETING CON MÁRGENES CORREGIDOS
+           3. PANEL DE MARKETING CON MÁRGENES AIDA
            ========================================== */
         .info-panel-3d {
             position: relative;
             min-width: 320px; 
-            padding: 0 25px; /* Corrección de las flechas rojas: margen interno seguro */
-            height: 48px;
-            margin-top: 15px;
+            padding: 0 25px; /* Flechas rojas corregidas de forma permanente */
+            height: 46px;
+            margin-top: 12px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 22px;
+            font-size: 23px;
             font-weight: 900;
-            letter-spacing: 2.5px;
+            letter-spacing: 3px;
             opacity: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(10, 10, 10, 0.78); /* Mayor solidez sobre fondos complejos */
+            background: rgba(12, 12, 12, 0.75);
             border-radius: 6px;
-            border: 1.5px solid rgba(255, 211, 91, 0.3);
-            box-shadow: inset 0 0 12px rgba(255, 211, 91, 0.15), 0 6px 15px rgba(0,0,0,0.5);
+            border: 1.5px solid rgba(255, 211, 91, 0.25);
+            box-shadow: inset 0 0 8px rgba(255, 211, 91, 0.15), 0 5px 12px rgba(0,0,0,0.5);
             transform: translateZ(-30px) scale(0.9);
         }
 
         .activo .info-panel-3d {
-            animation: entradaPanel 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-            animation-delay: 0.8s;
+            animation: loopPanel 12s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        @keyframes entradaPanel {
+        @keyframes loopPanel {
             0% { opacity: 0; transform: translateY(20px) translateZ(-30px) scale(0.9); }
-            100% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
+            8%, 95% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
+            100% { opacity: 0; transform: translateY(10px) translateZ(50px); }
         }
 
         .marketing-text-wrapper {
@@ -202,53 +229,42 @@
             background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-bright) 50%, var(--gold-main) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.9));
+            filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.9));
             opacity: 0;
             transform: translateY(10px);
-            transition: all 0.5s ease-in-out;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        /* Control de slides internos por clases JS */
-        .text-slide.activo-slide {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .text-slide.pasado-slide {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
+        .text-slide.activo-slide { opacity: 1; transform: translateY(0); }
+        .text-slide.pasado-slide { opacity: 0; transform: translateY(-10px); }
 
         /* ==========================================
-           4. DESTELLO PREMIUM "GLINT"
+           4. DESTELLO MÁGICO REUBICADO
            ========================================== */
         .stage-3d::after {
             content: '';
             position: absolute;
             top: 15%;
             left: -150%;
-            width: 110px;
+            width: 100px;
             height: 60%;
             background: linear-gradient(90deg, 
                 transparent 0%, 
-                rgba(255, 255, 255, 0.8) 50%, 
-                rgba(255, 211, 91, 0.4) 75%, 
-                transparent 100%
+                rgba(255, 255, 255, 0.75) 50%, 
+                rgba(255, 211, 91, 0.3) 70%, 
+                transparent 100__
             );
-            transform: skewX(-30deg) translateZ(30px);
-            opacity: 0;
+            transform: skewX(-35deg) translateZ(20px);
         }
 
         .activo::after {
-            animation: destelloGlint 2s ease-in-out forwards;
-            animation-delay: 1.5s;
+            animation: loopFlash 12s ease-in-out forwards;
         }
 
-        @annotation destelloGlint {
-            0% { left: -150%; opacity: 0; }
-            30% { opacity: 1; }
-            70% { opacity: 1; }
-            100% { left: 150%; opacity: 0; }
+        @keyframes loopFlash {
+            0%, 8% { left: -150%; opacity: 0; }
+            18% { left: 150%; opacity: 1; }
+            25%, 100% { left: 150%; opacity: 0; }
         }
     </style>
 </head>
@@ -278,51 +294,47 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN ESTRICTA DE TIEMPOS (En milisegundos)
-        const DURACION_VISIBLE = 12000; // 12 segundos expuesto en pantalla
-        const PAUSA_OCULTO     = 180000; // 3 minutos oculto (180 segundos exactos)
+        // TIEMPOS ESTRICTOS (Bucle exacto coordinado con el CSS)
+        const DURACION_VISIBLE = 12000; // 12 segundos en escena
+        const PAUSA_OCULTO     = 180000; // 3 minutos de descanso absoluto (180 segundos)
 
         const stage = document.getElementById("mtg-stage");
         const slide1 = document.getElementById("slide-1");
         const slide2 = document.getElementById("slide-2");
 
         function ejecutarBucleLogo() {
-            // 1. Entrada del contenedor principal
+            // Despierta la escena completa y arranca la coreografía CSS
             stage.className = "stage-3d activo";
             
-            // 2. Control de los textos deslizantes internos
-            // Primer texto (Teléfono) aparece inmediatamente
-            slide1.className = "text-slide activo-slide";
-            slide2.className = "text-slide";
+            // Slide de Marketing 1 (Teléfono) entra al segundo 1
+            setTimeout(() => {
+                slide1.className = "text-slide activo-slide";
+                slide2.className = "text-slide";
+            }, 1000);
 
-            // A los 6 segundos cambia al segundo texto (CTA / ¡RESERVA YA!)
+            // Slide de Marketing 2 (¡RESERVA YA!) toma el control a los 6 segundos
             setTimeout(() => {
                 slide1.className = "text-slide pasado-slide";
                 slide2.className = "text-slide activo-slide";
             }, 6000);
 
-            // 3. Desaparición completa de la escena a los 12 segundos exactos
+            // Apagón y reseteo total al segundo 12
             setTimeout(() => {
-                stage.className = "stage-3d"; // Quita la clase 'activo' y se oculta con transición suave
+                stage.className = "stage-3d"; 
                 
-                // Limpieza de estados internos para la próxima vuelta
                 setTimeout(() => {
                     slide1.className = "text-slide";
                     slide2.className = "text-slide";
-                }, 1000);
-
+                }, 800);
             }, DURACION_VISIBLE);
         }
 
         function iniciarControlador() {
-            // Primera ejecución al cargar la página
             ejecutarBucleLogo();
-
-            // Configuración del intervalo matemático continuo (Tiempo visible + tiempo de espera)
+            // Intervalo exacto: reaparece cada 3 minutos y 12 segundos matemáticos
             setInterval(ejecutarBucleLogo, DURACION_VISIBLE + PAUSA_OCULTO);
         }
 
-        // Arranca el sistema cuando el documento esté completamente listo
         window.onload = iniciarControlador;
     </script>
 </body>
