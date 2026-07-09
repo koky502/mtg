@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marcador Unificado MTG</title>
+    <title>Marcador Premium MTG</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
 
@@ -29,27 +29,29 @@
             overflow: hidden;
         }
 
+        /* CAJAS DE EQUIPO: Ahora con fondo negro transparente y letras color oro */
         .team-box {
-            background: rgba(15, 15, 15, 0.95);
-            color: #ffffff;
+            background: rgba(0, 0, 0, 0.75);
+            color: #e6ca65;
             height: 100%;
             display: flex;
             align-items: center;
-            padding: 0 25px;
-            font-size: 16px;
+            justify-content: center; /* Centrado absoluto horizontal */
+            text-align: center;      /* Centrado de líneas múltiples */
+            padding: 0 20px;
+            font-size: 15px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             min-width: 180px;
+            box-sizing: border-box;
         }
 
         .team-left { 
-            justify-content: flex-end; 
             border-bottom: 3px solid #b8860b;
         }
         
         .team-right { 
-            justify-content: flex-start; 
             border-bottom: 3px solid #b8860b;
         }
 
@@ -101,7 +103,6 @@
         <div id="team1-name" class="team-box team-left">LOCAL</div>
         <div id="team1-score" class="score-box score-left">0</div>
 
-        <!-- Al hacer clic aquí mediante Interactuar en OBS, pausarás o reanudarás el tiempo -->
         <div id="game-clock" class="time-box" onclick="toggleReloj()">00:00</div>
 
         <div id="team2-score" class="score-box score-right">0</div>
@@ -111,11 +112,9 @@
     <script>
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
 
-        // 1. VARIABLES DEL CRONÓMETRO LOCAL (Inmune a internet)
         let segundosCronometro = 0;
         let ejecutando = true; 
 
-        // 2. MEMORIA DEL CANDADO ANTI-RETROCESO PARA GOLES
         let golesLocalActuales = 0;
         let golesVisitaActuales = 0;
 
@@ -123,18 +122,16 @@
             return t ? t.replace(/^"|"\$/g, '').trim() : ""; 
         }
 
-        // CONTROL DEL RELOJ INTERNO (OBS Interactuar)
         function toggleReloj() {
             ejecutando = !ejecutando;
             const relojElemento = document.getElementById("game-clock");
             if (!ejecutando) {
-                relojElemento.style.color = "#ff4444"; // Rojo al pausar
+                relojElemento.style.color = "#ff4444"; 
             } else {
-                relojElemento.style.color = "#e6ca65"; // Oro al correr
+                relojElemento.style.color = "#e6ca65"; 
             }
         }
 
-        // MOTOR DEL TIEMPO (Cuenta segundo a segundo localmente)
         setInterval(() => {
             if (ejecutando) {
                 segundosCronometro++;
@@ -146,7 +143,6 @@
             }
         }, 1000);
 
-        // SINCRONIZADOR DE GOLES DESDE GOOGLE SHEETS (Con filtro estricto)
         async function consultarGolesYEquipos() {
             try {
                 const r = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
@@ -155,8 +151,8 @@
                 
                 if (l.length < 9) return;
                 
-                const e1 = l[7].split(","); // Fila 8 de tu Sheets
-                const e2 = l[8].split(","); // Fila 9 de tu Sheets
+                const e1 = l[7].split(","); 
+                const e2 = l[8].split(","); 
 
                 const nombreLocal = limpiar(e1[0]);
                 const golesLocalNube = parseInt(limpiar(e1[1])) || 0;
@@ -164,11 +160,9 @@
                 const nombreVisita = limpiar(e2[0]);
                 const golesVisitaNube = parseInt(limpiar(e2[1])) || 0;
 
-                // Actualizar nombres siempre
                 document.getElementById("team1-name").innerText = nombreLocal;
                 document.getElementById("team2-name").innerText = nombreVisita;
 
-                // FILTRO CANDADO: Evita que los goles bajen por culpa de la caché de Google
                 if (golesLocalNube >= golesLocalActuales) {
                     golesLocalActuales = golesLocalNube;
                     document.getElementById("team1-score").innerText = golesLocalActuales;
@@ -184,7 +178,6 @@
             }
         }
 
-        // Consulta los goles cada 4 segundos
         setInterval(consultarGolesYEquipos, 4000); 
         consultarGolesYEquipos();
     </script>
