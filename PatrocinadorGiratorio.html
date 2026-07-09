@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lower Third Premium Oro Puro - MTG</title>
     <style>
-        /* Importamos tipografías profesionales para broadcast */
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght=400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
  
         body {
             margin: 0;
@@ -60,12 +59,12 @@
             padding-left: 65px; 
             padding-right: 45px;
             height: 100px; 
-            background: rgba(0, 0, 0, 0.75); 
+            background: rgba(0, 0, 0, 0.82); /* Un toque más de opacidad para proteger el texto */
             border-top: 2.5px solid #e6ca65;
             border-right: 5px solid #e6ca65; 
             border-bottom: 2.5px solid #e6ca65;
             border-radius: 0 12px 12px 0;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
             z-index: 5;
             transform: scaleX(0);
             transform-origin: left;
@@ -73,14 +72,15 @@
             gap: 2px;
         }
  
-        /* LÍNEA 1: Agradecemos a: */
+        /* LÍNEA 1: Agradecemos a: (Oro claro y sombra protectora) */
         .sub-label {
-            color: #b8860b; 
+            color: #FFF3B3; 
             font-size: 11px; 
             font-weight: 900; 
             text-transform: uppercase;
             letter-spacing: 3.5px; 
             line-height: 1.2;
+            text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.5);
         }
  
         /* LÍNEA 2: Nombre del Patrocinador */
@@ -91,16 +91,17 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             line-height: 1.2;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.6); 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); 
         }
  
-        /* LÍNEA 3: Número de Teléfono */
+        /* LÍNEA 3: Número de Teléfono (Oro claro brillante para lectura rápida) */
         .phone-text {
-            color: #b8860b;
+            color: #FFF3B3;
             font-size: 14px; 
             font-weight: 700;
             letter-spacing: 1.5px; 
             line-height: 1.2;
+            text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.5);
         }
  
         /* ANIMACIONES DE TRIGGER */
@@ -169,8 +170,12 @@
                 const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
                 if (currentline[targetNameIdx]) {
-                    const nombreLimpio = currentline[targetNameIdx].replace(/^"|"\$/g, '').trim();
-                    const telfLimpio = currentline[targetPhoneIdx] ? currentline[targetPhoneIdx].replace(/^"|"\$/g, '').trim() : "";
+                    // Limpieza avanzada de comillas simples, dobles y duplicadas del CSV
+                    let nombreLimpio = currentline[targetNameIdx].trim();
+                    nombreLimpio = nombreLimpio.replace(/^"+|"+$/g, '').replace(/""/g, '"').trim();
+                    
+                    let telfLimpio = currentline[targetPhoneIdx] ? currentline[targetPhoneIdx].trim() : "";
+                    telfLimpio = telfLimpio.replace(/^"+|"+$/g, '').trim();
                     
                     if (nombreLimpio && nombreLimpio !== "" && nombreLimpio.toLowerCase() !== "patrocinadores") {
                         result.push({ nombre: nombreLimpio, telefono: telfLimpio });
@@ -229,7 +234,6 @@
             await cargarPatrocinadores();
             if (listaPatrocinadores.length > 0) ejecutarCicloVisual();
             
-            // Cambiado a 60000 ms (1 minuto de intervalo exacto)
             setInterval(ejecutarCicloVisual, 60000); 
             setInterval(cargarPatrocinadores, 120000);
         }
