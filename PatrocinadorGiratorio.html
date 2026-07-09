@@ -6,7 +6,7 @@
     <title>Lower Third Premium Oro Puro - MTG</title>
     <style>
         /* Importamos tipografías profesionales para broadcast */
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght=400;700;900&display=swap');
  
         body {
             margin: 0;
@@ -94,9 +94,9 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.6); 
         }
  
-        /* LÍNEA 3: Número de Teléfono (Cambiado al mismo oro mate de la línea 1) */
+        /* LÍNEA 3: Número de Teléfono */
         .phone-text {
-            color: #b8860b; /* COLOR ORO MATE COINCIDENTE */
+            color: #b8860b;
             font-size: 14px; 
             font-weight: 700;
             letter-spacing: 1.5px; 
@@ -228,8 +228,10 @@
         async function iniciar() {
             await cargarPatrocinadores();
             if (listaPatrocinadores.length > 0) ejecutarCicloVisual();
-            setInterval(ejecutarCicloVisual, 12000); 
-            setInterval(cargarPatrocinadores, 30000);
+            
+            // Cambiado a 60000 ms (1 minuto de intervalo exacto)
+            setInterval(ejecutarCicloVisual, 60000); 
+            setInterval(cargarPatrocinadores, 120000);
         }
  
         window.onload = iniciar;
