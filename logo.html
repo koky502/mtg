@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MTG Logo Transformers Intro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            --gold-light: #FFD35B;
+            --gold-main: #C99725;
+            --gold-dark: #8C6211;
+        }
+
+        /* Contenedor principal del Logo */
+        .transformer-container {
+            position: relative;
+            width: 500px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Filtro de sombra dorada premium estilo Glow */
+            filter: drop-shadow(0 0 15px rgba(201, 151, 37, 0.4));
+        }
+
+        /* ==========================================
+           1. MÓDULO WI-FI (SEÑAL SUPERIOR)
+           ========================================== */
+        .wifi-signal {
+            position: relative;
+            width: 160px;
+            height: 100px;
+            margin-bottom: -10px;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+        }
+
+        .arc {
+            border: 12px solid transparent;
+            border-top-color: var(--gold-main);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            transform-origin: bottom center;
+            opacity: 0;
+        }
+
+        /* Arco Pequeño (Centro) */
+        .arc-1 {
+            width: 40px;
+            height: 40px;
+            animation: assembleArc 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            animation-delay: 0.2s;
+        }
+
+        /* Arco Mediano */
+        .arc-2 {
+            width: 90px;
+            height: 90px;
+            animation: assembleArc 1.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            animation-delay: 0.4s;
+        }
+
+        /* Arco Grande (Exterior) */
+        .arc-3 {
+            width: 140px;
+            height: 140px;
+            animation: assembleArc 1.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            animation-delay: 0.6s;
+        }
+
+        @keyframes assembleArc {
+            0% {
+                opacity: 0;
+                transform: translateY(-200px) scale(0.2) rotate(-90deg);
+                filter: brightness(3);
+            }
+            70% {
+                opacity: 1;
+                transform: translateY(10px) scale(1.1) rotate(5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotate(0deg);
+                filter: brightness(1);
+            }
+        }
+
+        /* ==========================================
+           2. MÓDULO DE LETRAS (TEXTO MTG)
+           ========================================== */
+        .brand-letters {
+            display: flex;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 110px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold-main) 50%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .letter {
+            display: inline-block;
+            opacity: 0;
+            transform-origin: center center;
+        }
+
+        /* Animación Letra M - Viene disparada desde la izquierda */
+        .letter-m {
+            animation: transformM 1.5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes transformM {
+            0% {
+                opacity: 0;
+                transform: translateX(-400px) translateY(150px) scale(2) rotate(-120deg);
+                filter: blur(10px) brightness(2);
+            }
+            75% {
+                opacity: 1;
+                transform: translateX(15px) translateY(-10px) scale(0.9) rotate(10deg);
+                filter: blur(0px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+            }
+        }
+
+        /* Animación Letra T - Cae pesada desde el espacio superior */
+        .letter-t {
+            animation: transformT 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation-delay: 1.1s;
+            z-index: 2;
+        }
+
+        @keyframes transformT {
+            0% {
+                opacity: 0;
+                transform: translateY(-300px) scale(0.5) skewY(30deg);
+                filter: brightness(4);
+            }
+            70% {
+                opacity: 1;
+                transform: translateY(20px) scale(1.05) skewY(-5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) skewY(0deg);
+                filter: brightness(1);
+            }
+        }
+
+        /* Animación Letra G - Entra rotando veloz desde la derecha */
+        .letter-g {
+            animation: transformG 1.5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+            animation-delay: 0.9s;
+        }
+
+        @keyframes transformG {
+            0% {
+                opacity: 0;
+                transform: translateX(400px) translateY(-100px) scale(1.8) rotate(180deg);
+                filter: blur(5px) brightness(2);
+            }
+            80% {
+                opacity: 1;
+                transform: translateX(-10px) translateY(5px) scale(0.95) rotate(-10deg);
+                filter: blur(0px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+            }
+        }
+
+        /* ==========================================
+           3. MÓDULO INFOBAR (TELÉFONO / SUBTEXTO)
+           ========================================== */
+        .info-bar {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            color: #ffffff;
+            margin-top: 15px;
+            letter-spacing: 3px;
+            font-weight: 900;
+            opacity: 0;
+            text-shadow: 0 0 8px var(--gold-main);
+            transform: scaleX(0);
+            animation: lockInfoBar 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation-delay: 2.2s; /* Se activa justo cuando el logo termina de armarse */
+        }
+
+        @keyframes lockInfoBar {
+            0% {
+                opacity: 0;
+                transform: scaleX(0);
+                filter: brightness(3);
+            }
+            100% {
+                opacity: 1;
+                transform: scaleX(1);
+                filter: brightness(1);
+            }
+        }
+
+        /* Destello metálico final de ensamble exitoso (Efecto Óptico) */
+        .transformer-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 211, 91, 0.4), transparent);
+            transform: skewX(-30deg);
+            animation: metallicShine 1.2s ease-in-out;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes metallicShine {
+            0% { left: -150%; }
+            100% { left: 150%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="transformer-container">
+        <!-- Parte 1: El Wi-Fi desfragmentado -->
+        <div class="wifi-signal">
+            <div class="arc arc-1"></div>
+            <div class="arc arc-2"></div>
+            <div class="arc arc-3"></div>
+        </div>
+
+        <!-- Parte 2: El núcleo del logo (Las piezas mecánicas MTG) -->
+        <div class="brand-letters">
+            <span class="letter letter-m">M</span>
+            <span class="letter letter-t">T</span>
+            <span class="letter letter-g">G</span>
+        </div>
+
+        <!-- Parte 3: Bloqueo de Datos Final -->
+        <div class="info-bar">Tel. 3684 7307</div>
+    </div>
+
+</body>
+</html>
