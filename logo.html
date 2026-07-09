@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>MTG - Marketing Master Overlay 3D</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght=900&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -33,7 +33,6 @@
             align-items: center;
             transform-style: preserve-3d;
             filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.65));
-            /* TRUCO 2: Pulso global de escala publicitaria (Anclaje visual) */
             animation: stagePulse 12s cubic-bezier(0.25, 1, 0.5, 1) infinite;
         }
 
@@ -44,7 +43,7 @@
         }
 
         /* ==========================================
-           1. ARCOS WI-FI (TRUCO 3: EFECTO RADAR/SEÑAL VIVA)
+           1. ARCOS WI-FI (EFECTO RADAR/SEÑAL VIVA)
            ========================================== */
         .wifi-3d-group {
             position: relative;
@@ -177,7 +176,7 @@
         }
 
         /* ==========================================
-           3. PANEL DE MARKETING CORREGIDO (SIN FILTRACIONES)
+           3. PANEL DE MARKETING CON ROTACIÓN ACTIVA
            ========================================== */
         .info-panel-3d {
             position: relative;
@@ -209,7 +208,6 @@
             align-items: center;
         }
 
-        /* CORRECCIÓN: El gradiente oro se aplica directamente aquí para evitar que OBS lo vuelva invisible */
         .text-slide {
             position: absolute;
             opacity: 0;
@@ -223,16 +221,15 @@
         .slide-phone { animation: rotateText1 12s ease-in-out infinite; }
         .slide-cta { animation: rotateText2 12s ease-in-out infinite; }
 
-        /* Ajuste de tiempos exactos para evitar zonas muertas en pantalla */
         @keyframes rotateText1 {
             0%, 5% { opacity: 0; transform: translateY(5px); }
-            10%, 45% { opacity: 1; transform: translateY(0); } /* Visible la mitad del tiempo */
+            10%, 45% { opacity: 1; transform: translateY(0); }
             50%, 100% { opacity: 0; transform: translateY(-5px); }
         }
 
         @keyframes rotateText2 {
             0%, 50% { opacity: 0; transform: translateY(5px); }
-            55%, 90% { opacity: 1; transform: translateY(0); } /* Visible la otra mitad */
+            55%, 90% { opacity: 1; transform: translateY(0); }
             95%, 100% { opacity: 0; transform: translateY(-5px); }
         }
 
@@ -292,7 +289,7 @@
         <div class="info-panel-3d">
             <div class="marketing-text-wrapper">
                 <span class="text-slide slide-phone">TEL. 3684 7307</span>
-                <span class="text-slide slide-cta">¡CONTRÁTANOS!</span>
+                <span class="text-slide slide-cta">¡RESERVA YA!</span>
             </div>
         </div>
         
