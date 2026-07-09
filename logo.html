@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG Logo Transformers Intro</title>
+    <title>MTG - Cinematic 3D Transformers</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -14,248 +14,282 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 100vw;
+            /* Activamos el espacio tridimensional global */
+            perspective: 1200px;
             --gold-light: #FFD35B;
             --gold-main: #C99725;
             --gold-dark: #8C6211;
         }
 
-        /* Contenedor principal del Logo */
-        .transformer-container {
+        /* Contenedor Maestro con soporte 3D */
+        .stage-3d {
             position: relative;
-            width: 500px;
-            height: 400px;
+            width: 600px;
+            height: 500px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* Filtro de sombra dorada premium estilo Glow */
-            filter: drop-shadow(0 0 15px rgba(201, 151, 37, 0.4));
+            transform-style: preserve-3d;
         }
 
         /* ==========================================
-           1. MÓDULO WI-FI (SEÑAL SUPERIOR)
+           1. ISOTIPO: WI-FI CINEMÁTICO DE ALTA RED
            ========================================== */
-        .wifi-signal {
+        .wifi-3d-group {
             position: relative;
-            width: 160px;
-            height: 100px;
-            margin-bottom: -10px;
-            display: flex;
-            flex-direction: column-reverse;
-            align-items: center;
+            width: 200px;
+            height: 110px;
+            margin-bottom: 5px;
+            transform-style: preserve-3d;
         }
 
-        .arc {
-            border: 12px solid transparent;
-            border-top-color: var(--gold-main);
-            border-radius: 50%;
+        .arc-3d {
             position: absolute;
             bottom: 0;
+            left: 50%;
+            border: 14px solid transparent;
+            border-top-color: var(--gold-main);
+            border-radius: 50%;
+            transform-style: preserve-3d;
             transform-origin: bottom center;
             opacity: 0;
+            /* Simulación de bisel metálico mediante filtros de sombra avanzados */
+            filter: drop-shadow(0px 5px 4px rgba(0,0,0,0.6)) drop-shadow(0px 0px 8px rgba(201,151,37,0.3));
         }
 
-        /* Arco Pequeño (Centro) */
         .arc-1 {
-            width: 40px;
-            height: 40px;
-            animation: assembleArc 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            width: 50px;
+            height: 50px;
+            margin-left: -39px;
+            animation: buildArc1 1.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
             animation-delay: 0.2s;
         }
 
-        /* Arco Mediano */
         .arc-2 {
-            width: 90px;
-            height: 90px;
-            animation: assembleArc 1.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            width: 110px;
+            height: 110px;
+            margin-left: -69px;
+            animation: buildArc2 1.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
             animation-delay: 0.4s;
         }
 
-        /* Arco Grande (Exterior) */
         .arc-3 {
-            width: 140px;
-            height: 140px;
-            animation: assembleArc 1.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            width: 170px;
+            height: 170px;
+            margin-left: -99px;
+            animation: buildArc3 1.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
             animation-delay: 0.6s;
         }
 
-        @keyframes assembleArc {
-            0% {
-                opacity: 0;
-                transform: translateY(-200px) scale(0.2) rotate(-90deg);
-                filter: brightness(3);
-            }
-            70% {
-                opacity: 1;
-                transform: translateY(10px) scale(1.1) rotate(5deg);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1) rotate(0deg);
-                filter: brightness(1);
-            }
+        @keyframes buildArc1 {
+            0% { opacity: 0; transform: translateZ(400px) translateY(-100px) rotateX(-90deg) scale(0.1); filter: brightness(3); }
+            100% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
+        }
+        @keyframes buildArc2 {
+            0% { opacity: 0; transform: translateZ(500px) translateY(-150px) rotateY(90deg) scale(0.1); filter: brightness(3); }
+            100% { opacity: 1; transform: translateZ(0) translateY(0) rotateY(0deg) scale(1); filter: brightness(1); }
+        }
+        @keyframes buildArc3 {
+            0% { opacity: 0; transform: translateZ(600px) translateY(-200px) rotateX(90deg) scale(0.1); filter: brightness(3); }
+            100% { opacity: 1; transform: translateZ(0) translateY(0) rotateX(0deg) scale(1); filter: brightness(1); }
         }
 
         /* ==========================================
-           2. MÓDULO DE LETRAS (TEXTO MTG)
+           2. NÚCLEO MECÁNICO: LETRAS MTG EN 3D
            ========================================== */
-        .brand-letters {
+        .logo-core-3d {
             display: flex;
+            transform-style: preserve-3d;
             font-family: 'Orbitron', sans-serif;
-            font-size: 110px;
+            font-size: 130px;
             font-weight: 900;
-            letter-spacing: -2px;
-            background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold-main) 50%, var(--gold-dark) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: -4px;
             position: relative;
         }
 
-        .letter {
+        .letter-3d {
             display: inline-block;
+            position: relative;
+            transform-style: preserve-3d;
             opacity: 0;
-            transform-origin: center center;
+            color: var(--gold-main);
+            /* Gradiente metálico premium */
+            background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold-main) 50%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Animación Letra M - Viene disparada desde la izquierda */
-        .letter-m {
-            animation: transformM 1.5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+        /* Efecto de Extrusión 3D Real simulado mediante texto duplicado en capas de sombra */
+        .letter-3d::after {
+            content: attr(data-letter);
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateZ(-10px);
+            background: linear-gradient(180deg, #5c4103 0%, #2b1f01 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            z-index: -1;
+        }
+
+        /* Animación Letra M - Viene cruzada en el eje Z rotando de forma agresiva */
+        .m-piece {
+            animation: transformM3D 1.6s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
             animation-delay: 0.8s;
         }
-
-        @keyframes transformM {
+        @keyframes transformM3D {
             0% {
                 opacity: 0;
-                transform: translateX(-400px) translateY(150px) scale(2) rotate(-120deg);
-                filter: blur(10px) brightness(2);
+                transform: translateX(-500px) translateY(200px) translateZ(600px) rotateY(-130deg) rotateX(45deg);
+                filter: blur(8px) brightness(3);
             }
-            75% {
+            80% {
                 opacity: 1;
-                transform: translateX(15px) translateY(-10px) scale(0.9) rotate(10deg);
+                transform: translateX(10px) translateY(-5px) translateZ(-20px) rotateY(15deg) rotateX(-5deg);
                 filter: blur(0px);
             }
             100% {
                 opacity: 1;
-                transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+                transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg);
             }
         }
 
-        /* Animación Letra T - Cae pesada desde el espacio superior */
-        .letter-t {
-            animation: transformT 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        /* Animación Letra T - La pieza central que cae perpendicular impactando el lienzo */
+        .t-piece {
+            animation: transformT3D 1.4s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
             animation-delay: 1.1s;
-            z-index: 2;
+            z-index: 5;
         }
-
-        @keyframes transformT {
+        @keyframes transformT3D {
             0% {
                 opacity: 0;
-                transform: translateY(-300px) scale(0.5) skewY(30deg);
+                transform: translateY(-400px) translateZ(-800px) rotateX(-90deg) scale(0.4);
                 filter: brightness(4);
             }
             70% {
                 opacity: 1;
-                transform: translateY(20px) scale(1.05) skewY(-5deg);
+                transform: translateY(15px) translateZ(30px) rotateX(10deg) scale(1.05);
             }
             100% {
                 opacity: 1;
-                transform: translateY(0) scale(1) skewY(0deg);
+                transform: translateY(0) translateZ(0) rotateX(0deg) scale(1);
                 filter: brightness(1);
             }
         }
 
-        /* Animación Letra G - Entra rotando veloz desde la derecha */
-        .letter-g {
-            animation: transformG 1.5s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+        /* Animación Letra G - Entra desde el fondo del espacio tridimensional rotando veloz */
+        .g-piece {
+            animation: transformG3D 1.6s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
             animation-delay: 0.9s;
         }
-
-        @keyframes transformG {
+        @keyframes transformG3D {
             0% {
                 opacity: 0;
-                transform: translateX(400px) translateY(-100px) scale(1.8) rotate(180deg);
-                filter: blur(5px) brightness(2);
+                transform: translateX(500px) translateY(-150px) translateZ(600px) rotateY(140deg) rotateX(-30deg);
+                filter: blur(8px) brightness(3);
             }
             80% {
                 opacity: 1;
-                transform: translateX(-10px) translateY(5px) scale(0.95) rotate(-10deg);
+                transform: translateX(-10px) translateY(5px) translateZ(-20px) rotateY(-15deg) rotateX(5deg);
                 filter: blur(0px);
             }
             100% {
                 opacity: 1;
-                transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+                transform: translateX(0) translateY(0) translateZ(0) rotateY(0deg) rotateX(0deg);
             }
         }
 
         /* ==========================================
-           3. MÓDULO INFOBAR (TELÉFONO / SUBTEXTO)
+           3. BASE DE DATOS: ESCÁNER MECÁNICO
            ========================================== */
-        .info-bar {
+        .info-panel-3d {
             font-family: 'Orbitron', sans-serif;
-            font-size: 24px;
+            font-size: 26px;
             color: #ffffff;
-            margin-top: 15px;
-            letter-spacing: 3px;
+            margin-top: 20px;
+            letter-spacing: 4px;
             font-weight: 900;
             opacity: 0;
-            text-shadow: 0 0 8px var(--gold-main);
-            transform: scaleX(0);
-            animation: lockInfoBar 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            animation-delay: 2.2s; /* Se activa justo cuando el logo termina de armarse */
+            border: 2px solid var(--gold-main);
+            background: rgba(18, 18, 18, 0.85);
+            padding: 8px 30px;
+            border-radius: 6px;
+            box-shadow: 0 0 15px rgba(201, 151, 37, 0.4);
+            transform: translateZ(-100px) scaleX(0);
+            animation: lockPanel3D 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation-delay: 2.3s;
         }
 
-        @keyframes lockInfoBar {
+        @keyframes lockPanel3D {
             0% {
                 opacity: 0;
-                transform: scaleX(0);
+                transform: translateZ(-100px) scaleX(0);
                 filter: brightness(3);
             }
             100% {
                 opacity: 1;
-                transform: scaleX(1);
+                transform: translateZ(0) scaleX(1);
                 filter: brightness(1);
             }
         }
 
-        /* Destello metálico final de ensamble exitoso (Efecto Óptico) */
-        .transformer-container::after {
-            content: '';
+        /* ==========================================
+           4. DESTELLO CINEMATOGRÁFICO DE CIERRE (SHINE)
+           ========================================== */
+        .shine-layer {
             position: absolute;
             top: 0;
-            left: -150%;
-            width: 50%;
+            left: 0;
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 211, 91, 0.4), transparent);
-            transform: skewX(-30deg);
-            animation: metallicShine 1.2s ease-in-out;
-            animation-delay: 2.5s;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            transform-style: preserve-3d;
         }
 
-        @keyframes metallicShine {
-            0% { left: -150%; }
-            100% { left: 150%; }
+        .stage-3d::after {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: -150%;
+            width: 60px;
+            height: 70%;
+            background: linear-gradient(90deg, transparent, rgba(255, 211, 91, 0.6), transparent);
+            transform: skewX(-25deg) translateZ(20px);
+            animation: cinematicFlash 1.4s ease-in-out forwards;
+            animation-delay: 2.6s;
+        }
+
+        @keyframes cinematicFlash {
+            0% { left: -150%; opacity: 1; }
+            100% { left: 150%; opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="transformer-container">
-        <!-- Parte 1: El Wi-Fi desfragmentado -->
-        <div class="wifi-signal">
-            <div class="arc arc-1"></div>
-            <div class="arc arc-2"></div>
-            <div class="arc arc-3"></div>
+    <!-- Escenario de Renderizado 3D Completo -->
+    <div class="stage-3d">
+        
+        <!-- Isotipo Desfragmentado en el Espacio Z -->
+        <div class="wifi-3d-group">
+            <div class="arc-3d arc-1"></div>
+            <div class="arc-3d arc-2"></div>
+            <div class="arc-3d arc-3"></div>
         </div>
 
-        <!-- Parte 2: El núcleo del logo (Las piezas mecánicas MTG) -->
-        <div class="brand-letters">
-            <span class="letter letter-m">M</span>
-            <span class="letter letter-t">T</span>
-            <span class="letter letter-g">G</span>
+        <!-- El Núcleo de Letras Extruidas Mecánicas -->
+        <div class="logo-core-3d">
+            <span class="letter-3d m-piece" data-letter="M">M</span>
+            <span class="letter-3d t-piece" data-letter="T">T</span>
+            <span class="letter-3d g-piece" data-letter="G">G</span>
         </div>
 
-        <!-- Parte 3: Bloqueo de Datos Final -->
-        <div class="info-bar">Tel. 3684 7307</div>
+        <!-- Panel de Confirmación de Datos del Negocio -->
+        <div class="info-panel-3d">TEL. 3684 7307</div>
+        
     </div>
 
 </body>
