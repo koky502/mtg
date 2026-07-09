@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MTG - Unified Pure Gold 3D</title>
+    <title>MTG - Marketing Master Overlay 3D</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -16,7 +16,6 @@
             height: 100vh;
             width: 100vw;
             perspective: 1600px;
-            /* Paleta Cromada de Oro Premium */
             --gold-light: #FFF5BC;
             --gold-bright: #FFD35B;
             --gold-main: #C99725;
@@ -34,10 +33,18 @@
             align-items: center;
             transform-style: preserve-3d;
             filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.65));
+            /* Truco 2: Pulso global de escala publicitaria al armarse */
+            animation: stagePulse 12s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+        }
+
+        @keyframes stagePulse {
+            0%, 18% { transform: scale(1); }
+            22% { transform: scale(1.03); } /* Latido de marca */
+            26%, 100% { transform: scale(1); }
         }
 
         /* ==========================================
-           1. ARCOS WI-FI (CICLO DE LUZ INTERMITENTE)
+           1. ARCOS WI-FI (TRUCO 3: EFECTO RADAR)
            ========================================== */
         .wifi-3d-group {
             position: relative;
@@ -62,7 +69,10 @@
 
         .arc-1 { width: 60px; height: 60px; margin-left: -44px; animation: loopArc1 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
         .arc-2 { width: 120px; height: 120px; margin-left: -74px; animation: loopArc2 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
-        .arc-3 { width: 180px; height: 180px; margin-left: -104px; animation: loopArc3 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; }
+        .arc-3 { 
+            width: 180px; height: 180px; margin-left: -104px; 
+            animation: loopArc3 12s cubic-bezier(0.25, 1, 0.5, 1) infinite; 
+        }
 
         @keyframes loopArc1 {
             0% { opacity: 0; transform: translateZ(300px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
@@ -84,6 +94,9 @@
             0%, 3% { opacity: 0; transform: translateZ(500px) scale(0.4); filter: brightness(2.5) drop-shadow(0 0 15px var(--gold-bright)); }
             8% { opacity: 1; transform: translateZ(0) scale(1); filter: brightness(1.8) drop-shadow(0 0 12px var(--gold-bright)); }
             24% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
+            /* Truco Radar en el pico más alto */
+            35% { filter: brightness(0.6) drop-shadow(0 0 20px var(--gold-bright)); }
+            40% { filter: brightness(0.6) drop-shadow(0px 4px 8px rgba(0,0,0,0.7)); }
             82% { opacity: 1; transform: translateZ(0) scale(1); }
             86% { opacity: 0; transform: translateZ(200px) scale(0.8); filter: blur(4px); }
             100% { opacity: 0; }
@@ -168,31 +181,59 @@
         }
 
         /* ==========================================
-           3. PANEL DE DATOS (TEXTO INTEGRADO EN ORO CROMADO)
+           3. PANEL DE MARKETING INTERACTIVO (TRUCO 1)
            ========================================== */
         .info-panel-3d {
+            position: relative;
+            width: 380px;
+            height: 38px;
+            margin-top: 5px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 26px;
-            margin-top: -3px; 
-            letter-spacing: 5px;
+            font-size: 24px;
             font-weight: 900;
+            letter-spacing: 3px;
             opacity: 0;
-            background: rgba(12, 12, 12, 0.45);
-            padding: 6px 35px;
-            border-radius: 6px;
-            
-            /* Aplicación de gradiente oro a los números para corregir el error de marketing */
-            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-bright) 50%, var(--gold-main) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            
-            /* Sombra y delineado estricto para mantener contraste IRL */
-            filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.9));
-            box-shadow: inset 0 0 8px rgba(255, 211, 91, 0.15), 0 4px 10px rgba(0,0,0,0.4);
-            
+            display: flex;
+            justify-content: center;
+            align-items: center;
             transform: translateZ(-30px) scale(0.9);
             animation: loopPanel 12s cubic-bezier(0.25, 1, 0.5, 1) infinite;
             animation-delay: 1s;
+        }
+
+        /* Contenedor del texto rotativo publicitario */
+        .marketing-text-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-bright) 50%, var(--gold-main) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.9));
+        }
+
+        .text-slide {
+            position: absolute;
+            opacity: 0;
+        }
+
+        /* Sincronización comercial del texto rotativo */
+        .slide-phone { animation: rotateText1 12s ease-in-out infinite; }
+        .slide-cta { animation: rotateText2 12s ease-in-out infinite; }
+
+        @keyframes rotateText1 {
+            0%, 12% { opacity: 0; transform: translateY(10px); }
+            16%, 48% { opacity: 1; transform: translateY(0); } /* Muestra teléfono */
+            52%, 100% { opacity: 0; transform: translateY(-10px); }
+        }
+
+        @keyframes rotateText2 {
+            0%, 48% { opacity: 0; transform: translateY(10px); }
+            54%, 78% { opacity: 1; transform: translateY(0); } /* Muestra ¡CONTRÁTANOS! */
+            82%, 100% { opacity: 0; transform: translateY(-10px); }
         }
 
         @keyframes loopPanel {
@@ -248,7 +289,13 @@
             <span class="letter-3d g-piece" data-letter="G">G</span>
         </div>
 
-        <div class="info-panel-3d">TEL. 3684 7307</div>
+        <!-- Panel con el truco rotativo de marketing -->
+        <div class="info-panel-3d">
+            <div class="marketing-text-wrapper">
+                <span class="text-slide slide-phone">TEL. 3684 7307</span>
+                <span class="text-slide slide-cta">¡CONTRÁTANOS!</span>
+            </div>
+        </div>
         
     </div>
 
