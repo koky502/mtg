@@ -33,7 +33,6 @@
             align-items: center;
             transform-style: preserve-3d;
             filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.65));
-            /* Sincronizado a ciclo de 3 minutos */
             animation: stagePulse 180s cubic-bezier(0.25, 1, 0.5, 1) infinite;
         }
 
@@ -177,7 +176,7 @@
         }
 
         /* ==========================================
-           3. PANEL DE MARKETING AJUSTADO (ANCHO EXACTO)
+           3. PANEL DE MARKETING INTERMITENTE (CORREGIDO)
            ========================================== */
         .info-panel-3d {
             position: relative;
@@ -211,35 +210,34 @@
 
         .text-slide {
             position: absolute;
-            opacity: 0;
             white-space: nowrap;
             background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-bright) 50%, var(--gold-main) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.9));
+            opacity: 0;
         }
 
-        .slide-phone { animation: rotateText1 180s ease-in-out infinite; }
-        .slide-cta { animation: rotateText2 180s ease-in-out infinite; }
+        /* Corregido: Ahora una sola línea de tiempo controla las transiciones del texto de forma segura */
+        .slide-phone { animation: showPhone 180s ease-in-out infinite; }
+        .slide-cta { animation: showCTA 180s ease-in-out infinite; }
 
-        @keyframes rotateText1 {
-            0%, 0.3% { opacity: 0; transform: translateY(5px); }
-            0.6%, 2.7% { opacity: 1; transform: translateY(0); } /* Muestra Teléfono de 0 a 5 segs */
-            3.0%, 100% { opacity: 0; transform: translateY(-5px); }
+        @keyframes showPhone {
+            0%, 0.5% { opacity: 0; transform: translateY(5px); }
+            0.6%, 2.7% { opacity: 1; transform: translateY(0); }
+            2.8%, 100% { opacity: 0; transform: translateY(-5px); }
         }
 
-        @keyframes rotateText2 {
-            0%, 3.0% { opacity: 0; transform: translateY(5px); }
-            3.3%, 5.4% { opacity: 1; transform: translateY(0); } /* Muestra ¡RESERVA YA! de 5 a 10 segs */
-            5.7%, 100% { opacity: 0; transform: translateY(-5px); }
+        @keyframes showCTA {
+            0%, 2.9% { opacity: 0; transform: translateY(5px); }
+            3.0%, 5.4% { opacity: 1; transform: translateY(0); }
+            5.5%, 100% { opacity: 0; transform: translateY(-5px); }
         }
 
         @keyframes loopPanel {
             0% { opacity: 0; transform: translateY(20px) translateZ(-30px) scale(0.9); }
-            0.6% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
-            5.5% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
-            5.7% { opacity: 0; transform: translateY(10px) translateZ(50px); }
-            100% { opacity: 0; }
+            0.6%, 5.4% { opacity: 1; transform: translateY(0) translateZ(0) scale(1); }
+            5.7%, 100% { opacity: 0; transform: translateY(10px) translateZ(50px); }
         }
 
         /* ==========================================
