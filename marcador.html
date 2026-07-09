@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcador Unificado MTG</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #scoreboard-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            height: 55px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .team-box {
+            background: rgba(15, 15, 15, 0.95);
+            color: #ffffff;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 180px;
+        }
+
+        .team-left { 
+            justify-content: flex-end; 
+            border-bottom: 3px solid #b8860b;
+        }
+        
+        .team-right { 
+            justify-content: flex-start; 
+            border-bottom: 3px solid #b8860b;
+        }
+
+        .time-box {
+            background: linear-gradient(135deg, #111111 0%, #222222 100%);
+            color: #e6ca65;
+            height: 100%;
+            width: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            z-index: 5;
+            border-bottom: 3px solid #e6ca65;
+            clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
+            padding: 0 10px;
+            cursor: pointer;
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%);
+            color: #000000;
+            height: 100%;
+            width: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 900;
+            z-index: 4;
+        }
+
+        .score-left {
+            clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 0% 100%);
+            padding-right: 8px;
+        }
+
+        .score-right {
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%);
+            padding-left: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="scoreboard-container">
+        <div id="team1-name" class="team-box team-left">LOCAL</div>
+        <div id="team1-score" class="score-box score-left">0</div>
+
+        <!-- Al hacer clic aquí mediante Interactuar en OBS, pausarás o reanudarás el tiempo -->
+        <div id="game-clock" class="time-box" onclick="toggleReloj()">00:00</div>
+
+        <div id="team2-score" class="score-box score-right">0</div>
+        <div id="team2-name" class="team-box team-right">VISITANTE</div>
+    </div>
+
+    <script>
+        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
+
+        // 1. VARIABLES DEL CRONÓMETRO LOCAL (Inmune a internet)
+        let segundosCronometro = 0;
+        let ejecutando = true; 
+
+        // 2. MEMORIA DEL CANDADO ANTI-RETROCESO PARA GOLES
+        let golesLocalActuales = 0;
+        let golesVisitaActuales = 0;
+
+        function limpiar(t) { 
+            return t ? t.replace(/^"|"\$/g, '').trim() : ""; 
+        }
+
+        // CONTROL DEL RELOJ INTERNO (OBS Interactuar)
+        function toggleReloj() {
+            ejecutando = !ejecutando;
+            const relojElemento = document.getElementById("game-clock");
+            if (!ejecutando) {
+                relojElemento.style.color = "#ff4444"; // Rojo al pausar
+            } else {
+                relojElemento.style.color = "#e6ca65"; // Oro al correr
+            }
+        }
+
+        // MOTOR DEL TIEMPO (Cuenta segundo a segundo localmente)
+        setInterval(() => {
+            if (ejecutando) {
+                segundosCronometro++;
+                const mins = Math.floor(segundosCronometro / 60);
+                const segs = segundosCronometro % 60;
+                const strMins = mins < 10 ? "0" + mins : mins;
+                const strSegs = segs < 10 ? "0" + segs : segs;
+                document.getElementById("game-clock").innerText = `${strMins}:${strSegs}`;
+            }
+        }, 1000);
+
+        // SINCRONIZADOR DE GOLES DESDE GOOGLE SHEETS (Con filtro estricto)
+        async function consultarGolesYEquipos() {
+            try {
+                const r = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
+                const d = await r.text(); 
+                const l = d.replace(/\r/g, "").split("\n");
+                
+                if (l.length < 9) return;
+                
+                const e1 = l[7].split(","); // Fila 8 de tu Sheets
+                const e2 = l[8].split(","); // Fila 9 de tu Sheets
+
+                const nombreLocal = limpiar(e1[0]);
+                const golesLocalNube = parseInt(limpiar(e1[1])) || 0;
+                
+                const nombreVisita = limpiar(e2[0]);
+                const golesVisitaNube = parseInt(limpiar(e2[1])) || 0;
+
+                // Actualizar nombres siempre
+                document.getElementById("team1-name").innerText = nombreLocal;
+                document.getElementById("team2-name").innerText = nombreVisita;
+
+                // FILTRO CANDADO: Evita que los goles bajen por culpa de la caché de Google
+                if (golesLocalNube >= golesLocalActuales) {
+                    golesLocalActuales = golesLocalNube;
+                    document.getElementById("team1-score").innerText = golesLocalActuales;
+                }
+                
+                if (golesVisitaNube >= golesVisitaActuales) {
+                    golesVisitaActuales = golesVisitaNube;
+                    document.getElementById("team2-score").innerText = golesVisitaActuales;
+                }
+
+            } catch (e) { 
+                console.error("Error sincronizando Sheets:", e); 
+            }
+        }
+
+        // Consulta los goles cada 4 segundos
+        setInterval(consultarGolesYEquipos, 4000); 
+        consultarGolesYEquipos();
+    </script>
+</body>
+</html>
