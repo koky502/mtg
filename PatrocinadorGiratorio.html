@@ -59,7 +59,7 @@
             padding-left: 65px; 
             padding-right: 45px;
             height: 100px; 
-            background: rgba(0, 0, 0, 0.82); /* Un toque más de opacidad para proteger el texto */
+            background: rgba(0, 0, 0, 0.82);
             border-top: 2.5px solid #e6ca65;
             border-right: 5px solid #e6ca65; 
             border-bottom: 2.5px solid #e6ca65;
@@ -72,7 +72,7 @@
             gap: 2px;
         }
  
-        /* LÍNEA 1: Agradecemos a: (Oro claro y sombra protectora) */
+        /* LÍNEA 1: Agradecemos a: */
         .sub-label {
             color: #FFF3B3; 
             font-size: 11px; 
@@ -94,7 +94,7 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); 
         }
  
-        /* LÍNEA 3: Número de Teléfono (Oro claro brillante para lectura rápida) */
+        /* LÍNEA 3: Número de Teléfono */
         .phone-text {
             color: #FFF3B3;
             font-size: 14px; 
@@ -170,7 +170,6 @@
                 const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
                 if (currentline[targetNameIdx]) {
-                    // Limpieza avanzada de comillas simples, dobles y duplicadas del CSV
                     let nombreLimpio = currentline[targetNameIdx].trim();
                     nombreLimpio = nombreLimpio.replace(/^"+|"+$/g, '').replace(/""/g, '"').trim();
                     
@@ -211,29 +210,35 @@
  
             indiceActual = (indiceActual + 1) % listaPatrocinadores.length;
  
+            // t=0s: Entra el botón giratorio de Play
             btn.className = "play-button animar-play-entrada";
  
+            // t=0.5s: Se despliega el banner hacia la derecha
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-entrada";
             }, 500);
  
+            // t=12.5s: El banner se oculta tras 12 segundos completos de lectura limpia
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-salida";
-            }, 6500);
+            }, 12500);
  
+            // t=13.0s: El botón de Play se reduce y desaparece
             setTimeout(() => {
                 btn.className = "play-button animar-play-salida";
-            }, 7000);
+            }, 13000);
  
+            // t=14.0s: Se libera el candado para permitir el próximo ciclo
             setTimeout(() => {
                 estaMostrando = false;
-            }, 8000);
+            }, 14000);
         }
  
         async function iniciar() {
             await cargarPatrocinadores();
             if (listaPatrocinadores.length > 0) ejecutarCicloVisual();
             
+            // Lanza un patrocinador cada 60 segundos
             setInterval(ejecutarCicloVisual, 60000); 
             setInterval(cargarPatrocinadores, 120000);
         }
