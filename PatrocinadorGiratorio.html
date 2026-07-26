@@ -26,7 +26,7 @@
             height: 120px; 
         }
 
-        /* EL BOTÓN REDONDO DE PLAY CORPORATIVO */
+        /* BOTÓN REDONDO DE PLAY CORPORATIVO */
         .play-button {
             width: 90px;
             height: 90px;
@@ -50,7 +50,7 @@
             margin-left: 10px;
         }
 
-        /* CONTENEDOR DE LAS 3 LÍNEAS (Fondo Negro Transparente) */
+        /* CONTENEDOR PRINCIPAL */
         .banner-wrapper {
             display: flex;
             flex-direction: column;
@@ -72,7 +72,7 @@
             gap: 2px;
         }
 
-        /* LÍNEA 1: Frase Dinámica (Agradecemos a:, Cumpleaños de:, etc.) */
+        /* LÍNEA 1: Título */
         .sub-label {
             color: #FFF3B3; 
             font-size: 11px; 
@@ -83,7 +83,7 @@
             text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.5);
         }
 
-        /* LÍNEA 2: Nombre Principal */
+        /* LÍNEA 2: Descripción */
         .main-text {
             color: #e6ca65; 
             font-size: 24px; 
@@ -94,7 +94,7 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); 
         }
 
-        /* LÍNEA 3: Teléfono / Fecha / Info Extra */
+        /* LÍNEA 3: Rótulo1 + Rótulo2 */
         .phone-text {
             color: #FFF3B3;
             font-size: 14px; 
@@ -137,16 +137,16 @@
         </div>
         
         <div id="banner" class="banner-wrapper">
-            <div id="sponsor-frase" class="sub-label">Cargando...</div>
-            <div id="sponsor-name" class="main-text"></div>
-            <div id="sponsor-phone" class="phone-text"></div>
+            <div id="sponsor-titulo" class="sub-label">Cargando...</div>
+            <div id="sponsor-desc" class="main-text"></div>
+            <div id="sponsor-rotulos" class="phone-text"></div>
         </div>
     </div>
 
     <script>
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
         
-        let listaPatrocinadores = [];
+        let listaRegistros = [];
         let indiceActual = 0;
         let estaMostrando = false;
 
@@ -157,36 +157,31 @@
 
             const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
             
-            // Detección automática por encabezado o por índice de columna (D=3, E=4, F=5)
-            const fraseIdx = headers.indexOf("frase");
-            const nameIdx = headers.indexOf("patrocinadores"); 
-            const phoneIdx = headers.indexOf("telefono");
-
-            const targetFraseIdx = (fraseIdx !== -1) ? fraseIdx : 3;
-            const targetNameIdx = (nameIdx !== -1) ? nameIdx : 4;
-            const targetPhoneIdx = (phoneIdx !== -1) ? phoneIdx : 5;
+            // Detección automática por nombre de encabezado o por columna fija (A=0, B=1, C=2, D=3)
+            const titIdx = headers.indexOf("titulo") !== -1 ? headers.indexOf("titulo") : 0;
+            const descIdx = headers.indexOf("descripción") !== -1 ? headers.indexOf("descripción") : (headers.indexOf("descripcion") !== -1 ? headers.indexOf("descripcion") : 1);
+            const rot1Idx = headers.indexOf("rótulo1") !== -1 ? headers.indexOf("rótulo1") : (headers.indexOf("rotulo1") !== -1 ? headers.indexOf("rotulo1") : 2);
+            const rot2Idx = headers.indexOf("rótulo2") !== -1 ? headers.indexOf("rótulo2") : (headers.indexOf("rotulo2") !== -1 ? headers.indexOf("rotulo2") : 3);
 
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
                 
+                // Expresión regular para soportar comas dentro de textos entre comillas
                 const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
-                if (currentline[targetNameIdx]) {
-                    let fraseLimpia = currentline[targetFraseIdx] ? currentline[targetFraseIdx].trim() : "Agradecemos a:";
-                    fraseLimpia = fraseLimpia.replace(/^"+|"+$/g, '').replace(/""/g, '"').trim();
+                if (currentline[descIdx]) {
+                    let titulo = currentline[titIdx] ? currentline[titIdx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
+                    let descripcion = currentline[descIdx] ? currentline[descIdx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
+                    let rotulo1 = currentline[rot1Idx] ? currentline[rot1Idx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
+                    let rotulo2 = currentline[rot2Idx] ? currentline[rot2Idx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
 
-                    let nombreLimpio = currentline[targetNameIdx].trim();
-                    nombreLimpio = nombreLimpio.replace(/^"+|"+$/g, '').replace(/""/g, '"').trim();
-                    
-                    let telfLimpio = currentline[targetPhoneIdx] ? currentline[targetPhoneIdx].trim() : "";
-                    telfLimpio = telfLimpio.replace(/^"+|"+$/g, '').trim();
-                    
-                    if (nombreLimpio && nombreLimpio !== "" && nombreLimpio.toLowerCase() !== "patrocinadores") {
+                    if (descripcion && descripcion.toLowerCase() !== "descripción" && descripcion.toLowerCase() !== "descripcion") {
                         result.push({ 
-                            frase: fraseLimpia || "Agradecemos a:",
-                            nombre: nombreLimpio, 
-                            telefono: telfLimpio 
+                            titulo: titulo,
+                            descripcion: descripcion, 
+                            rotulo1: rotulo1,
+                            rotulo2: rotulo2
                         });
                     }
                 }
@@ -194,41 +189,44 @@
             return result;
         }
 
-        async function cargarPatrocinadores() {
+        async function cargarDatos() {
             try {
                 const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
                 const dataText = await response.text();
-                const nuevasMarcas = parseCSV(dataText);
-                if (nuevasMarcas.length > 0) listaPatrocinadores = nuevasMarcas;
+                const nuevosDatos = parseCSV(dataText);
+                if (nuevosDatos.length > 0) listaRegistros = nuevosDatos;
             } catch (error) {
                 console.error("Error cargando base de datos:", error);
             }
         }
 
         function ejecutarCicloVisual() {
-            if (listaPatrocinadores.length === 0 || estaMostrando) return;
+            if (listaRegistros.length === 0 || estaMostrando) return;
             
             estaMostrando = true;
             const btn = document.getElementById("play-btn");
             const banner = document.getElementById("banner");
-            const txtFrase = document.getElementById("sponsor-frase");
-            const txtNombre = document.getElementById("sponsor-name");
-            const txtTelefono = document.getElementById("sponsor-phone");
+            const txtTitulo = document.getElementById("sponsor-titulo");
+            const txtDesc = document.getElementById("sponsor-desc");
+            const txtRotulos = document.getElementById("sponsor-rotulos");
 
-            const itemActual = listaPatrocinadores[indiceActual];
-            txtFrase.innerText = itemActual.frase;
-            txtNombre.innerText = itemActual.nombre;
+            const itemActual = listaRegistros[indiceActual];
+            txtTitulo.innerText = itemActual.titulo;
+            txtDesc.innerText = itemActual.descripcion;
 
-            // Formato Inteligente para el Campo Teléfono/Fecha
-            if (itemActual.telefono) {
-                // Si contiene solo números, espacios o guiones es un teléfono
-                const esTelefono = /^[\d\s\-+()]+$/.test(itemActual.telefono);
-                txtTelefono.innerText = esTelefono ? `WhatsApp / Tel: ${itemActual.telefono}` : itemActual.telefono;
-            } else {
-                txtTelefono.innerText = "";
+            // Ensamblar Rótulo1 y Rótulo2 dinámicamente
+            let combinacionRotulos = "";
+            if (itemActual.rotulo1 && itemActual.rotulo2) {
+                combinacionRotulos = `${itemActual.rotulo1}: ${itemActual.rotulo2}`;
+            } else if (itemActual.rotulo1) {
+                combinacionRotulos = itemActual.rotulo1;
+            } else if (itemActual.rotulo2) {
+                combinacionRotulos = itemActual.rotulo2;
             }
 
-            indiceActual = (indiceActual + 1) % listaPatrocinadores.length;
+            txtRotulos.innerText = combinacionRotulos;
+
+            indiceActual = (indiceActual + 1) % listaRegistros.length;
 
             // t=0s: Entra el botón giratorio de Play
             btn.className = "play-button animar-play-entrada";
@@ -238,12 +236,12 @@
                 banner.className = "banner-wrapper animar-banner-entrada";
             }, 500);
 
-            // t=12.5s: El banner se oculta tras 12 segundos de lectura
+            // t=12.5s: El banner se oculta tras 12 segundos
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-salida";
             }, 12500);
 
-            // t=13.0s: El botón de Play se reduce y desaparece
+            // t=13.0s: El botón de Play desaparece
             setTimeout(() => {
                 btn.className = "play-button animar-play-salida";
             }, 13000);
@@ -255,12 +253,12 @@
         }
 
         async function iniciar() {
-            await cargarPatrocinadores();
-            if (listaPatrocinadores.length > 0) ejecutarCicloVisual();
+            await cargarDatos();
+            if (listaRegistros.length > 0) ejecutarCicloVisual();
             
-            // Lanza una tarjeta cada 60 segundos
+            // Lanza una tarjeta cada 60 segundos y actualiza datos cada 2 minutos
             setInterval(ejecutarCicloVisual, 60000); 
-            setInterval(cargarPatrocinadores, 120000);
+            setInterval(cargarDatos, 120000);
         }
 
         window.onload = iniciar;
