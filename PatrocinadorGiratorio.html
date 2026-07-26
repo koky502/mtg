@@ -157,7 +157,6 @@
 
             const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
             
-            // Detección automática por nombre de encabezado o por columna fija (A=0, B=1, C=2, D=3)
             const titIdx = headers.indexOf("titulo") !== -1 ? headers.indexOf("titulo") : 0;
             const descIdx = headers.indexOf("descripción") !== -1 ? headers.indexOf("descripción") : (headers.indexOf("descripcion") !== -1 ? headers.indexOf("descripcion") : 1);
             const rot1Idx = headers.indexOf("rótulo1") !== -1 ? headers.indexOf("rótulo1") : (headers.indexOf("rotulo1") !== -1 ? headers.indexOf("rotulo1") : 2);
@@ -167,7 +166,6 @@
                 const line = lines[i].trim();
                 if (!line) continue;
                 
-                // Expresión regular para soportar comas dentro de textos entre comillas
                 const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
                 if (currentline[descIdx]) {
@@ -214,10 +212,10 @@
             txtTitulo.innerText = itemActual.titulo;
             txtDesc.innerText = itemActual.descripcion;
 
-            // Ensamblar Rótulo1 y Rótulo2 dinámicamente
+            // Ensamblado simple: Une Rótulo1 y Rótulo2 con un espacio limpio (sin puntos automáticos)
             let combinacionRotulos = "";
             if (itemActual.rotulo1 && itemActual.rotulo2) {
-                combinacionRotulos = `${itemActual.rotulo1}: ${itemActual.rotulo2}`;
+                combinacionRotulos = `${itemActual.rotulo1} ${itemActual.rotulo2}`;
             } else if (itemActual.rotulo1) {
                 combinacionRotulos = itemActual.rotulo1;
             } else if (itemActual.rotulo2) {
@@ -228,25 +226,25 @@
 
             indiceActual = (indiceActual + 1) % listaRegistros.length;
 
-            // t=0s: Entra el botón giratorio de Play
+            // t=0s: Entra el botón giratorio
             btn.className = "play-button animar-play-entrada";
 
-            // t=0.5s: Se despliega el banner hacia la derecha
+            // t=0.5s: Despliegue del banner
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-entrada";
             }, 500);
 
-            // t=12.5s: El banner se oculta tras 12 segundos
+            // t=12.5s: Ocultar banner
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-salida";
             }, 12500);
 
-            // t=13.0s: El botón de Play desaparece
+            // t=13.0s: Salida del botón
             setTimeout(() => {
                 btn.className = "play-button animar-play-salida";
             }, 13000);
 
-            // t=14.0s: Se libera el candado para permitir el próximo ciclo
+            // t=14.0s: Liberar candado
             setTimeout(() => {
                 estaMostrando = false;
             }, 14000);
@@ -256,7 +254,6 @@
             await cargarDatos();
             if (listaRegistros.length > 0) ejecutarCicloVisual();
             
-            // Lanza una tarjeta cada 60 segundos y actualiza datos cada 2 minutos
             setInterval(ejecutarCicloVisual, 60000); 
             setInterval(cargarDatos, 120000);
         }
