@@ -6,7 +6,7 @@
     <title>Lower Third Premium Oro Puro - MTG</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
- 
+
         body {
             margin: 0;
             padding: 0;
@@ -16,7 +16,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
- 
+
         #widget-container {
             position: absolute;
             bottom: 15px;
@@ -25,7 +25,7 @@
             align-items: center;
             height: 120px; 
         }
- 
+
         /* EL BOTÓN REDONDO DE PLAY CORPORATIVO */
         .play-button {
             width: 90px;
@@ -40,7 +40,7 @@
             border: 3.5px solid #0a0a0a;
             transform: scale(0);
         }
- 
+
         .triangle {
             width: 0;
             height: 0;
@@ -49,7 +49,7 @@
             border-bottom: 16px solid transparent;
             margin-left: 10px;
         }
- 
+
         /* CONTENEDOR DE LAS 3 LÍNEAS (Fondo Negro Transparente) */
         .banner-wrapper {
             display: flex;
@@ -71,8 +71,8 @@
             white-space: nowrap;
             gap: 2px;
         }
- 
-        /* LÍNEA 1: Agradecemos a : */
+
+        /* LÍNEA 1: Frase Dinámica (Agradecemos a:, Cumpleaños de:, etc.) */
         .sub-label {
             color: #FFF3B3; 
             font-size: 11px; 
@@ -82,8 +82,8 @@
             line-height: 1.2;
             text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.5);
         }
- 
-        /* LÍNEA 2: Nombre del Patrocinador */
+
+        /* LÍNEA 2: Nombre Principal */
         .main-text {
             color: #e6ca65; 
             font-size: 24px; 
@@ -93,8 +93,8 @@
             line-height: 1.2;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); 
         }
- 
-        /* LÍNEA 3: Número de Teléfono */
+
+        /* LÍNEA 3: Teléfono / Fecha / Info Extra */
         .phone-text {
             color: #FFF3B3;
             font-size: 14px; 
@@ -103,14 +103,14 @@
             line-height: 1.2;
             text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.5);
         }
- 
+
         /* ANIMACIONES DE TRIGGER */
         .animar-play-entrada { animation: entradaPlay 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .animar-play-salida  { animation: salidaPlay 0.5s ease forwards; }
-         
+        
         .animar-banner-entrada { animation: entradaBanner 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
         .animar-banner-salida  { animation: salidaBanner 0.4s ease forwards; }
- 
+
         @keyframes entradaPlay {
             0% { transform: scale(0) rotate(-180deg); }
             100% { transform: scale(1) rotate(0deg); }
@@ -130,39 +130,42 @@
     </style>
 </head>
 <body>
- 
+
     <div id="widget-container">
         <div id="play-btn" class="play-button">
             <div class="triangle"></div>
         </div>
         
         <div id="banner" class="banner-wrapper">
-            <div class="sub-label">Agradecemos a:</div>
-            <div id="sponsor-name" class="main-text">Cargando...</div>
+            <div id="sponsor-frase" class="sub-label">Cargando...</div>
+            <div id="sponsor-name" class="main-text"></div>
             <div id="sponsor-phone" class="phone-text"></div>
         </div>
     </div>
- 
+
     <script>
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
         
         let listaPatrocinadores = [];
         let indiceActual = 0;
         let estaMostrando = false;
- 
+
         function parseCSV(text) {
             const lines = text.replace(/\r/g, "").split("\n");
             const result = [];
             if (lines.length === 0) return [];
- 
+
             const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
             
+            // Detección automática por encabezado o por índice de columna (D=3, E=4, F=5)
+            const fraseIdx = headers.indexOf("frase");
             const nameIdx = headers.indexOf("patrocinadores"); 
             const phoneIdx = headers.indexOf("telefono");
- 
+
+            const targetFraseIdx = (fraseIdx !== -1) ? fraseIdx : 3;
             const targetNameIdx = (nameIdx !== -1) ? nameIdx : 4;
             const targetPhoneIdx = (phoneIdx !== -1) ? phoneIdx : 5;
- 
+
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
@@ -170,6 +173,9 @@
                 const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
                 if (currentline[targetNameIdx]) {
+                    let fraseLimpia = currentline[targetFraseIdx] ? currentline[targetFraseIdx].trim() : "Agradecemos a:";
+                    fraseLimpia = fraseLimpia.replace(/^"+|"+$/g, '').replace(/""/g, '"').trim();
+
                     let nombreLimpio = currentline[targetNameIdx].trim();
                     nombreLimpio = nombreLimpio.replace(/^"+|"+$/g, '').replace(/""/g, '"').trim();
                     
@@ -177,13 +183,17 @@
                     telfLimpio = telfLimpio.replace(/^"+|"+$/g, '').trim();
                     
                     if (nombreLimpio && nombreLimpio !== "" && nombreLimpio.toLowerCase() !== "patrocinadores") {
-                        result.push({ nombre: nombreLimpio, telefono: telfLimpio });
+                        result.push({ 
+                            frase: fraseLimpia || "Agradecemos a:",
+                            nombre: nombreLimpio, 
+                            telefono: telfLimpio 
+                        });
                     }
                 }
             }
             return result;
         }
- 
+
         async function cargarPatrocinadores() {
             try {
                 const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
@@ -194,57 +204,66 @@
                 console.error("Error cargando base de datos:", error);
             }
         }
- 
+
         function ejecutarCicloVisual() {
             if (listaPatrocinadores.length === 0 || estaMostrando) return;
             
             estaMostrando = true;
             const btn = document.getElementById("play-btn");
             const banner = document.getElementById("banner");
+            const txtFrase = document.getElementById("sponsor-frase");
             const txtNombre = document.getElementById("sponsor-name");
             const txtTelefono = document.getElementById("sponsor-phone");
- 
+
             const itemActual = listaPatrocinadores[indiceActual];
+            txtFrase.innerText = itemActual.frase;
             txtNombre.innerText = itemActual.nombre;
-            txtTelefono.innerText = itemActual.telefono ? `WhatsApp / Tel: ${itemActual.telefono}` : "";
- 
+
+            // Formato Inteligente para el Campo Teléfono/Fecha
+            if (itemActual.telefono) {
+                // Si contiene solo números, espacios o guiones es un teléfono
+                const esTelefono = /^[\d\s\-+()]+$/.test(itemActual.telefono);
+                txtTelefono.innerText = esTelefono ? `WhatsApp / Tel: ${itemActual.telefono}` : itemActual.telefono;
+            } else {
+                txtTelefono.innerText = "";
+            }
+
             indiceActual = (indiceActual + 1) % listaPatrocinadores.length;
- 
+
             // t=0s: Entra el botón giratorio de Play
             btn.className = "play-button animar-play-entrada";
- 
+
             // t=0.5s: Se despliega el banner hacia la derecha
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-entrada";
             }, 500);
- 
-            // t=12.5s: El banner se oculta tras 12 segundos completos de lectura limpia
+
+            // t=12.5s: El banner se oculta tras 12 segundos de lectura
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-salida";
             }, 12500);
- 
+
             // t=13.0s: El botón de Play se reduce y desaparece
             setTimeout(() => {
                 btn.className = "play-button animar-play-salida";
             }, 13000);
- 
+
             // t=14.0s: Se libera el candado para permitir el próximo ciclo
             setTimeout(() => {
                 estaMostrando = false;
             }, 14000);
         }
- 
+
         async function iniciar() {
             await cargarPatrocinadores();
             if (listaPatrocinadores.length > 0) ejecutarCicloVisual();
             
-            // Lanza un patrocinador cada 60 segundos
+            // Lanza una tarjeta cada 60 segundos
             setInterval(ejecutarCicloVisual, 60000); 
             setInterval(cargarPatrocinadores, 120000);
         }
- 
+
         window.onload = iniciar;
     </script>
 </body>
 </html>
-
