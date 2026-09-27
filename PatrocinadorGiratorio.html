@@ -122,18 +122,18 @@
             gap: 2px;
         }
 
-        /* LÍNEA 1: Título (Mismo tamaño: 24px) */
+        /* LÍNEA 1: Título (Encabezado secundario) */
         .sub-label {
             color: #FFF3B3; 
-            font-size: 24px; 
+            font-size: 15px; 
             font-weight: 900; 
             text-transform: uppercase;
-            letter-spacing: 1px; 
+            letter-spacing: 2px; 
             line-height: 1.2;
             text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.5);
         }
 
-        /* LÍNEA 2: Descripción (Tamaño de referencia: 24px) */
+        /* LÍNEA 2: Descripción (Protagonista principal) */
         .main-text {
             color: #e6ca65; 
             font-size: 24px; 
@@ -144,10 +144,10 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.6); 
         }
 
-        /* LÍNEA 3: Rótulo1 + Rótulo2 (Mismo tamaño: 24px) */
+        /* LÍNEA 3: Rótulo1 + Separador + Rótulo2 */
         .phone-text {
-            color: #FFF3B3;
-            font-size: 24px; 
+            color: #FFFFFF;
+            font-size: 16px; 
             font-weight: 700;
             letter-spacing: 1px; 
             line-height: 1.2;
@@ -273,7 +273,7 @@
 
             let combinacionRotulos = "";
             if (itemActual.rotulo1 && itemActual.rotulo2) {
-                combinacionRotulos = `${itemActual.rotulo1} ${itemActual.rotulo2}`;
+                combinacionRotulos = `${itemActual.rotulo1} • ${itemActual.rotulo2}`;
             } else if (itemActual.rotulo1) {
                 combinacionRotulos = itemActual.rotulo1;
             } else if (itemActual.rotulo2) {
