@@ -36,8 +36,8 @@
         /* MARCO DE LA FOTO */
         .photo-frame {
             position: relative;
-            width: 165px;
-            height: 205px;
+            width: 150px;
+            height: 190px;
             border-radius: 10px 10px 4px 4px;
             overflow: visible;
             flex-shrink: 0;
@@ -45,7 +45,6 @@
         }
 
         .photo-inner {
-            position: relative;
             width: 100%;
             height: 100%;
             border-radius: 10px 10px 4px 4px;
@@ -63,20 +62,11 @@
             display: block;
         }
 
-        /* Viñeta oscura para fundir la foto con el marco */
-        .photo-inner::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.65) 100%);
-            pointer-events: none;
-        }
-
         /* CINTA DE LUTO (esquina superior de la foto) */
         .cinta-luto {
             position: absolute;
             top: -8px;
-            left: 4px;
+            left: 14px;
             width: 26px;
             z-index: 3;
         }
@@ -86,7 +76,7 @@
             height: 26px;
             background: #0a0a0a;
             border-radius: 50%;
-            border: 3px solid #e6ca65;
+            border: 2px solid #e6ca65;
             box-shadow: 0 3px 8px rgba(0,0,0,0.6);
         }
 
@@ -122,8 +112,6 @@
             height: 54px;
             z-index: 4;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
-            background: radial-gradient(circle, rgba(0,0,0,0.5) 40%, transparent 70%);
-            border-radius: 50%;
         }
 
         /* BLOQUE DE TEXTO */
@@ -199,3 +187,131 @@
             <svg class="rosa-decorativa" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <g fill="#f5f0e6" stroke="#d8cfa8" stroke-width="1.5">
                     <circle cx="50" cy="35" r="16"/>
+                    <circle cx="34" cy="48" r="14"/>
+                    <circle cx="66" cy="48" r="14"/>
+                    <circle cx="42" cy="60" r="13"/>
+                    <circle cx="58" cy="60" r="13"/>
+                    <circle cx="50" cy="50" r="12" fill="#fffdf6"/>
+                </g>
+                <g fill="#6b8e5a">
+                    <path d="M48 72 Q46 85 42 95 L50 95 Q52 85 50 72 Z"/>
+                    <ellipse cx="38" cy="80" rx="8" ry="4" transform="rotate(-30 38 80)"/>
+                </g>
+            </svg>
+        </div>
+
+        <div class="text-block">
+            <div class="marca-mtg">MTG</div>
+            <div id="nombre" class="nombre-text">Cargando...</div>
+            <div id="subtitulo" class="subtitulo-text"></div>
+            <div id="detalle" class="detalle-text"></div>
+        </div>
+    </div>
+
+    <script>
+        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
+
+        let listaRegistros = [];
+        let indiceActual = 0;
+        let estaMostrando = false;
+
+        function parseCSV(text) {
+            const lines = text.replace(/\r/g, "").split("\n");
+            const result = [];
+            if (lines.length === 0) return [];
+
+            const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
+
+            const titIdx = headers.indexOf("titulo") !== -1 ? headers.indexOf("titulo") : 0;
+            const descIdx = headers.indexOf("descripción") !== -1 ? headers.indexOf("descripción") : (headers.indexOf("descripcion") !== -1 ? headers.indexOf("descripcion") : 1);
+            const rot1Idx = headers.indexOf("rótulo1") !== -1 ? headers.indexOf("rótulo1") : (headers.indexOf("rotulo1") !== -1 ? headers.indexOf("rotulo1") : 2);
+            const rot2Idx = headers.indexOf("rótulo2") !== -1 ? headers.indexOf("rótulo2") : (headers.indexOf("rotulo2") !== -1 ? headers.indexOf("rotulo2") : 3);
+            const fotoIdx = headers.indexOf("foto") !== -1 ? headers.indexOf("foto") : 4;
+
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+
+                if (currentline[descIdx]) {
+                    let titulo = currentline[titIdx] ? currentline[titIdx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
+                    let descripcion = currentline[descIdx] ? currentline[descIdx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
+                    let rotulo1 = currentline[rot1Idx] ? currentline[rot1Idx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
+                    let rotulo2 = currentline[rot2Idx] ? currentline[rot2Idx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
+                    let foto = currentline[fotoIdx] ? currentline[fotoIdx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
+
+                    if (descripcion && descripcion.toLowerCase() !== "descripción" && descripcion.toLowerCase() !== "descripcion") {
+                        result.push({ titulo, descripcion, rotulo1, rotulo2, foto });
+                    }
+                }
+            }
+            return result;
+        }
+
+        async function cargarDatos() {
+            try {
+                const response = await fetch(`${csvUrl}&nocache=${new Date().getTime()}`);
+                const dataText = await response.text();
+                const nuevosDatos = parseCSV(dataText);
+                if (nuevosDatos.length > 0) listaRegistros = nuevosDatos;
+            } catch (error) {
+                console.error("Error cargando base de datos:", error);
+            }
+        }
+
+        function ejecutarCicloVisual() {
+            if (listaRegistros.length === 0 || estaMostrando) return;
+
+            estaMostrando = true;
+            const container = document.getElementById("widget-container");
+            const foto = document.getElementById("person-photo");
+            const nombre = document.getElementById("nombre");
+            const subtitulo = document.getElementById("subtitulo");
+            const detalle = document.getElementById("detalle");
+
+            const itemActual = listaRegistros[indiceActual];
+
+            nombre.innerText = itemActual.descripcion;
+            subtitulo.innerText = itemActual.titulo;
+
+            let combinacionDetalle = "";
+            if (itemActual.rotulo1 && itemActual.rotulo2) {
+                combinacionDetalle = `${itemActual.rotulo1} • ${itemActual.rotulo2}`;
+            } else if (itemActual.rotulo1) {
+                combinacionDetalle = itemActual.rotulo1;
+            } else if (itemActual.rotulo2) {
+                combinacionDetalle = itemActual.rotulo2;
+            }
+            detalle.innerText = combinacionDetalle;
+
+            foto.src = itemActual.foto || "";
+
+            indiceActual = (indiceActual + 1) % listaRegistros.length;
+
+            // Entrada
+            container.classList.add("visible");
+
+            // Salida tras 13 segundos visible
+            setTimeout(() => {
+                container.classList.remove("visible");
+            }, 13000);
+
+            // Reinicio del ciclo
+            setTimeout(() => {
+                estaMostrando = false;
+            }, 14000);
+        }
+
+        async function iniciar() {
+            await cargarDatos();
+            if (listaRegistros.length > 0) ejecutarCicloVisual();
+
+            setInterval(ejecutarCicloVisual, 60000);
+            setInterval(cargarDatos, 120000);
+        }
+
+        window.onload = iniciar;
+    </script>
+</body>
+</html>
