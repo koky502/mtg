@@ -24,10 +24,9 @@
             display: flex;
             align-items: center;
             height: 120px; 
-            max-width: 1250px; /* margen de seguridad dentro del lienzo 1280px */
+            max-width: 1250px;
         }
 
-        /* BOTÓN REDONDO ORO PURO */
         .play-button {
             width: 90px;
             height: 90px;
@@ -42,9 +41,9 @@
             transform: scale(0);
             position: relative;
             flex-shrink: 0;
+            overflow: hidden;
         }
 
-        /* CONTENEDOR INTERNO DE CONTENIDO (PLAY vs MTG) */
         .badge-content {
             width: 100%;
             height: 100%;
@@ -54,7 +53,6 @@
             position: relative;
         }
 
-        /* TRIÁNGULO DE PLAY CON GIRO CONTINUO */
         .triangle {
             width: 0;
             height: 0;
@@ -76,7 +74,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* TEXTO MARCA MTG */
         .brand-text {
             position: absolute;
             color: #000000;
@@ -87,6 +84,17 @@
             transform: scale(0.5);
             transition: opacity 0.4s ease, transform 0.4s ease;
             text-shadow: 0 1px 1px rgba(255,255,255,0.3);
+        }
+
+        .person-photo {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
         .mostrar-marca .triangle {
@@ -100,7 +108,11 @@
             transform: scale(1);
         }
 
-        /* CONTENEDOR PRINCIPAL DEL BANNER */
+        .mostrar-marca .person-photo {
+            opacity: 1;
+            transform: scale(1);
+        }
+
         .banner-wrapper {
             display: flex;
             flex-direction: column;
@@ -123,7 +135,6 @@
             max-width: fit-content;
         }
 
-        /* LÍNEA 1: Título (Dorado Crema) */
         .sub-label {
             color: #FFF3B3; 
             font-size: 19px; 
@@ -135,7 +146,6 @@
             transition: font-size 0.15s ease;
         }
 
-        /* LÍNEA 2: Descripción (Oro Puro destacado) */
         .main-text {
             color: #E6CA65; 
             font-size: 30px; 
@@ -147,7 +157,6 @@
             transition: font-size 0.15s ease;
         }
 
-        /* LÍNEA 3: Rótulo1 + Separador + Rótulo2 (Dorado Crema) */
         .phone-text {
             color: #FFF3B3;
             font-size: 19px; 
@@ -158,7 +167,6 @@
             transition: font-size 0.15s ease;
         }
 
-        /* ANIMACIONES DE ENTRADA Y SALIDA DEL CONTENEDOR */
         .animar-play-entrada { animation: entradaPlay 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .animar-play-salida  { animation: salidaPlay 0.5s ease forwards; }
         
@@ -189,7 +197,8 @@
         <div id="play-btn" class="play-button">
             <div id="badge-inner" class="badge-content">
                 <div id="icon-triangle" class="triangle girando-play"></div>
-                <div class="brand-text">MTG</div>
+                <div id="brand-text" class="brand-text">MTG</div>
+                <img id="person-photo" class="person-photo" src="" alt="">
             </div>
         </div>
         
@@ -207,14 +216,13 @@
         let indiceActual = 0;
         let estaMostrando = false;
 
-        // --- CONFIGURACIÓN DE AUTOAJUSTE DE TAMAÑO ---
-        const ANCHO_MAXIMO_BANNER = 1150; // margen de seguridad dentro del lienzo 1280px
+        const ANCHO_MAXIMO_BANNER = 1150;
         const TAMANOS = {
             titulo:   { base: 19, min: 13 },
             desc:     { base: 30, min: 18 },
             rotulos:  { base: 19, min: 13 }
         };
-        const PASO_REDUCCION = 1; // px que baja en cada iteración
+        const PASO_REDUCCION = 1;
 
         function ajustarTamanoTexto() {
             const banner = document.getElementById("banner");
@@ -222,7 +230,6 @@
             const txtDesc = document.getElementById("sponsor-desc");
             const txtRotulos = document.getElementById("sponsor-rotulos");
 
-            // Reiniciar a tamaño base antes de medir
             txtTitulo.style.fontSize = TAMANOS.titulo.base + "px";
             txtDesc.style.fontSize = TAMANOS.desc.base + "px";
             txtRotulos.style.fontSize = TAMANOS.rotulos.base + "px";
@@ -231,7 +238,6 @@
             let actualDesc = TAMANOS.desc.base;
             let actualRotulos = TAMANOS.rotulos.base;
 
-            // Reducir en pasos hasta que quepa o se llegue al mínimo
             let intentos = 0;
             while (banner.scrollWidth > ANCHO_MAXIMO_BANNER && intentos < 40) {
                 if (actualDesc > TAMANOS.desc.min) {
@@ -247,7 +253,6 @@
                     txtRotulos.style.fontSize = actualRotulos + "px";
                 }
 
-                // Si ya todos están en el mínimo y sigue sin caber, se detiene igual
                 if (actualDesc <= TAMANOS.desc.min && actualTitulo <= TAMANOS.titulo.min && actualRotulos <= TAMANOS.rotulos.min) {
                     break;
                 }
@@ -266,6 +271,7 @@
             const descIdx = headers.indexOf("descripción") !== -1 ? headers.indexOf("descripción") : (headers.indexOf("descripcion") !== -1 ? headers.indexOf("descripcion") : 1);
             const rot1Idx = headers.indexOf("rótulo1") !== -1 ? headers.indexOf("rótulo1") : (headers.indexOf("rotulo1") !== -1 ? headers.indexOf("rotulo1") : 2);
             const rot2Idx = headers.indexOf("rótulo2") !== -1 ? headers.indexOf("rótulo2") : (headers.indexOf("rotulo2") !== -1 ? headers.indexOf("rotulo2") : 3);
+            const fotoIdx = headers.indexOf("foto") !== -1 ? headers.indexOf("foto") : (headers.indexOf("imagen") !== -1 ? headers.indexOf("imagen") : 4);
 
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -278,13 +284,15 @@
                     let descripcion = currentline[descIdx] ? currentline[descIdx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
                     let rotulo1 = currentline[rot1Idx] ? currentline[rot1Idx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
                     let rotulo2 = currentline[rot2Idx] ? currentline[rot2Idx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
+                    let foto = currentline[fotoIdx] ? currentline[fotoIdx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
 
                     if (descripcion && descripcion.toLowerCase() !== "descripción" && descripcion.toLowerCase() !== "descripcion") {
                         result.push({ 
                             titulo: titulo,
                             descripcion: descripcion, 
                             rotulo1: rotulo1,
-                            rotulo2: rotulo2
+                            rotulo2: rotulo2,
+                            foto: foto
                         });
                     }
                 }
@@ -310,12 +318,13 @@
             const btn = document.getElementById("play-btn");
             const innerBadge = document.getElementById("badge-inner");
             const iconTriangle = document.getElementById("icon-triangle");
+            const brandText = document.getElementById("brand-text");
+            const personPhoto = document.getElementById("person-photo");
             const banner = document.getElementById("banner");
             const txtTitulo = document.getElementById("sponsor-titulo");
             const txtDesc = document.getElementById("sponsor-desc");
             const txtRotulos = document.getElementById("sponsor-rotulos");
 
-            // Resetear animación del icono
             innerBadge.className = "badge-content";
             iconTriangle.className = "triangle girando-play";
 
@@ -331,38 +340,38 @@
             } else if (itemActual.rotulo2) {
                 combinacionRotulos = itemActual.rotulo2;
             }
-
             txtRotulos.innerText = combinacionRotulos;
+
+            if (itemActual.foto && itemActual.foto.length > 0) {
+                personPhoto.src = itemActual.foto;
+                brandText.style.display = "none";
+            } else {
+                personPhoto.src = "";
+                brandText.style.display = "block";
+            }
 
             indiceActual = (indiceActual + 1) % listaRegistros.length;
 
-            // Ajustar tamaño ANTES de animar la entrada, con el banner ya visible en el DOM (opacidad 0 vía scaleX)
             ajustarTamanoTexto();
 
-            // t=0s: Entra el botón redondo
             btn.className = "play-button animar-play-entrada";
 
-            // t=0.5s: Despliegue del banner informativo
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-entrada";
             }, 500);
 
-            // t=3.0s: Tras 3 segundos de rotación, entra "MTG"
             setTimeout(() => {
                 innerBadge.className = "badge-content mostrar-marca";
             }, 3000);
 
-            // t=12.5s: Cierre del banner
             setTimeout(() => {
                 banner.className = "banner-wrapper animar-banner-salida";
             }, 12500);
 
-            // t=13.0s: Salida del botón
             setTimeout(() => {
                 btn.className = "play-button animar-play-salida";
             }, 13000);
 
-            // t=14.0s: Reinicio
             setTimeout(() => {
                 estaMostrando = false;
             }, 14000);
