@@ -74,42 +74,12 @@
         /* CINTA DE LUTO (esquina superior de la foto) */
         .cinta-luto {
             position: absolute;
-            top: -8px;
-            left: 4px;
-            width: 26px;
+            top: -14px;
+            left: 8px;
+            width: 34px;
+            height: 44px;
             z-index: 3;
-        }
-
-        .cinta-luto .lazo {
-            width: 26px;
-            height: 26px;
-            background: #0a0a0a;
-            border-radius: 50%;
-            border: 3px solid #e6ca65;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.6);
-        }
-
-        .cinta-luto .cola {
-            position: absolute;
-            top: 20px;
-            left: 2px;
-            width: 0;
-            height: 0;
-            border-left: 11px solid transparent;
-            border-right: 11px solid transparent;
-            border-top: 32px solid #0a0a0a;
-        }
-
-        .cinta-luto .cola::after {
-            content: '';
-            position: absolute;
-            top: -32px;
-            left: -9px;
-            width: 0;
-            height: 0;
-            border-left: 9px solid transparent;
-            border-right: 9px solid transparent;
-            border-top: 26px solid transparent;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.7));
         }
 
         /* ROSA BLANCA DECORATIVA (esquina inferior de la foto) */
@@ -191,10 +161,26 @@
             <div class="photo-inner">
                 <img id="person-photo" src="" alt="">
             </div>
-            <div class="cinta-luto">
-                <div class="lazo"></div>
-                <div class="cola"></div>
-            </div>
+            <svg class="cinta-luto" viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="cintaNegra" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#2a2a2a"/>
+                        <stop offset="50%" stop-color="#0a0a0a"/>
+                        <stop offset="100%" stop-color="#1a1a1a"/>
+                    </linearGradient>
+                </defs>
+                <!-- Lazo superior (aro) -->
+                <path d="M30 15 Q50 -5 70 15 Q75 35 50 45 Q25 35 30 15 Z" 
+                      fill="url(#cintaNegra)" stroke="#e6ca65" stroke-width="1.5"/>
+                <path d="M42 22 Q50 14 58 22 Q58 32 50 36 Q42 32 42 22 Z" 
+                      fill="#000" opacity="0.5"/>
+                <!-- Cola izquierda -->
+                <path d="M50 42 L28 115 L40 125 L54 48 Z" 
+                      fill="url(#cintaNegra)" stroke="#e6ca65" stroke-width="1.5"/>
+                <!-- Cola derecha -->
+                <path d="M50 42 L72 115 L60 125 L46 48 Z" 
+                      fill="url(#cintaNegra)" stroke="#e6ca65" stroke-width="1.5"/>
+            </svg>
             <svg class="rosa-decorativa" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <g fill="#f5f0e6" stroke="#d8cfa8" stroke-width="1.5">
                     <circle cx="50" cy="35" r="16"/>
@@ -282,44 +268,3 @@
             const detalle = document.getElementById("detalle");
 
             const itemActual = listaRegistros[indiceActual];
-
-            nombre.innerText = itemActual.descripcion;
-            subtitulo.innerText = itemActual.titulo;
-
-            let combinacionDetalle = "";
-            if (itemActual.rotulo1 && itemActual.rotulo2) {
-                combinacionDetalle = `${itemActual.rotulo1} • ${itemActual.rotulo2}`;
-            } else if (itemActual.rotulo1) {
-                combinacionDetalle = itemActual.rotulo1;
-            } else if (itemActual.rotulo2) {
-                combinacionDetalle = itemActual.rotulo2;
-            }
-            detalle.innerText = combinacionDetalle;
-
-            foto.src = itemActual.foto || "";
-
-            indiceActual = (indiceActual + 1) % listaRegistros.length;
-
-            container.classList.add("visible");
-
-            setTimeout(() => {
-                container.classList.remove("visible");
-            }, 13000);
-
-            setTimeout(() => {
-                estaMostrando = false;
-            }, 14000);
-        }
-
-        async function iniciar() {
-            await cargarDatos();
-            if (listaRegistros.length > 0) ejecutarCicloVisual();
-
-            setInterval(ejecutarCicloVisual, 60000);
-            setInterval(cargarDatos, 120000);
-        }
-
-        window.onload = iniciar;
-    </script>
-</body>
-</html>
