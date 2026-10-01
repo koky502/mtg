@@ -24,6 +24,7 @@
             display: flex;
             align-items: center;
             height: 120px; 
+            max-width: 1250px; /* margen de seguridad dentro del lienzo 1280px */
         }
 
         /* BOTÓN REDONDO ORO PURO */
@@ -40,6 +41,7 @@
             border: 3.5px solid #0a0a0a;
             transform: scale(0);
             position: relative;
+            flex-shrink: 0;
         }
 
         /* CONTENEDOR INTERNO DE CONTENIDO (PLAY vs MTG) */
@@ -65,7 +67,6 @@
             transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
-        /* Animación de rotación del icono play */
         .girando-play {
             animation: girarIcono 1s linear infinite;
         }
@@ -88,7 +89,6 @@
             text-shadow: 0 1px 1px rgba(255,255,255,0.3);
         }
 
-        /* TRANSICIÓN: Oculta Play y Entra MTG */
         .mostrar-marca .triangle {
             opacity: 0;
             transform: scale(0);
@@ -120,39 +120,43 @@
             transform-origin: left;
             white-space: nowrap;
             gap: 2px;
+            max-width: fit-content;
         }
 
-       /* LÍNEA 1: Título (Dorado Crema) */
-.sub-label {
-    color: #FFF3B3; 
-    font-size: 19px;        /* antes 15px */
-    font-weight: 900; 
-    text-transform: uppercase;
-    letter-spacing: 2px; 
-    line-height: 1.2;
-    text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.6);
-}
+        /* LÍNEA 1: Título (Dorado Crema) */
+        .sub-label {
+            color: #FFF3B3; 
+            font-size: 19px; 
+            font-weight: 900; 
+            text-transform: uppercase;
+            letter-spacing: 2px; 
+            line-height: 1.2;
+            text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.6);
+            transition: font-size 0.15s ease;
+        }
 
-/* LÍNEA 2: Descripción (Oro Puro destacado) */
-.main-text {
-    color: #E6CA65; 
-    font-size: 30px;        /* antes 24px */
-    font-weight: 900; 
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    line-height: 1.2;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 0 6px rgba(0,0,0,0.7); 
-}
+        /* LÍNEA 2: Descripción (Oro Puro destacado) */
+        .main-text {
+            color: #E6CA65; 
+            font-size: 30px; 
+            font-weight: 900; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 0 6px rgba(0,0,0,0.7); 
+            transition: font-size 0.15s ease;
+        }
 
-/* LÍNEA 3: Rótulo1 + Separador + Rótulo2 (Dorado Crema) */
-.phone-text {
-    color: #FFF3B3;
-    font-size: 19px;        /* antes 16px */
-    font-weight: 700;
-    letter-spacing: 1px; 
-    line-height: 1.2;
-    text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.6);
-}
+        /* LÍNEA 3: Rótulo1 + Separador + Rótulo2 (Dorado Crema) */
+        .phone-text {
+            color: #FFF3B3;
+            font-size: 19px; 
+            font-weight: 700;
+            letter-spacing: 1px; 
+            line-height: 1.2;
+            text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.6);
+            transition: font-size 0.15s ease;
+        }
 
         /* ANIMACIONES DE ENTRADA Y SALIDA DEL CONTENEDOR */
         .animar-play-entrada { animation: entradaPlay 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
@@ -202,6 +206,54 @@
         let listaRegistros = [];
         let indiceActual = 0;
         let estaMostrando = false;
+
+        // --- CONFIGURACIÓN DE AUTOAJUSTE DE TAMAÑO ---
+        const ANCHO_MAXIMO_BANNER = 1150; // margen de seguridad dentro del lienzo 1280px
+        const TAMANOS = {
+            titulo:   { base: 19, min: 13 },
+            desc:     { base: 30, min: 18 },
+            rotulos:  { base: 19, min: 13 }
+        };
+        const PASO_REDUCCION = 1; // px que baja en cada iteración
+
+        function ajustarTamanoTexto() {
+            const banner = document.getElementById("banner");
+            const txtTitulo = document.getElementById("sponsor-titulo");
+            const txtDesc = document.getElementById("sponsor-desc");
+            const txtRotulos = document.getElementById("sponsor-rotulos");
+
+            // Reiniciar a tamaño base antes de medir
+            txtTitulo.style.fontSize = TAMANOS.titulo.base + "px";
+            txtDesc.style.fontSize = TAMANOS.desc.base + "px";
+            txtRotulos.style.fontSize = TAMANOS.rotulos.base + "px";
+
+            let actualTitulo = TAMANOS.titulo.base;
+            let actualDesc = TAMANOS.desc.base;
+            let actualRotulos = TAMANOS.rotulos.base;
+
+            // Reducir en pasos hasta que quepa o se llegue al mínimo
+            let intentos = 0;
+            while (banner.scrollWidth > ANCHO_MAXIMO_BANNER && intentos < 40) {
+                if (actualDesc > TAMANOS.desc.min) {
+                    actualDesc -= PASO_REDUCCION;
+                    txtDesc.style.fontSize = actualDesc + "px";
+                }
+                if (actualTitulo > TAMANOS.titulo.min) {
+                    actualTitulo -= PASO_REDUCCION;
+                    txtTitulo.style.fontSize = actualTitulo + "px";
+                }
+                if (actualRotulos > TAMANOS.rotulos.min) {
+                    actualRotulos -= PASO_REDUCCION;
+                    txtRotulos.style.fontSize = actualRotulos + "px";
+                }
+
+                // Si ya todos están en el mínimo y sigue sin caber, se detiene igual
+                if (actualDesc <= TAMANOS.desc.min && actualTitulo <= TAMANOS.titulo.min && actualRotulos <= TAMANOS.rotulos.min) {
+                    break;
+                }
+                intentos++;
+            }
+        }
 
         function parseCSV(text) {
             const lines = text.replace(/\r/g, "").split("\n");
@@ -283,6 +335,9 @@
             txtRotulos.innerText = combinacionRotulos;
 
             indiceActual = (indiceActual + 1) % listaRegistros.length;
+
+            // Ajustar tamaño ANTES de animar la entrada, con el banner ya visible en el DOM (opacidad 0 vía scaleX)
+            ajustarTamanoTexto();
 
             // t=0s: Entra el botón redondo
             btn.className = "play-button animar-play-entrada";
