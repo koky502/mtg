@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lower Third Premium Oro Puro - MTG</title>
+    <title>Tarjeta Memorial MTG</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
 
         body {
             margin: 0;
             padding: 0;
             background-color: transparent;
-            font-family: 'Montserrat', sans-serif; 
+            font-family: 'Montserrat', sans-serif;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -19,246 +19,201 @@
 
         #widget-container {
             position: absolute;
-            bottom: 15px;
-            left: 15px;
+            bottom: 25px;
+            left: 25px;
             display: flex;
-            align-items: center;
-            height: 120px; 
-            max-width: 1250px;
+            align-items: flex-end;
+            transform: scale(0.9) translateY(30px);
+            opacity: 0;
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        .play-button {
-            width: 90px;
-            height: 90px;
-            background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-            z-index: 10;
-            border: 3.5px solid #0a0a0a;
-            transform: scale(0);
+        #widget-container.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* MARCO DE LA FOTO */
+        .photo-frame {
             position: relative;
+            width: 150px;
+            height: 190px;
+            border-radius: 10px 10px 4px 4px;
+            overflow: visible;
             flex-shrink: 0;
-            overflow: hidden;
+            z-index: 2;
         }
 
-        .badge-content {
+        .photo-inner {
             width: 100%;
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+            border-radius: 10px 10px 4px 4px;
+            overflow: hidden;
+            border: 3px solid #e6ca65;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            background: #111;
         }
 
-        .triangle {
-            width: 0;
-            height: 0;
-            border-top: 16px solid transparent;
-            border-left: 28px solid #000000;
-            border-bottom: 16px solid transparent;
-            margin-left: 6px;
-            opacity: 1;
-            transform-origin: 35% 50%;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-
-        .girando-play {
-            animation: girarIcono 1s linear infinite;
-        }
-
-        @keyframes girarIcono {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .brand-text {
-            position: absolute;
-            color: #000000;
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            opacity: 0;
-            transform: scale(0.5);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            text-shadow: 0 1px 1px rgba(255,255,255,0.3);
-        }
-
-        .person-photo {
-            position: absolute;
+        .photo-inner img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center top;
-            opacity: 0;
-            transform: scale(0.5);
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            display: block;
         }
 
-        .mostrar-marca .triangle {
-            opacity: 0;
-            transform: scale(0);
-            animation: none;
+        /* CINTA DE LUTO (esquina superior de la foto) */
+        .cinta-luto {
+            position: absolute;
+            top: -8px;
+            left: 14px;
+            width: 26px;
+            z-index: 3;
         }
 
-        .mostrar-marca .brand-text {
-            opacity: 1;
-            transform: scale(1);
+        .cinta-luto .lazo {
+            width: 26px;
+            height: 26px;
+            background: #0a0a0a;
+            border-radius: 50%;
+            border: 2px solid #e6ca65;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.6);
         }
 
-        .mostrar-marca .person-photo {
-            opacity: 1;
-            transform: scale(1);
+        .cinta-luto .cola {
+            position: absolute;
+            top: 20px;
+            left: 2px;
+            width: 0;
+            height: 0;
+            border-left: 11px solid transparent;
+            border-right: 11px solid transparent;
+            border-top: 32px solid #0a0a0a;
         }
 
-        .banner-wrapper {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin-left: -45px;
-            padding-left: 65px; 
-            padding-right: 45px;
-            height: 100px; 
-            background: rgba(0, 0, 0, 0.85);
+        .cinta-luto .cola::after {
+            content: '';
+            position: absolute;
+            top: -32px;
+            left: -9px;
+            width: 0;
+            height: 0;
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            border-top: 26px solid transparent;
+        }
+
+        /* ROSA BLANCA DECORATIVA (esquina inferior de la foto) */
+        .rosa-decorativa {
+            position: absolute;
+            bottom: -16px;
+            left: -16px;
+            width: 54px;
+            height: 54px;
+            z-index: 4;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+        }
+
+        /* BLOQUE DE TEXTO */
+        .text-block {
+            background: rgba(0, 0, 0, 0.88);
             border-top: 2.5px solid #e6ca65;
-            border-right: 5px solid #e6ca65; 
+            border-right: 5px solid #e6ca65;
             border-bottom: 2.5px solid #e6ca65;
-            border-radius: 0 12px 12px 0;
+            border-radius: 0 10px 10px 0;
+            padding: 18px 30px 18px 34px;
+            margin-left: -10px;
+            margin-bottom: 8px;
+            max-width: 480px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.6);
-            z-index: 5;
-            transform: scaleX(0);
-            transform-origin: left;
-            white-space: nowrap;
-            gap: 2px;
-            max-width: fit-content;
+            z-index: 1;
         }
 
-        .sub-label {
-            color: #FFF3B3; 
-            font-size: 19px; 
-            font-weight: 900; 
+        .nombre-text {
+            color: #E6CA65;
+            font-size: 26px;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 2px; 
-            line-height: 1.2;
-            text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.6);
-            transition: font-size 0.15s ease;
+            letter-spacing: 0.5px;
+            line-height: 1.25;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 0 6px rgba(0,0,0,0.7);
+            margin-bottom: 4px;
         }
 
-        .main-text {
-            color: #E6CA65; 
-            font-size: 30px; 
-            font-weight: 900; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            line-height: 1.2;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 0 6px rgba(0,0,0,0.7); 
-            transition: font-size 0.15s ease;
-        }
-
-        .phone-text {
+        .subtitulo-text {
             color: #FFF3B3;
-            font-size: 19px; 
+            font-size: 16px;
             font-weight: 700;
-            letter-spacing: 1px; 
-            line-height: 1.2;
-            text-shadow: 0 2px 3px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.6);
-            transition: font-size 0.15s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            line-height: 1.3;
+            text-shadow: 0 2px 3px rgba(0,0,0,0.9);
+            margin-bottom: 6px;
         }
 
-        .animar-play-entrada { animation: entradaPlay 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .animar-play-salida  { animation: salidaPlay 0.5s ease forwards; }
-        
-        .animar-banner-entrada { animation: entradaBanner 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
-        .animar-banner-salida  { animation: salidaBanner 0.4s ease forwards; }
+        .detalle-text {
+            color: #cfc49a;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+        }
 
-        @keyframes entradaPlay {
-            0% { transform: scale(0); }
-            100% { transform: scale(1); }
-        }
-        @keyframes salidaPlay {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0); opacity: 0; }
-        }
-        @keyframes entradaBanner {
-            0% { transform: scaleX(0); }
-            100% { transform: scaleX(1); }
-        }
-        @keyframes salidaBanner {
-            0% { transform: scaleX(1); opacity: 1; }
-            100% { transform: scaleX(0); opacity: 0; }
+        /* Marca MTG pequeña, esquina del bloque de texto */
+        .marca-mtg {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            color: #b8860b;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
 
     <div id="widget-container">
-        <div id="play-btn" class="play-button">
-            <div id="badge-inner" class="badge-content">
-                <div id="icon-triangle" class="triangle girando-play"></div>
-                <div id="brand-text" class="brand-text">MTG</div>
-                <img id="person-photo" class="person-photo" src="" alt="">
+        <div class="photo-frame">
+            <div class="photo-inner">
+                <img id="person-photo" src="" alt="">
             </div>
+            <div class="cinta-luto">
+                <div class="lazo"></div>
+                <div class="cola"></div>
+            </div>
+            <svg class="rosa-decorativa" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <g fill="#f5f0e6" stroke="#d8cfa8" stroke-width="1.5">
+                    <circle cx="50" cy="35" r="16"/>
+                    <circle cx="34" cy="48" r="14"/>
+                    <circle cx="66" cy="48" r="14"/>
+                    <circle cx="42" cy="60" r="13"/>
+                    <circle cx="58" cy="60" r="13"/>
+                    <circle cx="50" cy="50" r="12" fill="#fffdf6"/>
+                </g>
+                <g fill="#6b8e5a">
+                    <path d="M48 72 Q46 85 42 95 L50 95 Q52 85 50 72 Z"/>
+                    <ellipse cx="38" cy="80" rx="8" ry="4" transform="rotate(-30 38 80)"/>
+                </g>
+            </svg>
         </div>
-        
-        <div id="banner" class="banner-wrapper">
-            <div id="sponsor-titulo" class="sub-label">Cargando...</div>
-            <div id="sponsor-desc" class="main-text"></div>
-            <div id="sponsor-rotulos" class="phone-text"></div>
+
+        <div class="text-block">
+            <div class="marca-mtg">MTG</div>
+            <div id="nombre" class="nombre-text">Cargando...</div>
+            <div id="subtitulo" class="subtitulo-text"></div>
+            <div id="detalle" class="detalle-text"></div>
         </div>
     </div>
 
     <script>
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxIX6cZO_YWTxd2X0ElxK59rl1lCE7bjLzlO21aBzoXZFrMC2Vd3Yin8AolkYFKK0zKPRhA7dF0Rn/pub?output=csv";
-        
+
         let listaRegistros = [];
         let indiceActual = 0;
         let estaMostrando = false;
-
-        const ANCHO_MAXIMO_BANNER = 1150;
-        const TAMANOS = {
-            titulo:   { base: 19, min: 13 },
-            desc:     { base: 30, min: 18 },
-            rotulos:  { base: 19, min: 13 }
-        };
-        const PASO_REDUCCION = 1;
-
-        function ajustarTamanoTexto() {
-            const banner = document.getElementById("banner");
-            const txtTitulo = document.getElementById("sponsor-titulo");
-            const txtDesc = document.getElementById("sponsor-desc");
-            const txtRotulos = document.getElementById("sponsor-rotulos");
-
-            txtTitulo.style.fontSize = TAMANOS.titulo.base + "px";
-            txtDesc.style.fontSize = TAMANOS.desc.base + "px";
-            txtRotulos.style.fontSize = TAMANOS.rotulos.base + "px";
-
-            let actualTitulo = TAMANOS.titulo.base;
-            let actualDesc = TAMANOS.desc.base;
-            let actualRotulos = TAMANOS.rotulos.base;
-
-            let intentos = 0;
-            while (banner.scrollWidth > ANCHO_MAXIMO_BANNER && intentos < 40) {
-                if (actualDesc > TAMANOS.desc.min) {
-                    actualDesc -= PASO_REDUCCION;
-                    txtDesc.style.fontSize = actualDesc + "px";
-                }
-                if (actualTitulo > TAMANOS.titulo.min) {
-                    actualTitulo -= PASO_REDUCCION;
-                    txtTitulo.style.fontSize = actualTitulo + "px";
-                }
-                if (actualRotulos > TAMANOS.rotulos.min) {
-                    actualRotulos -= PASO_REDUCCION;
-                    txtRotulos.style.fontSize = actualRotulos + "px";
-                }
-
-                if (actualDesc <= TAMANOS.desc.min && actualTitulo <= TAMANOS.titulo.min && actualRotulos <= TAMANOS.rotulos.min) {
-                    break;
-                }
-                intentos++;
-            }
-        }
 
         function parseCSV(text) {
             const lines = text.replace(/\r/g, "").split("\n");
@@ -266,19 +221,19 @@
             if (lines.length === 0) return [];
 
             const headers = lines[0].split(",").map(h => h.trim().toLowerCase());
-            
+
             const titIdx = headers.indexOf("titulo") !== -1 ? headers.indexOf("titulo") : 0;
             const descIdx = headers.indexOf("descripción") !== -1 ? headers.indexOf("descripción") : (headers.indexOf("descripcion") !== -1 ? headers.indexOf("descripcion") : 1);
             const rot1Idx = headers.indexOf("rótulo1") !== -1 ? headers.indexOf("rótulo1") : (headers.indexOf("rotulo1") !== -1 ? headers.indexOf("rotulo1") : 2);
             const rot2Idx = headers.indexOf("rótulo2") !== -1 ? headers.indexOf("rótulo2") : (headers.indexOf("rotulo2") !== -1 ? headers.indexOf("rotulo2") : 3);
-            const fotoIdx = headers.indexOf("foto") !== -1 ? headers.indexOf("foto") : (headers.indexOf("imagen") !== -1 ? headers.indexOf("imagen") : 4);
+            const fotoIdx = headers.indexOf("foto") !== -1 ? headers.indexOf("foto") : 4;
 
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
-                
+
                 const currentline = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                
+
                 if (currentline[descIdx]) {
                     let titulo = currentline[titIdx] ? currentline[titIdx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
                     let descripcion = currentline[descIdx] ? currentline[descIdx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
@@ -287,13 +242,7 @@
                     let foto = currentline[fotoIdx] ? currentline[fotoIdx].replace(/^"+|"+$/g, '').replace(/""/g, '"').trim() : "";
 
                     if (descripcion && descripcion.toLowerCase() !== "descripción" && descripcion.toLowerCase() !== "descripcion") {
-                        result.push({ 
-                            titulo: titulo,
-                            descripcion: descripcion, 
-                            rotulo1: rotulo1,
-                            rotulo2: rotulo2,
-                            foto: foto
-                        });
+                        result.push({ titulo, descripcion, rotulo1, rotulo2, foto });
                     }
                 }
             }
@@ -313,65 +262,42 @@
 
         function ejecutarCicloVisual() {
             if (listaRegistros.length === 0 || estaMostrando) return;
-            
-            estaMostrando = true;
-            const btn = document.getElementById("play-btn");
-            const innerBadge = document.getElementById("badge-inner");
-            const iconTriangle = document.getElementById("icon-triangle");
-            const brandText = document.getElementById("brand-text");
-            const personPhoto = document.getElementById("person-photo");
-            const banner = document.getElementById("banner");
-            const txtTitulo = document.getElementById("sponsor-titulo");
-            const txtDesc = document.getElementById("sponsor-desc");
-            const txtRotulos = document.getElementById("sponsor-rotulos");
 
-            innerBadge.className = "badge-content";
-            iconTriangle.className = "triangle girando-play";
+            estaMostrando = true;
+            const container = document.getElementById("widget-container");
+            const foto = document.getElementById("person-photo");
+            const nombre = document.getElementById("nombre");
+            const subtitulo = document.getElementById("subtitulo");
+            const detalle = document.getElementById("detalle");
 
             const itemActual = listaRegistros[indiceActual];
-            txtTitulo.innerText = itemActual.titulo;
-            txtDesc.innerText = itemActual.descripcion;
 
-            let combinacionRotulos = "";
+            nombre.innerText = itemActual.descripcion;
+            subtitulo.innerText = itemActual.titulo;
+
+            let combinacionDetalle = "";
             if (itemActual.rotulo1 && itemActual.rotulo2) {
-                combinacionRotulos = `${itemActual.rotulo1} • ${itemActual.rotulo2}`;
+                combinacionDetalle = `${itemActual.rotulo1} • ${itemActual.rotulo2}`;
             } else if (itemActual.rotulo1) {
-                combinacionRotulos = itemActual.rotulo1;
+                combinacionDetalle = itemActual.rotulo1;
             } else if (itemActual.rotulo2) {
-                combinacionRotulos = itemActual.rotulo2;
+                combinacionDetalle = itemActual.rotulo2;
             }
-            txtRotulos.innerText = combinacionRotulos;
+            detalle.innerText = combinacionDetalle;
 
-            if (itemActual.foto && itemActual.foto.length > 0) {
-                personPhoto.src = itemActual.foto;
-                brandText.style.display = "none";
-            } else {
-                personPhoto.src = "";
-                brandText.style.display = "block";
-            }
+            foto.src = itemActual.foto || "";
 
             indiceActual = (indiceActual + 1) % listaRegistros.length;
 
-            ajustarTamanoTexto();
+            // Entrada
+            container.classList.add("visible");
 
-            btn.className = "play-button animar-play-entrada";
-
+            // Salida tras 13 segundos visible
             setTimeout(() => {
-                banner.className = "banner-wrapper animar-banner-entrada";
-            }, 500);
-
-            setTimeout(() => {
-                innerBadge.className = "badge-content mostrar-marca";
-            }, 3000);
-
-            setTimeout(() => {
-                banner.className = "banner-wrapper animar-banner-salida";
-            }, 12500);
-
-            setTimeout(() => {
-                btn.className = "play-button animar-play-salida";
+                container.classList.remove("visible");
             }, 13000);
 
+            // Reinicio del ciclo
             setTimeout(() => {
                 estaMostrando = false;
             }, 14000);
@@ -380,8 +306,8 @@
         async function iniciar() {
             await cargarDatos();
             if (listaRegistros.length > 0) ejecutarCicloVisual();
-            
-            setInterval(ejecutarCicloVisual, 60000); 
+
+            setInterval(ejecutarCicloVisual, 60000);
             setInterval(cargarDatos, 120000);
         }
 
