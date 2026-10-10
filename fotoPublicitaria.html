@@ -112,7 +112,7 @@
 
         .nombre-text {
             color: #E6CA65;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -183,7 +183,7 @@
         const ANCHO_MAXIMO_BLOQUE = 1000;
         // Si cambias un tamaño base, cámbialo también en el CSS (.nombre-text, .subtitulo-text, .detalle-text)
         const TAMANOS = {
-            nombre:    { base: 26, min: 20 },
+            nombre:    { base: 24, min: 20 },
             subtitulo: { base: 19, min: 14 },
             detalle:   { base: 17, min: 14 }
         };
@@ -239,7 +239,7 @@
                 if (document.fonts && document.fonts.load) {
                     await Promise.race([
                         Promise.all([
-                            document.fonts.load("900 26px Montserrat"),
+                            document.fonts.load("900 24px Montserrat"),
                             document.fonts.load("700 19px Montserrat"),
                             document.fonts.load("700 17px Montserrat")
                         ]),
@@ -305,50 +305,3 @@
             const nombre = document.getElementById("nombre");
             const subtitulo = document.getElementById("subtitulo");
             const detalle = document.getElementById("detalle");
-
-            const itemActual = listaRegistros[indiceActual];
-
-            nombre.innerText = itemActual.descripcion;
-            subtitulo.innerText = itemActual.titulo;
-
-            let combinacionDetalle = "";
-            if (itemActual.rotulo1 && itemActual.rotulo2) {
-                combinacionDetalle = `${itemActual.rotulo1} • ${itemActual.rotulo2}`;
-            } else if (itemActual.rotulo1) {
-                combinacionDetalle = itemActual.rotulo1;
-            } else if (itemActual.rotulo2) {
-                combinacionDetalle = itemActual.rotulo2;
-            }
-            detalle.innerText = combinacionDetalle;
-
-            foto.src = itemActual.foto || "";
-
-            indiceActual = (indiceActual + 1) % listaRegistros.length;
-
-            // Mide con las fuentes ya cargadas y ajusta el texto antes de mostrar la tarjeta
-            await esperarFuentes();
-            ajustarTamanoTexto();
-
-            container.classList.add("visible");
-
-            setTimeout(() => {
-                container.classList.remove("visible");
-            }, 13000);
-
-            setTimeout(() => {
-                estaMostrando = false;
-            }, 14000);
-        }
-
-        async function iniciar() {
-            await cargarDatos();
-            if (listaRegistros.length > 0) ejecutarCicloVisual();
-
-            setInterval(ejecutarCicloVisual, 60000);
-            setInterval(cargarDatos, 120000);
-        }
-
-        window.onload = iniciar;
-    </script>
-</body>
-</html>
