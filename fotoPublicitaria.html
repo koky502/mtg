@@ -84,9 +84,12 @@
             border-radius: 50%;
         }
 
-        /* BLOQUE DE TEXTO (su ancho se ajusta por JavaScript a la línea más larga) */
+        /* BLOQUE DE TEXTO: sin saltos de línea, su ancho se adapta al texto más largo */
         .text-block {
             position: relative;
+            width: max-content;
+            flex-shrink: 0;
+            white-space: nowrap;
             background: rgba(0, 0, 0, 0.88);
             border-top: 2.5px solid #e6ca65;
             border-right: 5px solid #e6ca65;
@@ -95,9 +98,16 @@
             padding: 18px 40px 18px 34px;
             margin-left: -10px;
             margin-bottom: 8px;
-            max-width: 520px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.6);
             z-index: 1;
+        }
+
+        /* Último recurso: si ni con la letra mínima cabe, se permiten dos líneas */
+        .text-block.permitir-saltos {
+            white-space: normal;
+            width: auto;
+            max-width: 1000px;
+            flex-shrink: 1;
         }
 
         .nombre-text {
@@ -109,7 +119,6 @@
             line-height: 1.25;
             text-shadow: 0 1px 2px rgba(0,0,0,0.8);
             margin-bottom: 4px;
-            text-wrap: balance;
         }
 
         .subtitulo-text {
@@ -128,7 +137,6 @@
             font-weight: 700;
             letter-spacing: 0.3px;
             line-height: 1.3;
-            text-wrap: balance;
         }
 
         /* Marca MTG pequeña, esquina del bloque de texto */
@@ -182,6 +190,79 @@
         let indiceActual = 0;
         let estaMostrando = false;
 
+        // --- CONFIGURACIÓN DE AUTOAJUSTE DE TAMAÑO ---
+        // Ancho máximo del cuadro de texto dentro del lienzo de 1280 px
+        // (1280 - 25 izquierda - 210 de foto - 25 de margen derecho = 1020, con un poco de seguridad)
+        const ANCHO_MAXIMO_BLOQUE = 1000;
+        const TAMANOS = {
+            nombre:    { base: 28, min: 20 },
+            subtitulo: { base: 20, min: 14 },
+            detalle:   { base: 18, min: 14 }
+        };
+        const PASO_REDUCCION = 1; // px que baja en cada iteración
+
+        // Mide el ancho real del texto de una línea
+        function anchoTexto(el) {
+            const anterior = el.style.display;
+            el.style.display = "inline-block";
+            const ancho = el.offsetWidth;
+            el.style.display = anterior;
+            return ancho;
+        }
+
+        // Reduce la letra de cada línea solo si esa línea no cabe
+        function ajustarTamanoTexto() {
+            const bloque = document.getElementById("text-block");
+            const lineas = [
+                { el: document.getElementById("nombre"),    cfg: TAMANOS.nombre },
+                { el: document.getElementById("subtitulo"), cfg: TAMANOS.subtitulo },
+                { el: document.getElementById("detalle"),   cfg: TAMANOS.detalle }
+            ];
+
+            // Estado inicial: una sola línea y tamaños base
+            bloque.classList.remove("permitir-saltos");
+            lineas.forEach(l => { l.el.style.fontSize = l.cfg.base + "px"; });
+
+            // Espacio que ocupan el relleno y los bordes del bloque
+            const cs = getComputedStyle(bloque);
+            const extra = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+                        + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+            const disponible = ANCHO_MAXIMO_BLOQUE - extra;
+
+            let algunaNoCabe = false;
+            lineas.forEach(l => {
+                let tamano = l.cfg.base;
+                while (anchoTexto(l.el) > disponible && tamano > l.cfg.min) {
+                    tamano -= PASO_REDUCCION;
+                    l.el.style.fontSize = tamano + "px";
+                }
+                if (anchoTexto(l.el) > disponible) algunaNoCabe = true;
+            });
+
+            // Último recurso: permitir dos líneas para que nada se corte
+            if (algunaNoCabe) {
+                bloque.classList.add("permitir-saltos");
+            }
+        }
+
+        // Espera a que carguen las fuentes (máximo 1.5 s) para medir bien el texto
+        async function esperarFuentes() {
+            try {
+                if (document.fonts && document.fonts.load) {
+                    await Promise.race([
+                        Promise.all([
+                            document.fonts.load("900 28px Montserrat"),
+                            document.fonts.load("700 20px Montserrat"),
+                            document.fonts.load("700 18px Montserrat")
+                        ]),
+                        new Promise(resolve => setTimeout(resolve, 1500))
+                    ]);
+                }
+            } catch (error) {
+                console.error("Error esperando fuentes:", error);
+            }
+        }
+
         function parseCSV(text) {
             const lines = text.replace(/\r/g, "").split("\n");
             const result = [];
@@ -227,58 +308,6 @@
             }
         }
 
-        // Espera a que carguen las fuentes (máximo 1.5 s) para medir bien el texto
-        async function esperarFuentes() {
-            try {
-                if (document.fonts && document.fonts.load) {
-                    await Promise.race([
-                        Promise.all([
-                            document.fonts.load("900 28px Montserrat"),
-                            document.fonts.load("700 20px Montserrat"),
-                            document.fonts.load("700 18px Montserrat")
-                        ]),
-                        new Promise(resolve => setTimeout(resolve, 1500))
-                    ]);
-                }
-            } catch (error) {
-                console.error("Error esperando fuentes:", error);
-            }
-        }
-
-        // Ajusta el ancho del bloque de texto a su línea más larga
-        function ajustarAnchoBloque() {
-            const container = document.getElementById("widget-container");
-            const bloque = document.getElementById("text-block");
-            const elementos = [
-                document.getElementById("nombre"),
-                document.getElementById("subtitulo"),
-                document.getElementById("detalle")
-            ];
-
-            // Quita el ancho anterior para que el texto se acomode al máximo permitido
-            bloque.style.width = "";
-
-            // Compensa la escala de la animación de entrada (scale 0.9)
-            const escala = container.offsetWidth > 0
-                ? container.getBoundingClientRect().width / container.offsetWidth
-                : 1;
-
-            let masAncha = 0;
-            elementos.forEach(el => {
-                if (!el || !el.textContent.trim()) return;
-                const rango = document.createRange();
-                rango.selectNodeContents(el);
-                const lineas = rango.getClientRects();
-                for (let i = 0; i < lineas.length; i++) {
-                    masAncha = Math.max(masAncha, lineas[i].width / escala);
-                }
-            });
-
-            if (masAncha > 0) {
-                bloque.style.width = (Math.ceil(masAncha) + 4) + "px";
-            }
-        }
-
         async function ejecutarCicloVisual() {
             if (listaRegistros.length === 0 || estaMostrando) return;
 
@@ -308,9 +337,9 @@
 
             indiceActual = (indiceActual + 1) % listaRegistros.length;
 
-            // Mide el texto con las fuentes ya cargadas y ajusta el cuadro antes de mostrarlo
+            // Mide con las fuentes ya cargadas y ajusta el texto antes de mostrar la tarjeta
             await esperarFuentes();
-            ajustarAnchoBloque();
+            ajustarTamanoTexto();
 
             container.classList.add("visible");
 
