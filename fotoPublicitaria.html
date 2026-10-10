@@ -86,7 +86,7 @@
         }
 
         /* BLOQUE DE TEXTO: sin saltos de línea, su ancho se adapta al texto más largo.
-           Sin margin-bottom: su base queda alineada con la base del marco de la foto. */
+            Sin margin-bottom: su base queda alineada con la base del marco de la foto. */
         .text-block {
             position: relative;
             width: max-content;
@@ -179,18 +179,14 @@
         let estaMostrando = false;
 
         // --- CONFIGURACIÓN DE AUTOAJUSTE DE TAMAÑO ---
-        // Ancho máximo del cuadro de texto dentro del lienzo de 1280 px
-        // (1280 - 25 izquierda - 210 de foto - 25 de margen derecho = 1020, con un poco de seguridad)
         const ANCHO_MAXIMO_BLOQUE = 1000;
-        // Si cambias un tamaño base, cámbialo también en el CSS (.nombre-text, .subtitulo-text, .detalle-text)
         const TAMANOS = {
             nombre:    { base: 24, min: 20 },
             subtitulo: { base: 19, min: 14 },
             detalle:   { base: 17, min: 14 }
         };
-        const PASO_REDUCCION = 1; // px que baja en cada iteración
+        const PASO_REDUCCION = 1;
 
-        // Mide el ancho real del texto de una línea
         function anchoTexto(el) {
             const anterior = el.style.display;
             el.style.display = "inline-block";
@@ -199,7 +195,6 @@
             return ancho;
         }
 
-        // Reduce la letra de cada línea solo si esa línea no cabe
         function ajustarTamanoTexto() {
             const bloque = document.getElementById("text-block");
             const lineas = [
@@ -208,11 +203,9 @@
                 { el: document.getElementById("detalle"),   cfg: TAMANOS.detalle }
             ];
 
-            // Estado inicial: una sola línea y tamaños base
             bloque.classList.remove("permitir-saltos");
             lineas.forEach(l => { l.el.style.fontSize = l.cfg.base + "px"; });
 
-            // Espacio que ocupan el relleno y los bordes del bloque
             const cs = getComputedStyle(bloque);
             const extra = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
                         + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
@@ -228,13 +221,11 @@
                 if (anchoTexto(l.el) > disponible) algunaNoCabe = true;
             });
 
-            // Último recurso: permitir dos líneas para que nada se corte
             if (algunaNoCabe) {
                 bloque.classList.add("permitir-saltos");
             }
         }
 
-        // Espera a que carguen las fuentes (máximo 1.5 s) para medir bien el texto
         async function esperarFuentes() {
             try {
                 if (document.fonts && document.fonts.load) {
@@ -309,8 +300,11 @@
 
             const itemActual = listaRegistros[indiceActual];
 
-            nombre.innerText = itemActual.descripcion;
-            subtitulo.innerText = itemActual.titulo;
+            // CAMBIO REALIZADO: 
+            // 'nombre' (primera línea, más grande y destacada) recibe el Título (ej. Q.E.P.D.)
+            // 'subtitulo' (segunda línea) recibe la Descripción (el Nombre de la persona)
+            nombre.innerText = itemActual.titulo;
+            subtitulo.innerText = itemActual.descripcion;
 
             let combinacionDetalle = "";
             if (itemActual.rotulo1 && itemActual.rotulo2) {
@@ -326,7 +320,6 @@
 
             indiceActual = (indiceActual + 1) % listaRegistros.length;
 
-            // Mide con las fuentes ya cargadas y ajusta el texto antes de mostrar la tarjeta
             await esperarFuentes();
             ajustarTamanoTexto();
 
