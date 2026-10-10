@@ -85,8 +85,7 @@
             border-radius: 50%;
         }
 
-        /* BLOQUE DE TEXTO: sin saltos de línea, su ancho se adapta al texto más largo.
-            Sin margin-bottom: su base queda alineada con la base del marco de la foto. */
+        /* BLOQUE DE TEXTO: sin saltos de línea, su ancho se adapta al texto más largo. */
         .text-block {
             position: relative;
             width: max-content;
@@ -111,6 +110,7 @@
             flex-shrink: 1;
         }
 
+        /* ESTILO PRINCIPAL (Para resaltar el nombre de la persona) */
         .nombre-text {
             color: #E6CA65;
             font-size: 24px;
@@ -122,6 +122,7 @@
             margin-bottom: 2px;
         }
 
+        /* ESTILO COMPLEMENTARIO (Para Q.E.P.D.) */
         .subtitulo-text {
             color: #FFF3B3;
             font-size: 19px;
@@ -165,8 +166,9 @@
         </div>
 
         <div id="text-block" class="text-block">
-            <div id="nombre" class="nombre-text">Cargando...</div>
+            <!-- Intercambiamos el orden visual directo en el HTML -->
             <div id="subtitulo" class="subtitulo-text"></div>
+            <div id="nombre" class="nombre-text">Cargando...</div>
             <div id="detalle" class="detalle-text"></div>
         </div>
     </div>
@@ -178,7 +180,6 @@
         let indiceActual = 0;
         let estaMostrando = false;
 
-        // --- CONFIGURACIÓN DE AUTOAJUSTE DE TAMAÑO ---
         const ANCHO_MAXIMO_BLOQUE = 1000;
         const TAMANOS = {
             nombre:    { base: 24, min: 20 },
@@ -300,11 +301,11 @@
 
             const itemActual = listaRegistros[indiceActual];
 
-            // CAMBIO REALIZADO: 
-            // 'nombre' (primera línea, más grande y destacada) recibe el Título (ej. Q.E.P.D.)
-            // 'subtitulo' (segunda línea) recibe la Descripción (el Nombre de la persona)
-            nombre.innerText = itemActual.titulo;
-            subtitulo.innerText = itemActual.descripcion;
+            // Asignación correcta:
+            // subtitulo (arriba, más pequeño) recibe el Título (Q.E.P.D.)
+            // nombre (en medio, grande y llamativo) recibe la Descripción (El nombre de la persona)
+            subtitulo.innerText = itemActual.titulo;
+            nombre.innerText = itemActual.descripcion;
 
             let combinacionDetalle = "";
             if (itemActual.rotulo1 && itemActual.rotulo2) {
