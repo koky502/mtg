@@ -84,7 +84,7 @@
             border-radius: 50%;
         }
 
-        /* BLOQUE DE TEXTO */
+        /* BLOQUE DE TEXTO (su ancho se ajusta por JavaScript a la línea más larga) */
         .text-block {
             position: relative;
             background: rgba(0, 0, 0, 0.88);
@@ -92,7 +92,7 @@
             border-right: 5px solid #e6ca65;
             border-bottom: 2.5px solid #e6ca65;
             border-radius: 0 10px 10px 0;
-            padding: 18px 30px 18px 34px;
+            padding: 18px 40px 18px 34px;
             margin-left: -10px;
             margin-bottom: 8px;
             max-width: 520px;
@@ -109,6 +109,7 @@
             line-height: 1.25;
             text-shadow: 0 1px 2px rgba(0,0,0,0.8);
             margin-bottom: 4px;
+            text-wrap: balance;
         }
 
         .subtitulo-text {
@@ -127,6 +128,7 @@
             font-weight: 700;
             letter-spacing: 0.3px;
             line-height: 1.3;
+            text-wrap: balance;
         }
 
         /* Marca MTG pequeña, esquina del bloque de texto */
@@ -165,7 +167,7 @@
             </svg>
         </div>
 
-        <div class="text-block">
+        <div id="text-block" class="text-block">
             <div class="marca-mtg">MTG</div>
             <div id="nombre" class="nombre-text">Cargando...</div>
             <div id="subtitulo" class="subtitulo-text"></div>
@@ -225,7 +227,59 @@
             }
         }
 
-        function ejecutarCicloVisual() {
+        // Espera a que carguen las fuentes (máximo 1.5 s) para medir bien el texto
+        async function esperarFuentes() {
+            try {
+                if (document.fonts && document.fonts.load) {
+                    await Promise.race([
+                        Promise.all([
+                            document.fonts.load("900 28px Montserrat"),
+                            document.fonts.load("700 20px Montserrat"),
+                            document.fonts.load("700 18px Montserrat")
+                        ]),
+                        new Promise(resolve => setTimeout(resolve, 1500))
+                    ]);
+                }
+            } catch (error) {
+                console.error("Error esperando fuentes:", error);
+            }
+        }
+
+        // Ajusta el ancho del bloque de texto a su línea más larga
+        function ajustarAnchoBloque() {
+            const container = document.getElementById("widget-container");
+            const bloque = document.getElementById("text-block");
+            const elementos = [
+                document.getElementById("nombre"),
+                document.getElementById("subtitulo"),
+                document.getElementById("detalle")
+            ];
+
+            // Quita el ancho anterior para que el texto se acomode al máximo permitido
+            bloque.style.width = "";
+
+            // Compensa la escala de la animación de entrada (scale 0.9)
+            const escala = container.offsetWidth > 0
+                ? container.getBoundingClientRect().width / container.offsetWidth
+                : 1;
+
+            let masAncha = 0;
+            elementos.forEach(el => {
+                if (!el || !el.textContent.trim()) return;
+                const rango = document.createRange();
+                rango.selectNodeContents(el);
+                const lineas = rango.getClientRects();
+                for (let i = 0; i < lineas.length; i++) {
+                    masAncha = Math.max(masAncha, lineas[i].width / escala);
+                }
+            });
+
+            if (masAncha > 0) {
+                bloque.style.width = (Math.ceil(masAncha) + 4) + "px";
+            }
+        }
+
+        async function ejecutarCicloVisual() {
             if (listaRegistros.length === 0 || estaMostrando) return;
 
             estaMostrando = true;
@@ -253,6 +307,10 @@
             foto.src = itemActual.foto || "";
 
             indiceActual = (indiceActual + 1) % listaRegistros.length;
+
+            // Mide el texto con las fuentes ya cargadas y ajusta el cuadro antes de mostrarlo
+            await esperarFuentes();
+            ajustarAnchoBloque();
 
             container.classList.add("visible");
 
