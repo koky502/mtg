@@ -305,3 +305,50 @@
             const nombre = document.getElementById("nombre");
             const subtitulo = document.getElementById("subtitulo");
             const detalle = document.getElementById("detalle");
+
+            const itemActual = listaRegistros[indiceActual];
+
+            nombre.innerText = itemActual.descripcion;
+            subtitulo.innerText = itemActual.titulo;
+
+            let combinacionDetalle = "";
+            if (itemActual.rotulo1 && itemActual.rotulo2) {
+                combinacionDetalle = `${itemActual.rotulo1} • ${itemActual.rotulo2}`;
+            } else if (itemActual.rotulo1) {
+                combinacionDetalle = itemActual.rotulo1;
+            } else if (itemActual.rotulo2) {
+                combinacionDetalle = itemActual.rotulo2;
+            }
+            detalle.innerText = combinacionDetalle;
+
+            foto.src = itemActual.foto || "";
+
+            indiceActual = (indiceActual + 1) % listaRegistros.length;
+
+            // Mide con las fuentes ya cargadas y ajusta el texto antes de mostrar la tarjeta
+            await esperarFuentes();
+            ajustarTamanoTexto();
+
+            container.classList.add("visible");
+
+            setTimeout(() => {
+                container.classList.remove("visible");
+            }, 13000);
+
+            setTimeout(() => {
+                estaMostrando = false;
+            }, 14000);
+        }
+
+        async function iniciar() {
+            await cargarDatos();
+            if (listaRegistros.length > 0) ejecutarCicloVisual();
+
+            setInterval(ejecutarCicloVisual, 60000);
+            setInterval(cargarDatos, 120000);
+        }
+
+        window.onload = iniciar;
+    </script>
+</body>
+</html>
