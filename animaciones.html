@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Call to Action TikTok - MTG</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+        }
+
+        /* BANNER ANIMADO EN LA ESQUINA INFERIOR DERECHA */
+        #cta-container {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(10, 10, 10, 0.90);
+            border: 2.5px solid #E6CA65;
+            border-radius: 50px;
+            padding: 10px 25px 10px 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+            transform: translateY(100px) scale(0.8);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #cta-container.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* ICONO ANIMADO CON EFECTO LATIDO / FLOTANTE */
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            background: #E6CA65;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #000;
+            box-shadow: 0 0 15px rgba(230, 202, 101, 0.5);
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.12); box-shadow: 0 0 22px rgba(230, 202, 101, 0.8); }
+            100% { transform: scale(1); }
+        }
+
+        /* TEXTO Y ACCIÓN */
+        .text-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .action-title {
+            color: #E6CA65;
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            line-height: 1.1;
+        }
+
+        .action-sub {
+            color: #FFF3B3;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cta-container">
+        <div class="icon-box" id="cta-icon">🤍</div>
+        <div class="text-box">
+            <span class="action-title" id="cta-title">¡DALE QUIÉREME!</span>
+            <span class="action-sub" id="cta-sub">Toca la pantalla para apoyar el LIVE</span>
+        </div>
+    </div>
+
+    <script>
+        // Mensajes que se irán rotando automáticamente
+        const mensajes = [
+            {
+                icono: "🤍",
+                titulo: "¡REGÁLANOS UN QUIÉREME!",
+                subtitulo: "Toca 2 veces la pantalla para apoyar"
+            },
+            {
+                icono: "↗️",
+                titulo: "¡COMPARTE EL LIVE!",
+                subtitulo: "Ayúdanos a llegar a más ciclistas"
+            },
+            {
+                icono: "➕",
+                titulo: "¡SÍGUENOS EN TIKTOK!",
+                subtitulo: "No te pierdas la próxima transmisión"
+            },
+            {
+                icono: "🎁",
+                titulo: "¡APOYA LA TRANSMISIÓN!",
+                subtitulo: "Tus regalos mantienen vivo el evento"
+            }
+        ];
+
+        let indice = 0;
+
+        function mostrarAnimacion() {
+            const container = document.getElementById("cta-container");
+            const icon = document.getElementById("cta-icon");
+            const title = document.getElementById("cta-title");
+            const sub = document.getElementById("cta-sub");
+
+            // Cargar datos actuales
+            const actual = mensajes[indice];
+            icon.innerText = actual.icono;
+            title.innerText = actual.titulo;
+            sub.innerText = actual.subtitulo;
+
+            // Pasar al siguiente
+            indice = (indice + 1) % mensajes.length;
+
+            // Mostrar banner
+            container.classList.add("visible");
+
+            // Ocultar a los 10 segundos
+            setTimeout(() => {
+                container.classList.remove("visible");
+            }, 10000);
+        }
+
+        // Ejecutar cada 45 segundos
+        setInterval(mostrarAnimacion, 45000);
+
+        // Primera animación al cargar (después de 3 segundos)
+        setTimeout(mostrarAnimacion, 3000);
+    </script>
+</body>
+</html>
