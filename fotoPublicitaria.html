@@ -33,7 +33,7 @@
             transform: none;
         }
 
-        /* CONTENEDOR DE FOTO SIN MARCO (Libre y transparente) */
+        /* CONTENEDOR DE FOTO */
         .photo-frame {
             position: relative;
             height: 250px;
@@ -55,7 +55,6 @@
             justify-content: center;
         }
 
-        /* Imagen PNG sin recortes ni bordes */
         .photo-inner img {
             max-height: 100%;
             width: auto;
@@ -65,20 +64,20 @@
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
         }
 
-        /* ROSA BLANCA DECORATIVA (Sutilmente posicionada en la esquina) */
+        /* ROSA BLANCA DECORATIVA */
         .rosa-decorativa {
             position: absolute;
-            bottom: -10px;
-            left: -16px;
-            width: 48px;
-            height: 48px;
+            bottom: -8px;
+            left: -14px;
+            width: 44px;
+            height: 44px;
             z-index: 4;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
             background: radial-gradient(circle, rgba(0,0,0,0.5) 40%, transparent 70%);
             border-radius: 50%;
         }
 
-        /* BLOQUE DE TEXTO */
+        /* BLOQUE DE TEXTO: Ajuste de margen negativo para que pegue perfecto a la foto */
         .text-block {
             position: relative;
             width: max-content;
@@ -89,8 +88,8 @@
             border-right: 5px solid #e6ca65;
             border-bottom: 2.5px solid #e6ca65;
             border-radius: 0 10px 10px 0;
-            padding: 12px 28px 12px 24px;
-            margin-left: -10px;
+            padding: 12px 28px 12px 22px;
+            margin-left: 0px; /* Alineado exacto sin espacios muertos */
             box-shadow: 0 10px 20px rgba(0,0,0,0.6);
             z-index: 1;
         }
@@ -305,14 +304,12 @@
 
             foto.src = itemActual.foto || "";
 
-            // Ajuste dinámico del ancho según la proporción real de la imagen PNG sin marcos
             foto.onload = function() {
                 const frame = document.getElementById("photo-frame");
                 const proporcion = this.naturalWidth / this.naturalHeight;
-                const altoFijo = 250; // Altura base en píxeles
+                const altoFijo = 250;
                 const anchoCalculado = altoFijo * proporcion;
                 
-                // Aplicamos el ancho proporcional exacto de la imagen
                 frame.style.width = anchoCalculado + "px";
             };
 
