@@ -33,7 +33,7 @@
             transform: none;
         }
 
-        /* CONTENEDOR DE FOTO */
+        /* CONTENEDOR DE FOTO SIN MARCO PERO LIMPIO */
         .photo-frame {
             position: relative;
             height: 250px;
@@ -64,20 +64,7 @@
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
         }
 
-        /* ROSA BLANCA DECORATIVA */
-        .rosa-decorativa {
-            position: absolute;
-            bottom: -8px;
-            left: -14px;
-            width: 44px;
-            height: 44px;
-            z-index: 4;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
-            background: radial-gradient(circle, rgba(0,0,0,0.5) 40%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        /* BLOQUE DE TEXTO: Ajuste de margen negativo para que pegue perfecto a la foto */
+        /* BLOQUE DE TEXTO CON SU LÍNEA DORADA IZQUIERDA RESTAURADA */
         .text-block {
             position: relative;
             width: max-content;
@@ -85,11 +72,12 @@
             white-space: nowrap;
             background: rgba(0, 0, 0, 0.88);
             border-top: 2.5px solid #e6ca65;
+            border-left: 5px solid #e6ca65;  /* <--- Línea dorada vertical recuperada a la izquierda */
             border-right: 5px solid #e6ca65;
             border-bottom: 2.5px solid #e6ca65;
             border-radius: 0 10px 10px 0;
-            padding: 12px 28px 12px 22px;
-            margin-left: 0px; /* Alineado exacto sin espacios muertos */
+            padding: 12px 28px 12px 24px;
+            margin-left: 12px; /* Espacio estético y limpio entre la foto y el bloque */
             box-shadow: 0 10px 20px rgba(0,0,0,0.6);
             z-index: 1;
         }
@@ -138,20 +126,7 @@
             <div class="photo-inner">
                 <img id="person-photo" src="" alt="">
             </div>
-            <svg class="rosa-decorativa" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <g fill="#f5f0e6" stroke="#d8cfa8" stroke-width="1.5">
-                    <circle cx="50" cy="35" r="16"/>
-                    <circle cx="34" cy="48" r="14"/>
-                    <circle cx="66" cy="48" r="14"/>
-                    <circle cx="42" cy="60" r="13"/>
-                    <circle cx="58" cy="60" r="13"/>
-                    <circle cx="50" cy="50" r="12" fill="#fffdf6"/>
-                </g>
-                <g fill="#6b8e5a">
-                    <path d="M48 72 Q46 85 42 95 L50 95 Q52 85 50 72 Z"/>
-                    <ellipse cx="38" cy="80" rx="8" ry="4" transform="rotate(-30 38 80)"/>
-                </g>
-            </svg>
+            <!-- Rosa blanca eliminada del HTML -->
         </div>
 
         <div id="text-block" class="text-block">
