@@ -33,7 +33,7 @@
             transform: none;
         }
 
-        /* CONTENEDOR DE FOTO SIN MARCO PERO LIMPIO */
+        /* CONTENEDOR DE FOTO */
         .photo-frame {
             position: relative;
             height: 250px;
@@ -64,7 +64,7 @@
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
         }
 
-        /* BLOQUE DE TEXTO CON SU LÍNEA DORADA IZQUIERDA RESTAURADA */
+        /* BLOQUE DE TEXTO CON OPCIÓN A (Fusión limpia / Margen negativo) */
         .text-block {
             position: relative;
             width: max-content;
@@ -72,12 +72,12 @@
             white-space: nowrap;
             background: rgba(0, 0, 0, 0.88);
             border-top: 2.5px solid #e6ca65;
-            border-left: 5px solid #e6ca65;  /* <--- Línea dorada vertical recuperada a la izquierda */
+            border-left: 5px solid #e6ca65;  /* Línea dorada vertical izquierda */
             border-right: 5px solid #e6ca65;
             border-bottom: 2.5px solid #e6ca65;
             border-radius: 0 10px 10px 0;
             padding: 12px 28px 12px 24px;
-            margin-left: 12px; /* Espacio estético y limpio entre la foto y el bloque */
+            margin-left: -5px; /* <--- Fusión perfecta: acerca el bloque a la imagen PNG sin dejar huecos */
             box-shadow: 0 10px 20px rgba(0,0,0,0.6);
             z-index: 1;
         }
@@ -126,7 +126,6 @@
             <div class="photo-inner">
                 <img id="person-photo" src="" alt="">
             </div>
-            <!-- Rosa blanca eliminada del HTML -->
         </div>
 
         <div id="text-block" class="text-block">
