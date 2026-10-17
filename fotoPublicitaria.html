@@ -33,15 +33,16 @@
             transform: none;
         }
 
-        /* MARCO DE LA FOTO (tamaño total visible, incluido el borde dorado) */
+        /* MARCO DE LA FOTO (Soporta imágenes individuales y de grupo) */
         .photo-frame {
             position: relative;
-            width: 226px;
-            height: 281px;
+            width: 320px; /* Ampliado para permitir fotos horizontales completas */
+            height: 250px;
             border-radius: 10px 10px 4px 4px;
             overflow: visible;
             flex-shrink: 0;
             z-index: 2;
+            transition: width 0.3s ease;
         }
 
         .photo-inner {
@@ -53,26 +54,22 @@
             overflow: hidden;
             border: 3px solid #e6ca65;
             box-shadow: 0 10px 25px rgba(0,0,0,0.7);
-            background: #111;
+            background: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* Cambio clave: object-fit contain evita que se recorten los laterales en fotos de grupo */
         .photo-inner img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            object-position: center top;
+            object-fit: contain; 
+            object-position: center;
             display: block;
         }
 
-        .photo-inner::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.65) 100%);
-            pointer-events: none;
-        }
-
-        /* ROSA BLANCA DECORATIVA (esquina inferior de la foto) */
+        /* ROSA BLANCA DECORATIVA */
         .rosa-decorativa {
             position: absolute;
             bottom: -16px;
@@ -85,7 +82,7 @@
             border-radius: 50%;
         }
 
-        /* BLOQUE DE TEXTO: sin saltos de línea, su ancho se adapta al texto más largo. */
+        /* BLOQUE DE TEXTO */
         .text-block {
             position: relative;
             width: max-content;
@@ -102,7 +99,6 @@
             z-index: 1;
         }
 
-        /* Último recurso: si ni con la letra mínima cabe, se permiten dos líneas */
         .text-block.permitir-saltos {
             white-space: normal;
             width: auto;
@@ -110,7 +106,6 @@
             flex-shrink: 1;
         }
 
-        /* ESTILO PRINCIPAL (Para resaltar el nombre de la persona) */
         .nombre-text {
             color: #E6CA65;
             font-size: 24px;
@@ -122,7 +117,6 @@
             margin-bottom: 2px;
         }
 
-        /* ESTILO COMPLEMENTARIO (Para Q.E.P.D.) */
         .subtitulo-text {
             color: #FFF3B3;
             font-size: 19px;
@@ -145,7 +139,7 @@
 <body>
 
     <div id="widget-container">
-        <div class="photo-frame">
+        <div class="photo-frame" id="photo-frame">
             <div class="photo-inner">
                 <img id="person-photo" src="" alt="">
             </div>
@@ -166,7 +160,6 @@
         </div>
 
         <div id="text-block" class="text-block">
-            <!-- Intercambiamos el orden visual directo en el HTML -->
             <div id="subtitulo" class="subtitulo-text"></div>
             <div id="nombre" class="nombre-text">Cargando...</div>
             <div id="detalle" class="detalle-text"></div>
@@ -301,9 +294,6 @@
 
             const itemActual = listaRegistros[indiceActual];
 
-            // Asignación correcta:
-            // subtitulo (arriba, más pequeño) recibe el Título (Q.E.P.D.)
-            // nombre (en medio, grande y llamativo) recibe la Descripción (El nombre de la persona)
             subtitulo.innerText = itemActual.titulo;
             nombre.innerText = itemActual.descripcion;
 
@@ -318,6 +308,16 @@
             detalle.innerText = combinacionDetalle;
 
             foto.src = itemActual.foto || "";
+
+            // Ajustar automáticamente la relación de aspecto si la imagen es horizontal
+            foto.onload = function() {
+                const frame = document.getElementById("photo-frame");
+                if (this.naturalWidth > this.naturalHeight) {
+                    frame.style.width = "340px"; // Marco ancho para grupos
+                } else {
+                    frame.style.width = "226px"; // Marco estándar para retratos individuales
+                }
+            };
 
             indiceActual = (indiceActual + 1) % listaRegistros.length;
 
